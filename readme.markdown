@@ -25,4 +25,9 @@ for separate confirmation which is annoying. Currently, I think that only pskill
 by the SDI software, so it is worth running this executable at least, to get the license
 dialog out of the way for future use. 
 
+Another thing to be aware of is that the first time psftp.exe is run (used to send back 
+realtime data snapshots) it will ask to confirm the identity of the remote server. It will 
+just hang the ftp until you confirm. This should not affect SDI operation however, just 
+delay the ftp. 
+
  
