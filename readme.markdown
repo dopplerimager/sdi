@@ -18,7 +18,7 @@ following directories are expected by the console and read from the settings fil
 * DLL_NAME  - path and filename of the SDI_EXTERNAL.dll
 
 Note also that the watchdog scripts will need to be updated on the target machine to 
-make sure their paths are correct. In addition, the forst time that some of the pstools
+make sure their paths are correct. In addition, the first time that some of the pstools
 executables are run they will ask you to agree with the SYSINTERNALS SOFTWARE LICENSE TERMS
 and execution will halt until you do this manually. Each executable in pstools will ask
 for separate confirmation which is annoying. Currently, I think that only pskill is used 
