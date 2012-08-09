@@ -1,0 +1,25 @@
+Product Line:	Moxa UPort 1200/1400/1600 
+Vrsion Number:	Ver1.0
+Platform:    	Windows CE 6.0 for x86 Platform
+Company:	Moxa Inc.
+Date:		03/29/2009	
+
+Support Product:
+===============
+UPort 1250
+UPort 1250I
+UPort 1410
+UPort 1450
+UPort 1450I
+UPort 1610-16
+UPort 1610-8
+UPort 1650-16
+UPort 1650-8
+
+Release Note:
+==============
+
+Ver1.0
+1. Official released.
+
+-End-

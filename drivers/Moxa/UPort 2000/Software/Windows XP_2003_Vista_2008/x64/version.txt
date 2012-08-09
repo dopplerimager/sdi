@@ -1,0 +1,22 @@
+Product:	MOXA UPort 2000 Series Windows Driver
+Version:	1.0
+Date:		05/26/2008
+Company:	Moxa Inc.
+
+Supported OS:
+=============
+Windows 2000
+Windows XP(x86), Windows XP(x64)
+Windows 2003(x86), Windows 2003(x64)
+Windows Vista(x86), Windows Vista(x64)
+Windows 2008 (x86), Windows 2008 (x64)
+
+Supported Moxa Product:
+UPort 2210, 2410
+
+Release Note:
+=============
+Ver1.0 
+Newly release.
+
+-END-

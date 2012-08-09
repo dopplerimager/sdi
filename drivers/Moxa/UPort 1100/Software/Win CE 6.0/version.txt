@@ -1,0 +1,21 @@
+Product Line:	Moxa UPort 1100 
+Vrsion Number:	Ver1.0
+Platform:    	Windows CE 6.0 for x86 Platform
+Company:	Moxa Inc.
+Date:		03/29/2009	
+
+Support Product:
+===============
+UPort 1110
+UPort 1130
+UPort 1150
+UPort 1150I
+
+
+Release Note:
+==============
+
+Ver 1.0
+1. Support WinCE 6.0.
+
+-End-

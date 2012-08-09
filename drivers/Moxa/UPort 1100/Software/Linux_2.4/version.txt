@@ -1,0 +1,18 @@
+Vrsion Number:	Ver1.0
+Product Line:	MOXA UPort 1100 Series
+Platform:	Linux kernel 2.4.20 & above, x86.
+Company:	Moxa Inc.
+Date:		03/18/2008
+
+Support Product:
+===============
+UPort 1110/1130/1150/1150I
+
+Tested Linux: 
+=============
+Red Hat Linux 9	(2.4.20)
+
+Release Note:
+==============
+Ver1.0
+1. Official release.

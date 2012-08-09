@@ -1,0 +1,40 @@
+Vrsion Number:	1.0
+Product Line:	MOXA UPort 2000 series
+Platform:    	Linux kernel 2.6.5 & above, x86 & x64
+Company:	Moxa Inc.
+Date:		05/28/2008
+
+
+Support Product:
+===============
+UPort 2210
+UPort 2410
+
+
+Tested Linux: 
+=============
+Fedora 8 (2.6.23)
+Fedora 7 (2.6.22)
+Fedora Core 6 (2.6.18)
+Fedora Core 5 (2.6.15)
+Fedora Core 4 (2.6.11)
+Fedora Core 3 (2.6.9)
+Fedora Core 2 (2.6.5)
+
+SuSE 10.3 (2.6.22)
+SuSE 10.1 (2.6.16)
+SuSE 9.3 (2.6.11)
+
+Ubuntu 8.04 (2.6.24)
+Ubuntu 7.10 (2.6.22)
+Debian 4 (2.6.18)
+Mandriva 2007 (2.6.17)
+Red Hat Enterprise Linux Release 4 (2.6.9)
+
+
+Release Note:
+==============
+Ver1.0
+1. Official released.
+
+-End-

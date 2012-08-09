@@ -1,0 +1,112 @@
+Product:	UPort 1110/1130/1130I/1150/1150I Windows Driver
+Version:	1.6
+Date:		06/29/2009
+Company:	Moxa Inc.
+
+Supported OS:
+==============
+Windows 98SE, Windows ME
+Windows 2000
+Windows XP
+Windows 2003(x86), Windows 2003(x64)
+Vista(x86), Vista(x64)
+Windows 2008(x86), Windows 2008(x64)
+
+Supported Moxa Product:
+=======================
+UPort 1110, 1130, 1130I, 1150, 1150I
+
+Release Note:
+=============
+Ver1.6
+1. Support 1130I.
+1. Support Fixed-base COM Mode.
+2. Fix to allow setting the smae Xon/Xoff char when software flow control is
+   not applied. (1.5.7)
+3. Fix TransmitCommChar failure problem. (1.5.5)
+4. Fix changing Xon/xoff char doesn't work problem. (1.5.5)
+
+Ver1.5
+1. Support 1150, 1150I
+2. Fix installation error in some system: "The required section was not found in the INF."
+
+Ver1.4
+1. Offical released.
+
+Ver1.3.29
+1. Fix Enable/Disable problem in Vista.
+2. Fix Sleep/Hibernation problem in Vista
+3. Fix 1st installation failed problem in Vista
+4. Support re-connection function.
+
+Ver1.3.27
+1. Support DOS "mode" program setting.
+
+Ver1.3.25
+1. Set default with classical mode to solve some communication fail problem.
+   The throughput will be a little lower than previous version. But this change
+   will be more suitable to differnet application.
+2. Improve firmware receiving latency.
+
+Ver1.3.23
+1. Improve transmit buffer size to match small packet trasmission.
+   This can fix some communication failed problem.
+
+Ver1.3.21
+1. Improve GetCommModemStatus performance.
+
+Ver1.3.17
+1. Support Windows Vista.
+2. Support IOCTL_SERIAL_XOFF_COUNTER
+
+Ver1.3.12
+1. Pass WHQL
+
+Ver1.3.7
+1. Fix: UPort 1130 can't send BREAK signal.
+2. Fix: Driver DCB.fErrorChar function doesn't work correctly in 2000/XP/2003(fix 1.3.5).
+
+Ver1.3.5:
+1. Fix: Driver DCB.fErrorChar function doesn't work correctly in 2000/XP/2003.
+
+Ver1.3.3:
+1. Improve driver to avoid dummy RTS/DTR signal change on opening
+   COM Port in 2000/XP/2003.
+
+Ver1.3.1:
+1. Support IRP_MJ_FLUSH_BUFFERS function for Windows 2000/XP/2003.
+
+
+Ver1.3:
+1. Support 1130.
+2. Support Windows XP/2003 x64.
+3. Support Windows 2000/XP/2003 Standby function.
+4. Rename NPort U1110 to UPort 1110.
+
+Ver1.2
+1. Driver cause system hang on some AMD platform. Fixed.
+2. COM number sometimes conflicts with Moxa NPort driver problem. Fixed.
+3. Uninstall driver will get "Application Error" message. Fixed.
+
+Ver1.1.7:
+1. Improve the "Fast flush" function. Now enabling this function
+   will not flush local driver buffer.
+2. Change U1110 settings will cause the port parameter setting to
+   be removed. Fixed.
+
+Ver1.1.5:
+1. Improve Ver1.1.3 problem with heigher baud rate.
+
+Ver1.1.3:
+1. When closing COM Port, driver will try to wait all queued data transmitted.
+
+Ver1.1.1:
+1. Fix Windows 2000/XP/2003 driver hanged on installation probelm.
+
+
+Ver1.1:
+1. Newly released.
+
+
+-END-
+
