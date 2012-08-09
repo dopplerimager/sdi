@@ -6,7 +6,7 @@ devcon and pstools, the watchdog scripts, driver stuff for the Faulhaver motors,
 Andor camera, MOXA usb hub, etc. 
 
 The standard directory to place this tree is in c:\users\sdi3000\. Some stuff (like
-the watchdog scripts) assume directory structure. Additional directories need to be 
+the watchdog scripts) assume this directory structure. Additional directories need to be 
 created on the target machine, depending on the settings file, for example the 
 following directories are expected by the console and read from the settings file:
 
