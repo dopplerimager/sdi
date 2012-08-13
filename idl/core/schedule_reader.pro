@@ -1,6 +1,16 @@
+;\\ Code formatted by DocGen
 
-pro schedule_reader, schedule_file, schedule_line, xcomm, xargs, lat, lon, console_ref, $
-					 refresh_nm_per_step=refresh_nm_per_step, refresh_phasemap=refresh_phasemap
+
+;\D\<Query an SDI schedule file for the next command.>
+pro schedule_reader, schedule_file, $                             ;\A\<Schedule file name>
+                     schedule_line, $                             ;\A\<The current schedule line>
+                     xcomm, $                                     ;\A\<OUT: string command>
+                     xargs, $                                     ;\A\<OUT: string array of arguments>
+                     lat, $                                       ;\A\<Geographic latitude>
+                     lon, $                                       ;\A\<Geographic longitude>
+                     console_ref, $                               ;\A\<Object reference for the console>
+                     refresh_nm_per_step=refresh_nm_per_step, $   ;\A\<Look for a nm per step refresh command (special syntax)>
+                     refresh_phasemap=refresh_phasemap            ;\A\<Look for a phasemap refresh command (special syntax)>
 
 
 	;\\ If keywords are set, search for the particular control line

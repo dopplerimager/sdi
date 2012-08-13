@@ -1,5 +1,9 @@
+;\\ Code formatted by DocGen
 
-function SDIEtalonSpacer::init, data=data, restore_struc = restore_struc
+
+;\D\<EtalonSpacer initialization.>
+function SDIEtalonSpacer::init, data=data, $                     ;\A\<Misc data>
+                                restore_struc=restore_struc      ;\A\<Restored settings>
 
 	self.palette = data.palette
 	self.need_timer = 0
@@ -72,8 +76,8 @@ function SDIEtalonSpacer::init, data=data, restore_struc = restore_struc
 
 end
 
-
-pro SDIEtalonSpacer::step_change, event
+;\D\<Change the size of the tilt adjustment.>
+pro SDIEtalonSpacer::step_change, event  ;\A\<Widget event>
 
 	if event.type eq 0 or event.type eq 2 then begin
 
@@ -86,8 +90,8 @@ pro SDIEtalonSpacer::step_change, event
 
 end
 
-
-pro SDIEtalonSpacer::tilt, event
+;\D\<A tilt event, for adjusting along the two orthogonal axes.>
+pro SDIEtalonSpacer::tilt, event  ;\A\<Widget event>
 
 	widget_control, get_uval = uval, event.id
 
@@ -138,7 +142,8 @@ pro SDIEtalonSpacer::tilt, event
 
 end
 
-pro SDIEtalonSpacer::adjust_legs_event, event
+;\D\<An event from the widget sloders representing leg voltages.>
+pro SDIEtalonSpacer::adjust_legs_event, event  ;\A\<Widget event>
 
 	widget_control, get_uval = uval, event.id
 
@@ -150,7 +155,7 @@ pro SDIEtalonSpacer::adjust_legs_event, event
 
 end
 
-
+;\D\<Get settings for saving.>
 function SDIEtalonSpacer::get_settings
 
 	struc = {id:self.id, geometry:self.geometry, need_timer:self.need_timer, need_frame:self.need_frame}
@@ -159,15 +164,13 @@ function SDIEtalonSpacer::get_settings
 
 end
 
-
-;\\ Cleanup routine
-
-pro SDIEtalonSpacer::cleanup, log
-
+;\D\<Cleanup - nothing to do>
+pro SDIEtalonSpacer::cleanup, log  ;\A\<No Doc>
 
 end
 
-
+;\D\<The EtalonSpacer plugin allows you to adjust the etalon plate separation at each leg.>
+;\D\<You can control each leg individually, or adjust paralellism along two orthogonal axes.>
 pro SDIEtalonSpacer__define
 
 	void = {SDIEtalonSpacer, id:0L, $
@@ -179,11 +182,3 @@ pro SDIEtalonSpacer__define
 							 inherits XDIBase}
 
 end
-
-
-
-
-
-
-
-

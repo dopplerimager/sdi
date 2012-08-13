@@ -1,5 +1,9 @@
+;\\ Code formatted by DocGen
 
-function SDIStepsPerOrder::init, restore_struc = restore_struc, data = data
+
+;\D\<No Doc>
+function SDIStepsPerOrder::init, restore_struc=restore_struc, $   ;\A\<No Doc>
+                                 data=data                        ;\A\<No Doc>
 
 
 	;\\ Generic Settings
@@ -93,10 +97,8 @@ function SDIStepsPerOrder::init, restore_struc = restore_struc, data = data
 
 end
 
-
-;\\ Toggle the record value option
-
-pro SDIStepsPerOrder::Toggle_Record, event
+;\D\<No Doc>
+pro SDIStepsPerOrder::Toggle_Record, event  ;\A\<No Doc>
 
 	if self.record_value eq 1 then begin
 		self.record_value = 0
@@ -108,10 +110,8 @@ pro SDIStepsPerOrder::Toggle_Record, event
 
 end
 
-
-;\\ Start the procedure
-
-pro SDIStepsPerOrder::start_scan, event
+;\D\<No Doc>
+pro SDIStepsPerOrder::start_scan, event  ;\A\<No Doc>
 
 	if self.scanning ne 1 then begin
 
@@ -170,10 +170,8 @@ pro SDIStepsPerOrder::start_scan, event
 
 end
 
-
-;\\ Auto-start procedure
-
-function SDIStepsPerOrder::auto_start, args
+;\D\<No Doc>
+function SDIStepsPerOrder::auto_start, args  ;\A\<No Doc>
 
 	if n_elements(args) ne 5 then return, 'Error: wrong # of arguments'
 
@@ -232,11 +230,9 @@ function SDIStepsPerOrder::auto_start, args
 
 end
 
-
-
-;\\ Frame Event
-
-pro SDIStepsPerOrder::frame_event, image, channel
+;\D\<No Doc>
+pro SDIStepsPerOrder::frame_event, image, $     ;\A\<No Doc>
+                                   channel      ;\A\<No Doc>
 
 	scan = self.curr_chord
 
@@ -371,11 +367,8 @@ pro SDIStepsPerOrder::frame_event, image, channel
 NEXT_FRAME_EVENT:
 end
 
-
-
-;\\ Stop the procedure
-
-pro SDIStepsPerOrder::stop_scan, event
+;\D\<No Doc>
+pro SDIStepsPerOrder::stop_scan, event  ;\A\<No Doc>
 
 	if self.scanning eq 1 then begin
 		self.scanning = 0
@@ -393,8 +386,7 @@ pro SDIStepsPerOrder::stop_scan, event
 
 end
 
-;\\ Retrieves the objects structure data for restoring, so only needs save info (required)
-
+;\D\<No Doc>
 function SDIStepsPerOrder::get_settings
 
 	struc = {id:self.id, num_chords:self.num_chords, start_volt_offset:self.start_volt_offset, stop_volt_offset:self.stop_volt_offset, $
@@ -405,10 +397,8 @@ function SDIStepsPerOrder::get_settings
 
 end
 
-
-;\\ Cleanup routine
-
-pro SDIStepsPerOrder::cleanup, log
+;\D\<No Doc>
+pro SDIStepsPerOrder::cleanup, log  ;\A\<No Doc>
 
 	ptr_free, self.corr, self.image, self.ref_image, self.chord_hist
 	if self.auto eq 1 then self.console -> end_auto_object, self.id, self, /kill
@@ -419,6 +409,7 @@ pro SDIStepsPerOrder::cleanup, log
 
 end
 
+;\D\<No Doc>
 pro SDIStepsPerOrder__define
 
 	void = {SDIStepsPerOrder, id:0L, $

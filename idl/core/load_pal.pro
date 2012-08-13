@@ -1,9 +1,8 @@
-;=======================================================================
-;
-; This is a long-winded routine that makes a really nice rainbow palette:
-;
+;\\ Code formatted by DocGen
 
-  pro MARKS_PALETTE
+
+;\D\<No Doc>
+pro MARKS_PALETTE
 
   if !d.table_size lt 4 then device,pseudo_color=8
   pcnt = 20
@@ -73,7 +72,15 @@
 
 end
 
-pro pal_subsamp, idxlo, idxhi, sred, sgrn, sblu, brt, satval, sign
+;\D\<No Doc>
+pro pal_subsamp, idxlo, $    ;\A\<No Doc>
+                 idxhi, $    ;\A\<No Doc>
+                 sred, $     ;\A\<No Doc>
+                 sgrn, $     ;\A\<No Doc>
+                 sblu, $     ;\A\<No Doc>
+                 brt, $      ;\A\<No Doc>
+                 satval, $   ;\A\<No Doc>
+                 sign        ;\A\<No Doc>
 
   tvlct, r,g,b, /get
   r = brt*r
@@ -98,21 +105,11 @@ pro pal_subsamp, idxlo, idxhi, sred, sgrn, sblu, brt, satval, sign
   if nsat gt 0 then sblu(satz) = satval
 end
 
-
-;========================================================================
-;
-;  Setup a nice palette for superimposing the data sets.  The palette has
-;  3 parts: 16 predefined "system" colors, a greyscale section, and a
-;  color section.  The color section is derived from "marks_palette" by
-;  default.  However, it can be derived from one of the IDL tables, simply
-;  by setting the IDL_TABLE keyword to the appropriate IDL color table
-;  number.  CULZ is a structure returned by this routine.  It contains
-;  pointers to the various parts of the color table.  See the code below for details.
-;
-;  Mark Conde, Kingston, September 1998.
-;
-
-pro load_pal, culz, idl_table=itbl, bright=brt, proportion=prp
+;\D\<No Doc>
+pro load_pal, culz, $             ;\A\<No Doc>
+              idl_table=itbl, $   ;\A\<No Doc>
+              bright=brt, $       ;\A\<No Doc>
+              proportion=prp      ;\A\<No Doc>
 
 if not(keyword_set(prp))  then prp=0.66
 if not(keyword_set(brt))  then brt=1

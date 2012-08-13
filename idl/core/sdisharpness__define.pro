@@ -1,5 +1,9 @@
+;\\ Code formatted by DocGen
 
-function SDISharpness::init, restore_struc = restore_struc, data = data
+
+;\D\<No Doc>
+function SDISharpness::init, restore_struc=restore_struc, $   ;\A\<No Doc>
+                             data=data                        ;\A\<No Doc>
 
 
 	;\\ Generic Settings
@@ -52,10 +56,8 @@ function SDISharpness::init, restore_struc = restore_struc, data = data
 
 end
 
-
-;\\ Finds the center of a fringe image
-
-pro SDISharpness::get_center, event
+;\D\<No Doc>
+pro SDISharpness::get_center, event  ;\A\<No Doc>
 
 	self.buffer -> get_buffer, image
 	draw = 0
@@ -69,8 +71,10 @@ pro SDISharpness::get_center, event
 
 end
 
-
-pro SDISharpness::frame_event, image, channel, scan
+;\D\<No Doc>
+pro SDISharpness::frame_event, image, $     ;\A\<No Doc>
+                               channel, $   ;\A\<No Doc>
+                               scan         ;\A\<No Doc>
 
 	view_id = widget_info(self.id, find_by_uname = 'Sharpness_'+self.obj_num+'_draw')
 	widget_control, get_value = tv_id, view_id
@@ -135,9 +139,7 @@ pro SDISharpness::frame_event, image, channel, scan
 
 end
 
-
-;\\ Retrieves the objects structure data for restoring, so only needs save info (required)
-
+;\D\<No Doc>
 function SDISharpness::get_settings
 
 	struc = {id:self.id, best:self.best, leg1_best:self.leg1_best, leg2_best:self.leg2_best, xcen:self.xcen, ycen:self.ycen, $
@@ -147,15 +149,13 @@ function SDISharpness::get_settings
 
 end
 
-
-;\\ Cleanup routine
-
-pro SDISharpness::cleanup, log
+;\D\<No Doc>
+pro SDISharpness::cleanup, log  ;\A\<No Doc>
 
 
 end
 
-
+;\D\<No Doc>
 pro SDISharpness__define
 
 	void = {SDISharpness, id:0L, $

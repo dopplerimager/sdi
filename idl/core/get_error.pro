@@ -1,5 +1,8 @@
+;\\ Code formatted by DocGen
 
-function Get_Error, err_code
+
+;\D\<Return an ANDOR error string given an error code.>
+function Get_Error, err_code  ;\A\<Error code>
 
 case err_code of
 

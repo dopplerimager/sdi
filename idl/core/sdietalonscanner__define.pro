@@ -1,5 +1,9 @@
+;\\ Code formatted by DocGen
 
-function SDIEtalonScanner::init, data=data, restore_struc = restore_struc
+
+;\D\<Initialize the EtalonScanner.>
+function SDIEtalonScanner::init, data=data, $                     ;\A\<Misc data>
+                                 restore_struc=restore_struc      ;\A\<Restored settings>
 
 	self.palette = data.palette
 	self.need_timer = 0
@@ -78,8 +82,8 @@ function SDIEtalonScanner::init, data=data, restore_struc = restore_struc
 
 end
 
-
-pro SDIEtalonScanner::start_scan, event
+;\D\<Start a scan.>
+pro SDIEtalonScanner::start_scan, event  ;\A\<Widget event>
 
 	if self.status ne 'Scanning' then begin
 
@@ -110,8 +114,8 @@ pro SDIEtalonScanner::start_scan, event
 
 end
 
-
-pro SDIEtalonScanner::pause_scan, event
+;\D\<Pause the current scan.>
+pro SDIEtalonScanner::pause_scan, event  ;\A\<Widget event>
 
 	if self.status eq 'Scanning' then begin
 
@@ -150,8 +154,8 @@ pro SDIEtalonScanner::pause_scan, event
 END_ETALONSCANNER_PAUSE_SCAN:
 end
 
-
-pro SDIEtalonScanner::stop_scan, event
+;\D\<Stop the current scan (will restart from beginning on next `start')>
+pro SDIEtalonScanner::stop_scan, event  ;\A\<Widget event>
 
 	if self.status eq 'Scanning' then begin
 
@@ -169,8 +173,8 @@ pro SDIEtalonScanner::stop_scan, event
 
 end
 
-
-pro SDIEtalonScanner::set_wavelength, event
+;\D\<Set the wavelength for scanning.>
+pro SDIEtalonScanner::set_wavelength, event  ;\A\<Widget event>
 
 	w = self.wavelength
 	xvaredit, w, name = 'Enter a wavelength in nm', group = self.id
@@ -180,7 +184,9 @@ pro SDIEtalonScanner::set_wavelength, event
 
 end
 
-pro SDIEtalonScanner::frame_event, image, channel
+;\D\<A new frame has been recieved. Update leg diagrams, decide if we need to start a new scan.>
+pro SDIEtalonScanner::frame_event, image, $     ;\A\<The new camera frame>
+                                   channel      ;\A\<The current scan channel>
 
 	if self.status eq 'Scanning' then begin
 		time = systime(/sec) - self.start_time
@@ -254,9 +260,7 @@ pro SDIEtalonScanner::frame_event, image, channel
 	endif
 end
 
-
-;\\ Retrieves the objects structure data for restoring, so only needs save info (required)
-
+;\D\<Select settings to save.>
 function SDIEtalonScanner::get_settings
 
 	struc = {id:self.id, wavelength:self.wavelength, geometry:self.geometry, need_timer:self.need_timer, $
@@ -266,18 +270,16 @@ function SDIEtalonScanner::get_settings
 
 end
 
-
-;\\ Cleanup routine
-
-pro SDIEtalonScanner::cleanup, log
+;\D\<Cleanup, stop any current scans.>
+pro SDIEtalonScanner::cleanup, log  ;\A\<No Doc>
 	if self.status ne 'Ready' then $
 		self.console -> scan_etalon, 'Etalon Scanner (' + string(self.wavelength, f='(f0.1)') + ') obj:' + self.obj_num, $
 						status = status, /stop_scan
 
 end
 
-
-
+;\D\<The EtalonScanner plugin lets you continuously scan the etalon over one order of interference>
+;\D\<at a given wavelength, and optionally pause during a scan.>
 pro SDIEtalonScanner__define
 
 	void = {SDIEtalonScanner, id:0L, status:'', wavelength:0.0, start_time:0D, nchann:0,  inherits XDIBase}

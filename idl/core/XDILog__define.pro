@@ -1,8 +1,14 @@
+;\\ Code formatted by DocGen
 
-;\\ Handles the log for each object which intantiates it
 
-function XDILog::init, log_window = log_window, show_log = show_log, prog_name = prog_name, log_path = log_path, $
-					   log_append = log_append,	enabled = enabled, header = header
+;\D\<No Doc>
+function XDILog::init, log_window=log_window, $   ;\A\<No Doc>
+                       show_log=show_log, $       ;\A\<No Doc>
+                       prog_name=prog_name, $     ;\A\<No Doc>
+                       log_path=log_path, $       ;\A\<No Doc>
+                       log_append=log_append, $   ;\A\<No Doc>
+                       enabled=enabled, $         ;\A\<No Doc>
+                       header=header              ;\A\<No Doc>
 
 	self.show_log  = show_log
 	self.prog_name = prog_name
@@ -59,10 +65,8 @@ function XDILog::init, log_window = log_window, show_log = show_log, prog_name =
 
 end
 
-
-;\\ Update the log
-
-pro XDILog::update, entry
+;\D\<No Doc>
+pro XDILog::update, entry  ;\A\<No Doc>
 
 if self.enabled eq 1 then begin
 
@@ -97,24 +101,16 @@ endif
 
 end
 
-
-;\\ Refresh the log
-
+;\D\<No Doc>
 pro XDILog::refresh
 
 	if self.show_log eq 1 and widget_info(self.log_window, /valid_id) eq 1 and self.enabled eq 1 then widget_control, set_value = self.log, self.log_window
 
 end
 
-
-;\\ Definition
-
+;\D\<No Doc>
 pro XDILog__define
 
 	void = {XDILog, log: strarr(100), log_window: 0L, prog_name:'', log_path:'', show_log:0, curdate:'', append:0, enabled:0}
 
 end
-
-
-
-

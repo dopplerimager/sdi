@@ -1,7 +1,9 @@
+;\\ Code formatted by DocGen
 
-;\\ Returns the julian date at 0:00 for this UT date and seconds since jd0
 
-pro get_jd0_sec, jd0, sec
+;\D\<Get the current julian date and the seconds into the day.>
+pro get_jd0_sec, jd0, $   ;\A\<OUT: Julian date at midnight I think...>
+                 sec      ;\A\<OUT: Seconds into the julian day>
 
 	js_now = dt_tm_tojs(systime(/ut))
 	js2ymds, js_now, yy, mm, dd, ss

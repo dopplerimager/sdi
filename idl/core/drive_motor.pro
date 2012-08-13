@@ -1,7 +1,13 @@
+;\\ Code formatted by DocGen
 
 
-;\\ Wait for a position notification
-pro drive_motor_wait_for_position, port, dll_name, com, max_wait_time=max_wait_time, errcode=errcode
+;\D\<Wait for a position reached notification from the motor (a `p' character). A timeout>
+;\D\<can be provided to prevent waiting forever.>
+pro drive_motor_wait_for_position, port, $                          ;\A\<Com port for the motor>
+                                   dll_name, $                      ;\A\<Name of the SDI\_External dll>
+                                   com, $                           ;\A\<String `com' type, e.g. "moxa">
+                                   max_wait_time=max_wait_time, $   ;\A\<Max time to wait in seconds>
+                                   errcode=errcode                  ;\A\<Returned error code>
 
 	if not keyword_set(max_wait_time) then max_wait_time = 30.	;\\ Max amount of time to wait, in seconds
 	errcode = 'p'
@@ -19,20 +25,22 @@ pro drive_motor_wait_for_position, port, dll_name, com, max_wait_time=max_wait_t
 
 end
 
-
-function drive_motor, port, $
-					  dll_name, $
-					  direction=direction, $
-					  gohix=gohix, $
-					  goix=goix, $
-					  drive_to=drive_to, $
-					  control=control, $
-					  readpos=readpos, $
-					  speed=speed, $
-					  accel=accel, $
-					  verbatim=verbatim, $
-					  home_max_spin_time=home_max_spin_time, $
-					  timeout=timeout
+;\D\<Wrapper for controlling Fualhaber motors. Open/close ports, enable/disable motor,>
+;\D\<get status, set position, drive to position, set speed/accel, drive in a direction>
+;\D\<in small increments until blocked (i.e. when homing the mirror motor) etc.>
+function drive_motor, port, $                                    ;\A\<Com port of the motor>
+                      dll_name, $                                ;\A\<SDI\_External dll name (full path)>
+                      direction=direction, $                     ;\A\<String direction ("forwards" or "backwards") to drive until blocked>
+                      gohix=gohix, $                             ;\A\<Drive to nearest hall index>
+                      goix=goix, $                               ;\A\<>
+                      drive_to=drive_to, $                       ;\A\<Drive to absolute position>
+                      control=control, $                         ;\A\<String control command (see function body)>
+                      readpos=readpos, $                         ;\A\<Read the motor position (returned from the function)>
+                      speed=speed, $                             ;\A\<Set the speed>
+                      accel=accel, $                             ;\A\<Set the acceleration>
+                      verbatim=verbatim, $                       ;\A\<Send a string command verbatim to the motor, appending a carriage return>
+                      home_max_spin_time=home_max_spin_time, $   ;\A\<Max time to spin (for every small increment) when homing>
+                      timeout=timeout                            ;\A\<Timeout in seconds>
 
 	;\\ CONTROL keyword - string "enable"/"disable" enables/disables the motor
 
@@ -143,6 +151,8 @@ function drive_motor, port, $
 	;\\ making this call.
 		if keyword_set(direction) then begin
 
+			if (direction ne 'forwards') and (direction ne 'backwards') then goto, END_DRIVE_MOTOR
+
 			data_str = 'LR'
 			if direction eq 'backwards' then data_str += '-'
 			data_str += string(increments, f='(i0)') + tx
@@ -173,5 +183,3 @@ END_DRIVE_MOTOR:
 comms_wrapper, port, dll_name, type=com, /read, data = clear_buffer
 return, 1
 end
-
-

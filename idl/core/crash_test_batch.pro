@@ -1,4 +1,4 @@
-
+;\\ Code formatted by DocGen
 
 ;\\ Crash test batch file - to be run approx. every 20 min
 ;\\ Looks for file, if there it means the console has not

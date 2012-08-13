@@ -1,4 +1,7 @@
+;\\ Code formatted by DocGen
 
+
+;\D\<No Doc>
 function get_paths
 
 ;\\ Extract paths from !path to search for SDI modules

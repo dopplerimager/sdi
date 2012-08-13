@@ -1,4 +1,7 @@
+;\\ Code formatted by DocGen
 
+
+;\D\<Restart the MOXA USB hub, using pstools (TODO: is this used? Paths are hard coded...)>
 pro restart_moxa
 
 	print, 'Disabling the Moxa device...'

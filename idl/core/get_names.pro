@@ -1,5 +1,8 @@
+;\\ Code formatted by DocGen
 
-function Get_Names, path_list
+
+;\D\<From a full path list of plugins, return only the plugin names>
+function Get_Names, path_list  ;\A\<Vector of plugin full path names>
 
 ;\\ Make a list of the module names
 

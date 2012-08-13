@@ -1,7 +1,11 @@
+;\\ Code formatted by DocGen
 
 
-function SDISpectrum::init, restore_struc = restore_struc, data = data, zone_settings = zone_settings, $
-						    file_name_format=file_name_format
+;\D\<No Doc>
+function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<No Doc>
+                            data=data, $                           ;\A\<No Doc>
+                            zone_settings=zone_settings, $         ;\A\<No Doc>
+                            file_name_format=file_name_format      ;\A\<No Doc>
 
 	;\\ Generic Settings
 		self.need_timer = 0
@@ -136,10 +140,8 @@ function SDISpectrum::init, restore_struc = restore_struc, data = data, zone_set
 
 end
 
-
-;\\ Start the procedure
-
-pro SDISpectrum::start_scan, event
+;\D\<No Doc>
+pro SDISpectrum::start_scan, event  ;\A\<No Doc>
 
 	if self.scanning ne 1 then begin
 
@@ -164,10 +166,8 @@ pro SDISpectrum::start_scan, event
 
 end
 
-
-;\\ Auto-start procedure
-
-function SDISpectrum::auto_start, args
+;\D\<No Doc>
+function SDISpectrum::auto_start, args  ;\A\<No Doc>
 
 	if n_elements(args) ne 3 then return, 'Error: wrong # of arguments'
 
@@ -192,10 +192,7 @@ function SDISpectrum::auto_start, args
 
 end
 
-
-
-;\\ Initializes the phasemap, zonemap and arrays
-
+;\D\<No Doc>
 pro SDISpectrum::initializer
 
 
@@ -309,11 +306,9 @@ pro SDISpectrum::initializer
 
 end
 
-
-
-;\\ Frame event - makes a spectral accumulation
-
-pro SDISpectrum::frame_event, image, channel
+;\D\<No Doc>
+pro SDISpectrum::frame_event, image, $     ;\A\<No Doc>
+                              channel      ;\A\<No Doc>
 common spec_save, spec, zone, phase, acc_im
 
 	now = systime(1)
@@ -558,10 +553,8 @@ common spec_save, spec, zone, phase, acc_im
 EXIT_FRAME_PROCESSING:
 end
 
-
-;\\ Stop the procedure
-
-pro SDISpectrum::stop_scan, event
+;\D\<No Doc>
+pro SDISpectrum::stop_scan, event  ;\A\<No Doc>
 
 	if self.scanning eq 1 then begin
 		self.scanning = 0
@@ -582,18 +575,13 @@ pro SDISpectrum::stop_scan, event
 
 end
 
-
-;\\ Finalize the current scan
-pro SDISpectrum::finalize_scan, event
+;\D\<No Doc>
+pro SDISpectrum::finalize_scan, event  ;\A\<No Doc>
 	self.finalize_flag = 1
 end
 
-
-;\\ Reloads the phasemap - if console refreshes the phasemap during the night,
-;\\ this plugin needs to reload it and also reload it's zone settings with
-;\\ the new fringe center (it might have changed)
-
-pro SDISpectrum::set_phasemap, failed
+;\D\<No Doc>
+pro SDISpectrum::set_phasemap, failed  ;\A\<No Doc>
 
 	failed = 0
 
@@ -618,12 +606,8 @@ pro SDISpectrum::set_phasemap, failed
 
 end
 
-
-
-
-
-;\\ Fit the current spectra
-pro SDISpectrum::fit_spectra, event
+;\D\<No Doc>
+pro SDISpectrum::fit_spectra, event  ;\A\<No Doc>
 
 	;\\ Get instrument profiles
 	if self.insprof_filename eq '' then begin
@@ -731,10 +715,7 @@ pro SDISpectrum::fit_spectra, event
 	plot, (positions - positions[0])*cnv
 end
 
-
-
-;\\ Retrieves the objects structure data for restoring, so only needs save info (required)
-
+;\D\<No Doc>
 function SDISpectrum::get_settings
 
 	struc = {id:self.id, geometry:self.geometry, need_timer:self.need_timer, need_frame:self.need_frame}
@@ -743,10 +724,8 @@ function SDISpectrum::get_settings
 
 end
 
-
-;\\ Cleanup routine
-
-pro SDISpectrum::cleanup, log
+;\D\<No Doc>
+pro SDISpectrum::cleanup, log  ;\A\<No Doc>
 
 	if self.scanning eq 1 then self -> stop_scan, 0
 	ptr_free, self.spectra, self.zonemap, self.phasemap, self.zone_centers
@@ -754,6 +733,7 @@ pro SDISpectrum::cleanup, log
 
 end
 
+;\D\<No Doc>
 pro SDISpectrum__define
 
 	void = {SDISpectrum, id:0L, $

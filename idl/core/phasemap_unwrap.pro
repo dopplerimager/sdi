@@ -1,27 +1,39 @@
+;\\ Code formatted by DocGen
 
-function phasemap_unwrap, xcen, ycen, radial_chunk, channels, threshold, wavelength, phasemap, show=show, tv_id=tv_id, dims=dims
+
+;\D\<`Unwrap' a phasemap produced by the SDIPhasemapper plugin.>
+function phasemap_unwrap, xcen, $           ;\A\<Nominal x center>
+                          ycen, $           ;\A\<Nominal y center>
+                          radial_chunk, $   ;\A\<Size of the chunk over which to average the phase (value of 50 is used in phasemapper)>
+                          channels, $       ;\A\<Number of channels in the scan>
+                          threshold, $      ;\A\<Value of 80 is used by the phasemapper>
+                          wavelength, $     ;\A\<The wavelength at which the phasemap was recorded>
+                          phasemap, $       ;\A\<The actual phasemap 2D array>
+                          show=show, $      ;\A\<Show the unwrap as it occurs>
+                          tv_id=tv_id, $    ;\A\<Id of the tv window for showing the unwrap>
+                          dims=dims         ;\A\<Dimensions of the tv window for drawing>
 
     phase_cpy = phasemap
 
     ;\\ Show the initial phasemap
-       if keyword_set(show) then begin
-         wset, tv_id
-         loadct, 0, /silent
-         tvscl, congrid(phase_cpy, dims[0], dims[1])
-       endif
+       	if keyword_set(show) then begin
+         	wset, tv_id
+        	 loadct, 0, /silent
+         	tvscl, congrid(phase_cpy, dims[0], dims[1])
+       	endif
 
     ;\\ Start a progress bar
-       progressBar = Obj_New("SHOWPROGRESS", message = 'Unwrapping phasemap...')
-       progressBar->Start
+       	progressBar = Obj_New("SHOWPROGRESS", message = 'Unwrapping phasemap...')
+       	progressBar->Start
 
     ;\\ Get array dimensions
-       nx = n_elements(phase_cpy(*,0))
-       ny = n_elements(phase_cpy(0,*))
+       	nx = n_elements(phase_cpy(*,0))
+      	ny = n_elements(phase_cpy(0,*))
 
     ;\\ Generate an array filled with values of distance from nominal center
-        xx  = transpose(lindgen(ny,nx)/ny) ;    - xcen
-        yy  = lindgen(nx,ny)/nx          ;  - ycen
-       dst = (xx - xcen)*(xx - xcen) + (yy - ycen)*(yy - ycen)
+    	xx  = transpose(lindgen(ny,nx)/ny) ;    - xcen
+       	yy  = lindgen(nx,ny)/nx          ;  - ycen
+       	dst = (xx - xcen)*(xx - xcen) + (yy - ycen)*(yy - ycen)
 
     ;\\ Indices of previous array sorted in order of lowest to highest distance from center
         dord = sort(dst)

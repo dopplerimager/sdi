@@ -1,6 +1,9 @@
+;\\ Code formatted by DocGen
 
 
-function XDIWidgetReg::init, ref = ref, id = id
+;\D\<No Doc>
+function XDIWidgetReg::init, ref=ref, $   ;\A\<No Doc>
+                             id=id        ;\A\<No Doc>
 
 	self.id = id
 	self.ref = ref
@@ -13,10 +16,13 @@ function XDIWidgetReg::init, ref = ref, id = id
 
 end
 
-
-;\\ Add an id to the register
-
-pro XDIWidgetReg::register, id, ref, type, store, timer, frame
+;\D\<No Doc>
+pro XDIWidgetReg::register, id, $      ;\A\<No Doc>
+                            ref, $     ;\A\<No Doc>
+                            type, $    ;\A\<No Doc>
+                            store, $   ;\A\<No Doc>
+                            timer, $   ;\A\<No Doc>
+                            frame      ;\A\<No Doc>
 
 	current = self.next
 
@@ -38,10 +44,8 @@ pro XDIWidgetReg::register, id, ref, type, store, timer, frame
 
 end
 
-
-;\\ Get an object ref from a widget id
-
-function XDIWidgetReg::match_register_ref, id
+;\D\<No Doc>
+function XDIWidgetReg::match_register_ref, id  ;\A\<No Doc>
 
 	current = self.next
 	if self.id eq id then return, self.ref
@@ -57,10 +61,8 @@ function XDIWidgetReg::match_register_ref, id
 
 end
 
-
-;\\ Get a timer value from a widget id
-
-function XDIWidgetReg::match_register_timer, id
+;\D\<No Doc>
+function XDIWidgetReg::match_register_timer, id  ;\A\<No Doc>
 
 	current = self.next
 
@@ -75,10 +77,8 @@ function XDIWidgetReg::match_register_timer, id
 
 end
 
-
-;\\ Get a frame value from a widget id
-
-function XDIWidgetReg::match_register_frame, id
+;\D\<No Doc>
+function XDIWidgetReg::match_register_frame, id  ;\A\<No Doc>
 
 	current = self.next
 
@@ -93,10 +93,8 @@ function XDIWidgetReg::match_register_frame, id
 
 end
 
-
-;\\ Get an object type from a widget id
-
-function XDIWidgetReg::match_register_type, id
+;\D\<No Doc>
+function XDIWidgetReg::match_register_type, id  ;\A\<No Doc>
 
 	current = self.next
 
@@ -111,10 +109,8 @@ function XDIWidgetReg::match_register_type, id
 
 end
 
-
-;\\ Get an object ref from a type string
-
-function XDIWidgetReg::match_register_from_type, type
+;\D\<No Doc>
+function XDIWidgetReg::match_register_from_type, type  ;\A\<No Doc>
 
 	current = self.next
 
@@ -129,10 +125,8 @@ function XDIWidgetReg::match_register_from_type, type
 
 end
 
-
-;\\ Get a store value from widget id
-
-function XDIWidgetReg::match_register_store, id
+;\D\<No Doc>
+function XDIWidgetReg::match_register_store, id  ;\A\<No Doc>
 
 	current = self.next
 
@@ -147,9 +141,7 @@ function XDIWidgetReg::match_register_store, id
 
 end
 
-
-;\\ Print all registered ids
-
+;\D\<No Doc>
 pro XDIWidgetReg::print_register
 
 	current = self.next
@@ -164,9 +156,7 @@ pro XDIWidgetReg::print_register
 
 end
 
-
-;\\ Generate a structure of arrays containing all objects, ids and types
-
+;\D\<No Doc>
 function XDIWidgetReg::generate_list
 
 	current = self.next
@@ -200,9 +190,7 @@ function XDIWidgetReg::generate_list
 
 end
 
-
-;\\ Count objects
-
+;\D\<No Doc>
 function XDIWidgetReg::count_objects
 
 	current = self.next
@@ -220,10 +208,10 @@ function XDIWidgetReg::count_objects
 
 end
 
-
-;\\ Set the controller field given an object reference and id
-
-pro XDIWidgetReg::set_control, id, ref, control
+;\D\<No Doc>
+pro XDIWidgetReg::set_control, id, $        ;\A\<No Doc>
+                               ref, $       ;\A\<No Doc>
+                               control      ;\A\<No Doc>
 
 	current = self.next
 
@@ -239,8 +227,8 @@ pro XDIWidgetReg::set_control, id, ref, control
 
 end
 
-;\\ Delete object from list
-pro XDIWidgetReg::delete_instance, id
+;\D\<No Doc>
+pro XDIWidgetReg::delete_instance, id  ;\A\<No Doc>
 
 		current = self.next
     	cnt = 0
@@ -292,10 +280,11 @@ pro XDIWidgetReg::delete_instance, id
 
 end
 
-
-;\\ Save
-
-pro XDIWidgetReg::save_settings, path, id, owner, ref
+;\D\<No Doc>
+pro XDIWidgetReg::save_settings, path, $    ;\A\<No Doc>
+                                 id, $      ;\A\<No Doc>
+                                 owner, $   ;\A\<No Doc>
+                                 ref        ;\A\<No Doc>
 
 	;\\ First get the generic settings for the object
 
@@ -317,10 +306,7 @@ pro XDIWidgetReg::save_settings, path, id, owner, ref
 
 end
 
-
-
-;\\ Definition
-
+;\D\<No Doc>
 pro XDIWidgetReg__define
 
 	void = {XDIWidgetReg, id: 0L, type: '', ref: obj_new(), store: 0, need_timer: 0, need_frame:0, controller: 0, next: ptr_new()}

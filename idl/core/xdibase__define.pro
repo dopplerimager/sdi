@@ -1,5 +1,7 @@
+;\\ Code formatted by DocGen
 
 
+;\D\<No Doc>
 pro XDIBase__define
 
 	load_pal, culz, idl = [3,1]

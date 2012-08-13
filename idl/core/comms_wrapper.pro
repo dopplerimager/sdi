@@ -1,13 +1,11 @@
+;\\ Code formatted by DocGen
 
 
-;\\ This will allow serial communication over standard serial comms,
-;\\ MOXA serial expander (using the MOXA library routines), and
-;\\ AIOUSB - DIO
-
-pro comms_wrapper, port, $
-				   dll_name, $
-				   type=type, $	;\\ type = 'moxa', 'dio', 'com' - default if keyword not set
-
+;\D\<No Doc>
+pro comms_wrapper, port, $        ;\A\<No Doc>
+                   dll_name, $    ;\A\<No Doc>
+                   type=type, $   ;\A\<No Doc>
+                                  ;\A\<No Doc>
 				   open=open, $		;\\ These are all switches, indicating required operation. No values.
 				   close=close, $
 				   read=read, $

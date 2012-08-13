@@ -1,6 +1,14 @@
+;\\ Code formatted by DocGen
 
-pro Get_Ephemeris, save_name=save_name, safe_sea=safe_sea, lat=lat, lon=lon, timeres=timeres, start_stop_times=start_stop_times, $
-				   get_sea = get_sea
+
+;\D\<No Doc>
+pro Get_Ephemeris, save_name=save_name, $                 ;\A\<No Doc>
+                   safe_sea=safe_sea, $                   ;\A\<No Doc>
+                   lat=lat, $                             ;\A\<No Doc>
+                   lon=lon, $                             ;\A\<No Doc>
+                   timeres=timeres, $                     ;\A\<No Doc>
+                   start_stop_times=start_stop_times, $   ;\A\<No Doc>
+                   get_sea=get_sea                        ;\A\<No Doc>
 
 	if not keyword_set(lat) then lat = -67.6
 	if not keyword_set(lon) then lon = 62.87
@@ -17,8 +25,6 @@ pro Get_Ephemeris, save_name=save_name, safe_sea=safe_sea, lat=lat, lon=lon, tim
     	date_str = date(2) + '/' + date(1) + '/' + string(yy, f='(i0)')
 	    time_str = date(3) + ':' + date(4) + ':' + date(5)
 	    start_hour = ss/3600.
-
-
 
 	;\\ Get moon alt, azi:
        	ut     = findgen(1+24*60/timeres)*timeres/(24*60); UT in days.

@@ -1,7 +1,9 @@
+;\\ Code formatted by DocGen
 
-;\\ Returns the current solar elevation angle
 
-function get_sun_elevation, lat, lon
+;\D\<Get the current sun elevation for a given latitude and longitude.>
+function get_sun_elevation, lat, $   ;\A\<Geographic latitude>
+                            lon      ;\A\<Geographic longitude>
 
 	time = bin_date(systime(/ut))
 

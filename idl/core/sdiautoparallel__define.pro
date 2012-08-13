@@ -1,5 +1,9 @@
+;\\ Code formatted by DocGen
 
-function SDIAutoParallel::init, data=data, restore_struc = restore_struc
+
+;\D\<No Doc>
+function SDIAutoParallel::init, data=data, $                     ;\A\<No Doc>
+                                restore_struc=restore_struc      ;\A\<No Doc>
 
 	self.palette = data.palette
 	self.need_timer = 0
@@ -60,8 +64,8 @@ function SDIAutoParallel::init, data=data, restore_struc = restore_struc
 
 end
 
-
-pro SDIAutoParallel::start_parallel, event
+;\D\<No Doc>
+pro SDIAutoParallel::start_parallel, event  ;\A\<No Doc>
 
 	if self.status ne 'searching' then begin
 
@@ -79,15 +83,16 @@ pro SDIAutoParallel::start_parallel, event
 
 end
 
-
-pro SDIAutoParallel::stop_parallel, event
+;\D\<No Doc>
+pro SDIAutoParallel::stop_parallel, event  ;\A\<No Doc>
 
 	self.status = 'idle'
 
 end
 
-
-pro SDIAutoParallel::frame_event, image, channel
+;\D\<No Doc>
+pro SDIAutoParallel::frame_event, image, $     ;\A\<No Doc>
+                                  channel      ;\A\<No Doc>
 
 	if self.status eq 'searching' then begin
 
@@ -180,9 +185,7 @@ pro SDIAutoParallel::frame_event, image, channel
 END_PARALLEL_FRAME_EVENT:
 end
 
-
-;\\ Retrieves the objects structure data for restoring, so only needs save info (required)
-
+;\D\<No Doc>
 function SDIAutoParallel::get_settings
 
 	struc = {id:self.id, wavelength:self.wavelength, geometry:self.geometry, need_timer:self.need_timer, $
@@ -192,16 +195,13 @@ function SDIAutoParallel::get_settings
 
 end
 
-
-;\\ Cleanup routine
-
-pro SDIAutoParallel::cleanup, log
+;\D\<No Doc>
+pro SDIAutoParallel::cleanup, log  ;\A\<No Doc>
 
 
 end
 
-
-
+;\D\<No Doc>
 pro SDIAutoParallel__define
 
 	void = {SDIAutoParallel, id:0L, status:'', wavelength:0.0, start_time:0D, param:fltarr(9), $

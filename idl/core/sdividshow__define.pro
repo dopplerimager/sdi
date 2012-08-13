@@ -1,6 +1,9 @@
+;\\ Code formatted by DocGen
 
 
-function SDIVidshow::init, restore_struc = restore_struc, data = data
+;\D\<No Doc>
+function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<No Doc>
+                           data=data                        ;\A\<No Doc>
 
 	self.need_timer = 0
 	self.need_frame = 1
@@ -67,8 +70,8 @@ function SDIVidshow::init, restore_struc = restore_struc, data = data
 
 end
 
-
-pro SDIVidshow::scaling, event
+;\D\<No Doc>
+pro SDIVidshow::scaling, event  ;\A\<No Doc>
 
 	if self.scale eq 1 then self.scale = 0 else self.scale = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_Scaler')
@@ -77,7 +80,8 @@ pro SDIVidshow::scaling, event
 
 end
 
-pro SDIVidshow::mask_quadrants, event
+;\D\<No Doc>
+pro SDIVidshow::mask_quadrants, event  ;\A\<No Doc>
 
 	if self.mask_quadrants eq 1 then self.mask_quadrants = 0 else self.mask_quadrants = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_masker')
@@ -86,7 +90,8 @@ pro SDIVidshow::mask_quadrants, event
 
 end
 
-pro SDIVidshow::set_scale, event
+;\D\<No Doc>
+pro SDIVidshow::set_scale, event  ;\A\<No Doc>
 
 	s = self.scale_fac
 	xvaredit, s, name = 'Set Image Gain Factor', group = self.id
@@ -94,7 +99,8 @@ pro SDIVidshow::set_scale, event
 
 end
 
-pro SDIVidshow::set_grid, event
+;\D\<No Doc>
+pro SDIVidshow::set_grid, event  ;\A\<No Doc>
 
 	if self.grid eq 1 then self.grid = 0 else self.grid = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_grid')
@@ -103,7 +109,8 @@ pro SDIVidshow::set_grid, event
 
 end
 
-pro SDIVidshow::set_crosshairs, event
+;\D\<No Doc>
+pro SDIVidshow::set_crosshairs, event  ;\A\<No Doc>
 
 	if self.crosshairs eq 1 then self.crosshairs = 0 else self.crosshairs = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_crosshairs')
@@ -112,7 +119,8 @@ pro SDIVidshow::set_crosshairs, event
 
 end
 
-pro SDIVidshow::set_crosshairs_point, event
+;\D\<No Doc>
+pro SDIVidshow::set_crosshairs_point, event  ;\A\<No Doc>
 
 	pnt = self.crosshairs_point
 	xvaredit, pnt, name = 'Set Crosshair X and Y Intersect', group = self.id
@@ -120,11 +128,9 @@ pro SDIVidshow::set_crosshairs_point, event
 
 end
 
-
-;\\ The handler procedure for a frame event (required for all classes needing new frames)
-;\\ must be a procedure called ::frame_event
-
-pro SDIVidshow::frame_event, image, channel
+;\D\<No Doc>
+pro SDIVidshow::frame_event, image, $     ;\A\<No Doc>
+                             channel      ;\A\<No Doc>
 
 	vid_image = image - min(image)
 
@@ -179,10 +185,8 @@ pro SDIVidshow::frame_event, image, channel
 
 end
 
-
-;\\ Resizes the vidshow window to the image dimensions
-
-pro SDIVidshow::fit_window, event
+;\D\<No Doc>
+pro SDIVidshow::fit_window, event  ;\A\<No Doc>
 
 	view_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_Vidarea')
 	widget_control, xsize = self.xdim, ysize = self.ydim, view_id
@@ -190,10 +194,8 @@ pro SDIVidshow::fit_window, event
 
 end
 
-
-;\\ Set the color table
-
-pro SDIVidshow::set_color_table, event
+;\D\<No Doc>
+pro SDIVidshow::set_color_table, event  ;\A\<No Doc>
 
 	c = self.color_table
 	xvaredit, c, name = 'Set Color Table Index:', group = self.id
@@ -201,8 +203,7 @@ pro SDIVidshow::set_color_table, event
 
 end
 
-;\\ Retrieves the objects structure data for restoring, so only needs save info (required)
-
+;\D\<No Doc>
 function SDIVidshow::get_settings
 
 	struc = {id:self.id, scale:self.scale, scale_fac: self.scale_fac, exp_time:self.exp_time, geometry:self.geometry, need_timer:self.need_timer, $
@@ -213,17 +214,13 @@ function SDIVidshow::get_settings
 
 end
 
-
-;\\ Cleanup routine
-
-pro SDIVidshow::cleanup, log
+;\D\<No Doc>
+pro SDIVidshow::cleanup, log  ;\A\<No Doc>
 
 
 end
 
-
-;\\ Definition (required)
-
+;\D\<No Doc>
 pro SDIVidshow__define
 
 	void = {SDIVidshow, id: 0L, inst:0, exp_time: 0.03, xdim:0, ydim:0, scale:0, scale_fac:0.005, $

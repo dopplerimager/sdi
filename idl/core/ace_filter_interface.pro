@@ -1,4 +1,9 @@
-function ace_filter_interface, command=command
+;\\ Code formatted by DocGen
+
+
+;\D\<Sends commands to an ACE filter wheel (used only at Poker I guess,>
+;\D\<since com ports are hard coded here.>
+function ace_filter_interface, command=command  ;\A\<Command to send>
 
 ;--Filter setup as of October 2002:
 ;  1: 6300 New
@@ -68,5 +73,3 @@ function ace_filter_interface, command=command
 ;--And quit:
    return, status
 end
-
-

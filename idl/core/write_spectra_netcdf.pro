@@ -1,18 +1,20 @@
+;\\ Code formatted by DocGen
 
-;\\ Writes NetCDF files for spectrum plugins.
-;\\ Arguments:
-;\\		ncdid 		-	id of a file already opened by the spectrum plugin
-;\\		spectra 	-	the data to add to the file
-;\\		start_time 	- 	time spectra started
-;\\ 	end_time 	-	time spectra ended
-;\\ Keywords:
-;\\ 	create		-	pro ignores ncdid and creates a new file, return_id must also be a variable to hold the id of the new file
-;\\		fname		-	the filename of the new file
-;\\		return_id	- 	id of the created file
-;\\		static		-	static variables to be written upon creation
 
-pro Write_Spectra_NetCDF, ncdid, spectra, start_time, end_time, nscans, acc_im, create=create, fname=fname, return_id=return_id, $
-						  header=header, data=data, reopen=reopen, update=update
+;\D\<No Doc>
+pro Write_Spectra_NetCDF, ncdid, $                 ;\A\<No Doc>
+                          spectra, $               ;\A\<No Doc>
+                          start_time, $            ;\A\<No Doc>
+                          end_time, $              ;\A\<No Doc>
+                          nscans, $                ;\A\<No Doc>
+                          acc_im, $                ;\A\<No Doc>
+                          create=create, $         ;\A\<No Doc>
+                          fname=fname, $           ;\A\<No Doc>
+                          return_id=return_id, $   ;\A\<No Doc>
+                          header=header, $         ;\A\<No Doc>
+                          data=data, $             ;\A\<No Doc>
+                          reopen=reopen, $         ;\A\<No Doc>
+                          update=update            ;\A\<No Doc>
 
 	;\\ Find dimensions
 		nchannels = n_elements(spectra(0,*))
@@ -176,5 +178,3 @@ pro Write_Spectra_NetCDF, ncdid, spectra, start_time, end_time, nscans, acc_im, 
 
 END_WRITE_SPECTRA_NETCDF:
 end
-
-

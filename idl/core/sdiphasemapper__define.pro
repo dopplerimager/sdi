@@ -1,6 +1,9 @@
+;\\ Code formatted by DocGen
 
 
-function SDIPhaseMapper::init, restore_struc = restore_struc, data = data
+;\D\<Phasemapper initialization.>
+function SDIPhaseMapper::init, restore_struc=restore_struc, $   ;\A\<Misc data>
+                               data=data                        ;\A\<Restored settings>
 
 
 	;\\ Generic Settings
@@ -85,8 +88,11 @@ function SDIPhaseMapper::init, restore_struc = restore_struc, data = data
 
 end
 
-
-pro SDIPhaseMapper::set_interp, event
+;\D\<When using more than one wavelength to generate a phasemap, we set the order of the cal sources>
+;\D\<(the numbers corresponding to positions of the calibration source selector switch) and the>
+;\D\<wavelengths those sources correspond to. The info from both phasemaps is store in such a way>
+;\D\<as to allow the spectral plugin to interpolate between the phasemaps at the two wavelengths.>
+pro SDIPhaseMapper::set_interp, event  ;\A\<Widget event>
 
 	o = self.source_order
 	xvaredit, o, name='Set Source Order', group = self.id
@@ -98,7 +104,8 @@ pro SDIPhaseMapper::set_interp, event
 
 end
 
-pro SDIPhaseMapper::set_smooth_window, event
+;\D\<Set the width of the smoothing window, applied after phasemap is unwrapped.>
+pro SDIPhaseMapper::set_smooth_window, event  ;\A\<Widget event>
 
 	o = self.smooth_window
 	xvaredit, o, name='Set Smooth Window', group = self.id
@@ -106,7 +113,8 @@ pro SDIPhaseMapper::set_smooth_window, event
 
 end
 
-pro SDIPhaseMapper::set_num_scans, event
+;\D\<Set the number of scans to co-add.>
+pro SDIPhaseMapper::set_num_scans, event  ;\A\<Widget event>
 
 	o = self.nscans
 	xvaredit, o, name='Set Number of Scans', group = self.id
@@ -114,10 +122,8 @@ pro SDIPhaseMapper::set_num_scans, event
 
 end
 
-
-;\\ Start the procedure
-
-pro SDIPhaseMapper::start_scan, event
+;\D\<Start scanning.>
+pro SDIPhaseMapper::start_scan, event  ;\A\<Widget event>
 
 	if self.scanning ne 1 then begin
 
@@ -153,10 +159,8 @@ pro SDIPhaseMapper::start_scan, event
 
 end
 
-
-;\\ Auto-start the procedure
-
-function SDIPhaseMapper::auto_start, args
+;\D\<Auto start the Phasemapper - called whn running in auto mode, and plugin is started from a scheduled command.>
+function SDIPhaseMapper::auto_start, args  ;\A\<String of arguments passed from the schedule file>
 
 	if n_elements(args) ne 7 then return, 'Error: wrong # of arguments'
 
@@ -208,10 +212,10 @@ function SDIPhaseMapper::auto_start, args
 
 end
 
-
-;\\ Frame Event
-
-pro SDIPhaseMapper::frame_event, image, channel
+;\D\<Frame event - update the Fourier summations for every pixel, if scan is finished,>
+;\D\<finalize and unwrap the phasemap, and save it.>
+pro SDIPhaseMapper::frame_event, image, $     ;\A\<Latest frame from the camera>
+                                 channel      ;\A\<Current scan channel>
 
 
 	scan = self.current_scan
@@ -415,11 +419,8 @@ pro SDIPhaseMapper::frame_event, image, channel
 
 end
 
-
-
-;\\ Stop the procedure
-
-pro SDIPhaseMapper::stop_scan, event
+;\D\<Stop the current scan.>
+pro SDIPhaseMapper::stop_scan, event  ;\A\<Widget event>
 
 	if self.scanning eq 1 then begin
 		self.scanning = 0
@@ -441,9 +442,7 @@ pro SDIPhaseMapper::stop_scan, event
 
 end
 
-
-;\\ Retrieves the objects structure data for restoring, so only needs save info (required)
-
+;\D\<Get settings to save.>
 function SDIPhaseMapper::get_settings
 
 	struc = {id:self.id, $
@@ -458,9 +457,8 @@ function SDIPhaseMapper::get_settings
 
 end
 
-;\\ Cleanup routine
-
-pro SDIPhaseMapper::cleanup, log
+;\D\<Cleanup, close any active scans.>
+pro SDIPhaseMapper::cleanup, log  ;\A\<No Doc>
 
 	ptr_free, self.image, self.phasemap, self.p, self.q, self.qx, self.px, self.source_pmap
 
@@ -472,6 +470,8 @@ pro SDIPhaseMapper::cleanup, log
 
 end
 
+;\D\<The Phasemapper plugin records `phase maps' which encode the scan channel at which>
+;\D\<a spectrum recorded at the phasemap wavelength peaks for every pixel in the camera frame.>
 pro SDIPhaseMapper__define
 
 	void = {SDIPhaseMapper, id:0L, $

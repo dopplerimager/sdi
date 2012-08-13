@@ -1,5 +1,11 @@
+;\\ Code formatted by DocGen
 
-function XDIConsole::init, schedule = schedule, mode = mode, settings = settings, start_line=start_line
+
+;\D\<No Doc>
+function XDIConsole::init, schedule=schedule, $       ;\A\<No Doc>
+                           mode=mode, $               ;\A\<No Doc>
+                           settings=settings, $       ;\A\<No Doc>
+                           start_line=start_line      ;\A\<No Doc>
 
 	if keyword_set(mode) then begin
 		if mode eq 'auto' and not keyword_set(schedule) then begin
@@ -242,11 +248,8 @@ function XDIConsole::init, schedule = schedule, mode = mode, settings = settings
 
 end
 
-
-
-;\\ ########################################## EVENT HANDLER #####################################
-
-pro XDIConsole::Event_Handler, event
+;\D\<No Doc>
+pro XDIConsole::Event_Handler, event  ;\A\<No Doc>
 
 	;\\ TIMER EVENT
 
@@ -301,12 +304,9 @@ pro XDIConsole::Event_Handler, event
 EVENT_SKIP:
 end
 
-
-
-
-;\\ ########################################## KILL HANDLER #####################################
-
-pro XDIConsole::Kill_Handler, id, kill_widget=kill_widget
+;\D\<No Doc>
+pro XDIConsole::Kill_Handler, id, $                        ;\A\<No Doc>
+                              kill_widget=kill_widget      ;\A\<No Doc>
 
 ;\\ info.kill = 1 means the whole heirarchy is being destroyed (end of session)
 
@@ -359,13 +359,7 @@ pro XDIConsole::Kill_Handler, id, kill_widget=kill_widget
 SKIP_KILL:
 end
 
-
-
-
-;\\ ########################################## CONSOLE TIMER EVENT #####################################
-
-;\\ Timer event: check for new frames, if available alert plug-ins that are registered for a new-frame event
-
+;\D\<No Doc>
 pro XDIConsole::timer_event
 	common console_images, image, img_buf
 	common mc_timesaver, numav, mc_start, frame_rate
@@ -657,14 +651,10 @@ pro XDIConsole::timer_event
 TIMER_EVENT_END:
 end
 
-
-
-;\\ ########################################## STOP AN AUTO-STARTED PLUGIN #####################################
-;\\ Auto-started plugins call this when they have finished their jobs. The kill switch tells the console whether
-;\\ or not to terminate the plugin as well as clear it from the active_object field. If a non active object calls
-;\\ this procedure it will be denied.
-
-pro XDIConsole::end_auto_object, id, ref, kill=kill
+;\D\<No Doc>
+pro XDIConsole::end_auto_object, id, $          ;\A\<No Doc>
+                                 ref, $         ;\A\<No Doc>
+                                 kill=kill      ;\A\<No Doc>
 
 	if ref eq self.misc.active_object then begin
 		self.misc.active_object = obj_new()
@@ -677,14 +667,7 @@ pro XDIConsole::end_auto_object, id, ref, kill=kill
 
 end
 
-
-
-
-;\\ ########################################## EXECUTE A SCHEDULE LINE #####################################
-;\\ Consults the schedule file, passes commands back to the console
-;\\ If either of the keywords are set then this function looks for phasemap or nm_per_step control
-;\\ blocks in the schedule file and executes them
-
+;\D\<No Doc>
 pro XDIConsole::execute_schedule
 
 	schedule_file = self.runtime.schedule
@@ -874,7 +857,7 @@ pro XDIConsole::execute_schedule
 END_EXECUTE_SCHEDULE:
 end
 
-
+;\D\<No Doc>
 pro XDIConsole::shutdown_spex
 
 	self->log, 'LOST LASER SIGNAL - SHUTDOWN_SPEX CALLED', 'Console', /display
@@ -890,9 +873,10 @@ pro XDIConsole::shutdown_spex
 
 end
 
-;\\ ########################################## START A NEW PLUGIN #####################################
-
-pro XDIConsole::start_plugin, event, args=args, new_obj=new_obj
+;\D\<No Doc>
+pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
+                              args=args, $         ;\A\<No Doc>
+                              new_obj=new_obj      ;\A\<No Doc>
 
 		if size(event, /type) eq 8 then begin
 			auto_start = 0
@@ -971,14 +955,9 @@ pro XDIConsole::start_plugin, event, args=args, new_obj=new_obj
 			print, 'Cleared stored images...'
 end
 
-
-
-
-;\\ ########################################## SET CAMERA OPTIONS #####################################
-
-;\\ Update the camera
-
-pro XDIConsole::update_camera, commands, results
+;\D\<No Doc>
+pro XDIConsole::update_camera, commands, $   ;\A\<No Doc>
+                               results       ;\A\<No Doc>
 
 	camera = self.camera
 
@@ -1163,15 +1142,8 @@ pro XDIConsole::update_camera, commands, results
 
 end
 
-
-
-
-;\\ ########################################## IMAGE CAPTURE #####################################
-
-;\\ This routine captures an image and stores it as a png or jpg, it can be called from any object,
-;\\ with uvalue = {tag:'image_capture', type:'png' or 'jpg', id:an array of draw widget ids,
-;\\ name:matching array of names to use for the files}
-pro XDIConsole::image_capture, event
+;\D\<No Doc>
+pro XDIConsole::image_capture, event  ;\A\<No Doc>
 
 	widget_control, get_uval = struc, event.id
 
@@ -1199,11 +1171,11 @@ pro XDIConsole::image_capture, event
 
 end
 
-
-
-;\\ ########################################## LOAD A SETTINGS FILE #####################################
-
-pro XDIConsole::load_settings, event, filename = filename, error = error, first_call = first_call
+;\D\<No Doc>
+pro XDIConsole::load_settings, event, $                   ;\A\<No Doc>
+                               filename=filename, $       ;\A\<No Doc>
+                               error=error, $             ;\A\<No Doc>
+                               first_call=first_call      ;\A\<No Doc>
 
 	error = 0
 
@@ -1319,12 +1291,8 @@ pro XDIConsole::load_settings, event, filename = filename, error = error, first_
 END_LOAD:
 end
 
-
-
-
-;\\ ########################################## SETTINGS EDITOR #####################################
-
-pro XDIConsole::edit_settings, event
+;\D\<No Doc>
+pro XDIConsole::edit_settings, event  ;\A\<No Doc>
 
 	edit_console_settings, filename = self.runtime.settings, $
 						   leader = self.misc.console_id, $
@@ -1332,8 +1300,8 @@ pro XDIConsole::edit_settings, event
 
 end
 
-
-pro XDIConsole::editor_closed, event
+;\D\<No Doc>
+pro XDIConsole::editor_closed, event  ;\A\<No Doc>
 
 	res = dialog_message('Reload current settings file?', /question)
 
@@ -1350,12 +1318,8 @@ pro XDIConsole::editor_closed, event
 
 end
 
-
-
-
-;\\ ########################################## SAVE SETTINGS #####################################
-
-pro XDIConsole::save_current_settings, filename=filename
+;\D\<No Doc>
+pro XDIConsole::save_current_settings, filename=filename  ;\A\<No Doc>
 
 	var_holder = {etalon:self.etalon, camera:self.camera, header:self.header, logging:self.logging, misc:self.misc}
 
@@ -1379,13 +1343,10 @@ pro XDIConsole::save_current_settings, filename=filename
 
 end
 
-
-
-;\\ ########################################## LOGGER #####################################
-
-pro XDIConsole::log, entry, $
-					 sender, $  ;\\ string identifying the caller, used for log file naming
-					 display_entry=display_entry ;\\ show the entry in the console log widget
+;\D\<No Doc>
+pro XDIConsole::log, entry, $                         ;\A\<No Doc>
+                     sender, $                        ;\A\<No Doc>
+                     display_entry=display_entry      ;\A\<No Doc>
 
 ;		logging = {log,    log_directory:'', $
 ;				    time_name_format:'', $
@@ -1435,10 +1396,8 @@ pro XDIConsole::log, entry, $
 
 end
 
-
-;\\ ########################################## MODE SWITCHER #####################################
-
-pro XDIConsole::mode_switch, event
+;\D\<No Doc>
+pro XDIConsole::mode_switch, event  ;\A\<No Doc>
 
 	id = widget_info(self.misc.console_id, find_by_uname = 'Console_mode_switch')
 
@@ -1484,13 +1443,8 @@ pro XDIConsole::mode_switch, event
 END_MODE_SWITCH:
 end
 
-
-
-
-
-;\\ ################################################ CAMERA TEMPERATURE ############################################
-
-pro XDIConsole::cam_temp, event
+;\D\<No Doc>
+pro XDIConsole::cam_temp, event  ;\A\<No Doc>
 
 	widget_control, get_uval = uval, event.id
 
@@ -1508,13 +1462,8 @@ pro XDIConsole::cam_temp, event
 	self->log, 'Temperature State is: '  + self.camera.temp_state, 'Console', /display
 end
 
-
-
-
-;\\ ################################################ CAMERA STATUS ############################################
-
-
-pro XDIConsole::cam_status, event
+;\D\<No Doc>
+pro XDIConsole::cam_status, event  ;\A\<No Doc>
 
 	status = 0
 	res = get_error(call_external(self.misc.dll_name, 'uGetStatus', status))
@@ -1526,12 +1475,8 @@ pro XDIConsole::cam_status, event
 
 end
 
-
-
-
-;\\ ################################################ COOLER OPTIONS ############################################
-
-pro XDIConsole::cam_cooler, event
+;\D\<No Doc>
+pro XDIConsole::cam_cooler, event  ;\A\<No Doc>
 
 	res = ''
 
@@ -1586,7 +1531,8 @@ pro XDIConsole::cam_cooler, event
 
 end
 
-pro XDIConsole::cam_cooler_event, event
+;\D\<No Doc>
+pro XDIConsole::cam_cooler_event, event  ;\A\<No Doc>
 
 	cool = self.camera.cooler_on
 
@@ -1651,10 +1597,11 @@ pro XDIConsole::cam_cooler_event, event
 
 end
 
-
-;\\ ########################################## ETALON LEGS UPDATER #####################################
-
-pro XDIConsole::update_legs, leg1=leg1, leg2=leg2, leg3=leg3, legs=legs
+;\D\<No Doc>
+pro XDIConsole::update_legs, leg1=leg1, $   ;\A\<No Doc>
+                             leg2=leg2, $   ;\A\<No Doc>
+                             leg3=leg3, $   ;\A\<No Doc>
+                             legs=legs      ;\A\<No Doc>
 
 	;print, 'Reached leg update 1:', systime()
 
@@ -1702,20 +1649,16 @@ pro XDIConsole::update_legs, leg1=leg1, leg2=leg2, leg3=leg3, legs=legs
 END_SCAN_ETALON:
 end
 
-
-;\\########################################## FILE MENU: Re-Initialize ################################################
-
-pro XDIConsole::file_re_initialize, event
+;\D\<No Doc>
+pro XDIConsole::file_re_initialize, event  ;\A\<No Doc>
 
 	;\\ Call the instrument specific initialisation routine
 		call_procedure, self.header.instrument_name + '_initialise', self.misc, self
 
 end
 
-
-;\\########################################## FILE MENU: SHOW ################################################
-
-pro XDIConsole::file_show, event
+;\D\<No Doc>
+pro XDIConsole::file_show, event  ;\A\<No Doc>
 
 	num = (self.manager -> count_objects()) - 1
 	struc = self.manager -> generate_list()
@@ -1727,11 +1670,8 @@ pro XDIConsole::file_show, event
 
 end
 
-
-
-;\\########################################## FILE MENU: SHOW SCHEDULE ################################################
-
-pro XDIConsole::file_show_sched, event
+;\D\<No Doc>
+pro XDIConsole::file_show_sched, event  ;\A\<No Doc>
 
 	if self.runtime.schedule ne '' then begin
 		spawn, /noshell, /nowait, 'notepad ' + self.runtime.schedule
@@ -1739,19 +1679,14 @@ pro XDIConsole::file_show_sched, event
 
 end
 
-
-;\\########################################## FILE MENU: CHANGE SCHEDULE ################################################
-
-pro XDIConsole::file_change_sched, event
+;\D\<No Doc>
+pro XDIConsole::file_change_sched, event  ;\A\<No Doc>
 	 self.runtime.schedule = dialog_pickfile(path = self.misc.default_settings_path)
 	 self.misc.schedule_line = 0
 end
 
-
-
-;\\ ######################################## CAMERA INITIALIZATION ###################################################
-
-pro XDIConsole::cam_initialize, event
+;\D\<No Doc>
+pro XDIConsole::cam_initialize, event  ;\A\<No Doc>
 
 	;\\ Initialise the camera
 		status = 0
@@ -1781,12 +1716,8 @@ pro XDIConsole::cam_initialize, event
 
 end
 
-
-;\\ ######################################## CAMERA SHUTDOWN ###################################################
-
-;\\ CAMERA SHUTDOWN - will not shutdown until temp reaches minimum of 'self.camera.cam_safe_temp' degrees
-
-pro XDIConsole::cam_shutdown, event
+;\D\<No Doc>
+pro XDIConsole::cam_shutdown, event  ;\A\<No Doc>
 
 	if size(event, /type) eq 7 then begin
 		if event eq 'console closed' then log = 0
@@ -1834,10 +1765,9 @@ pro XDIConsole::cam_shutdown, event
 
 end
 
-
-;\\########################################## CLOSE CAMERA SHUTTER ################################################
-
-pro XDIConsole::cam_shutterclose, event, shutdown = shutdown
+;\D\<No Doc>
+pro XDIConsole::cam_shutterclose, event, $               ;\A\<No Doc>
+                                  shutdown=shutdown      ;\A\<No Doc>
 
 	if self.runtime.shutter_state eq 1 then begin
 		res = call_external(self.misc.dll_name, 'uAbortAcquisition')
@@ -1855,10 +1785,8 @@ pro XDIConsole::cam_shutterclose, event, shutdown = shutdown
 
 end
 
-
-;\\########################################## OPEN CAMERA SHUTTER ################################################
-
-pro XDIConsole::cam_shutteropen, event
+;\D\<No Doc>
+pro XDIConsole::cam_shutteropen, event  ;\A\<No Doc>
 
 	if self.runtime.shutter_state eq 0 then begin
 		res = call_external(self.misc.dll_name, 'uAbortAcquisition')
@@ -1875,10 +1803,10 @@ pro XDIConsole::cam_shutteropen, event
 
 end
 
-
-;\\########################################## RETURN CAMERA TEMP ################################################
-
-pro XDIConsole::get_camera_temp, temp, temp_state, set_point
+;\D\<No Doc>
+pro XDIConsole::get_camera_temp, temp, $         ;\A\<No Doc>
+                                 temp_state, $   ;\A\<No Doc>
+                                 set_point       ;\A\<No Doc>
 
 	temp = self.camera.cam_temp
 	temp_state = self.camera.temp_state
@@ -1886,32 +1814,34 @@ pro XDIConsole::get_camera_temp, temp, temp_state, set_point
 
 end
 
-
-
-;\\########################################## RETRIEVE BUFFER IMAGE ################################################
-
-function XDIConsole::get_image, image
+;\D\<No Doc>
+function XDIConsole::get_image, image  ;\A\<No Doc>
 
 	return, *self.buffer.image
 
 end
 
-;\\########################################## RETRIEVE BUFFER RAW IMAGE ################################################
-
-function XDIConsole::get_raw_image, image
+;\D\<No Doc>
+function XDIConsole::get_raw_image, image  ;\A\<No Doc>
 
 	return, *self.buffer.raw_image
 
 end
 
-
-;\\########################################## ETALON SCANNER ################################################
-
-pro XDIConsole::scan_etalon, caller, start_scan = start_scan, stop_scan = stop_scan, pause_scan = pause_scan, $
-							 cont_scan = cont_scan, start_volt_offset = start_volt_offset, 					  $
-							 stop_volt_offset = stop_volt_offset,      										  $
-							 volt_step_size = volt_step_size, status = status, reference=reference,           $
-							 get_ref = get_ref, wavelength=wavelength, force_start = force_start
+;\D\<No Doc>
+pro XDIConsole::scan_etalon, caller, $                                ;\A\<No Doc>
+                             start_scan=start_scan, $                 ;\A\<No Doc>
+                             stop_scan=stop_scan, $                   ;\A\<No Doc>
+                             pause_scan=pause_scan, $                 ;\A\<No Doc>
+                             cont_scan=cont_scan, $                   ;\A\<No Doc>
+                             start_volt_offset=start_volt_offset, $   ;\A\<No Doc>
+                             stop_volt_offset=stop_volt_offset, $     ;\A\<No Doc>
+                             volt_step_size=volt_step_size, $         ;\A\<No Doc>
+                             status=status, $                         ;\A\<No Doc>
+                             reference=reference, $                   ;\A\<No Doc>
+                             get_ref=get_ref, $                       ;\A\<No Doc>
+                             wavelength=wavelength, $                 ;\A\<No Doc>
+                             force_start=force_start                  ;\A\<No Doc>
 
 	status = ''
 
@@ -2035,11 +1965,7 @@ pro XDIConsole::scan_etalon, caller, start_scan = start_scan, stop_scan = stop_s
 END_SCAN_ETALON:
 end
 
-
-
-
-;\\########################################## FORCE CAMERA IMAGE ################################################
-
+;\D\<No Doc>
 function XDIConsole::force_image_update
 
 	if self.camera.acquisition_mode eq 1 then begin
@@ -2102,10 +2028,8 @@ function XDIConsole::force_image_update
 
 end
 
-
-;\\########################################## VIEW PHASEMAP ################################################
-
-pro XDIConsole::see_calibration, event
+;\D\<No Doc>
+pro XDIConsole::see_calibration, event  ;\A\<No Doc>
 
 	now_time = dt_tm_tojs(systime())
 	phase_lag_hours = (now_time - self.etalon.phasemap_time)/3600.
@@ -2143,10 +2067,9 @@ pro XDIConsole::see_calibration, event
 
 end
 
-
-;\\########################################## EXPOSURE TIME SET ################################################
-
-pro XDIConsole::cam_exptime, event, new_time=new_time
+;\D\<No Doc>
+pro XDIConsole::cam_exptime, event, $               ;\A\<No Doc>
+                             new_time=new_time      ;\A\<No Doc>
 
 	if self.etalon.scanning eq 0 then begin
 
@@ -2170,11 +2093,9 @@ pro XDIConsole::cam_exptime, event, new_time=new_time
 
 end
 
-
-
-;\\########################################## GAIN SET ################################################
-
-pro XDIConsole::cam_gain, event, new_gain=new_gain
+;\D\<No Doc>
+pro XDIConsole::cam_gain, event, $               ;\A\<No Doc>
+                          new_gain=new_gain      ;\A\<No Doc>
 
 	if self.etalon.scanning eq 0 then begin
 
@@ -2198,11 +2119,8 @@ pro XDIConsole::cam_gain, event, new_gain=new_gain
 
 end
 
-
-
-;\\########################################## SNAPSHOT FROM MOST RECENT SPECTRAL ACQUISITION ################################################
-
-pro XDIConsole::spectrum_snapshot, snapshot
+;\D\<No Doc>
+pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<No Doc>
 
 	;\\ Example logging.ftp_snapshot:
 	;\\ '137.229.27.190 -l instrument -pw aer0n0my'
@@ -2225,10 +2143,8 @@ pro XDIConsole::spectrum_snapshot, snapshot
 
 end
 
-
-;\\########################################## FILL SPEC SAVE STRUC ################################################
-
-function XDIConsole::get_spec_save_info, nrings
+;\D\<No Doc>
+function XDIConsole::get_spec_save_info, nrings  ;\A\<No Doc>
 
 	pmap_dims = size(*self.etalon.phasemap_base, /dimensions)
 
@@ -2260,84 +2176,70 @@ function XDIConsole::get_spec_save_info, nrings
 
 end
 
-
-;\\########################################## GET HEADER INFO ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_header_info
 
 	return, self.header
 
 end
 
-
-;\\########################################## GET ETALON INFO ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_etalon_info
 
 	return, self.etalon
 
 end
 
-;\\########################################## GET LOGGING INFO ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_logging_info
 
 	return, self.logging
 
 end
 
-;\\########################################## GET PALETTE ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_palette
 
 	return, self.misc.palette
 
 end
 
-;\\########################################## GET PORT MAP ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_port_map
 
 	return, self.misc.port_map
 
 end
 
-;\\########################################## GET PHASE MAP PATH ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_phase_map_path
 
 	return, self.misc.phase_map_path
 
 end
 
-;\\########################################## GET ZONE SETTINGS PATH ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_zone_set_path
 
 	return, self.misc.zone_set_path
 
 end
 
-;\\########################################## GET SPECTRA PATH ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_spectra_path
 
 	return, self.misc.spectra_path
 
 end
 
-
-;\\########################################## GET SAVE PATH ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_default_path
 
 	return, self.misc.default_settings_path
 
 end
 
-
-;\\########################################## GET TIME NAME FORMAT ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_time_name_format
 
 	js = dt_tm_tojs(systime())
@@ -2350,20 +2252,18 @@ function XDIConsole::get_time_name_format
 
 end
 
-
-;\\########################################## SET NM_PER_STEP VALUE ################################################
-
-pro XDIConsole::set_nm_per_step, nm_per_step
+;\D\<No Doc>
+pro XDIConsole::set_nm_per_step, nm_per_step  ;\A\<No Doc>
 
 	self.etalon.nm_per_step = nm_per_step
 	self.etalon.nm_per_step_time = dt_tm_tojs(systime())
 
 end
 
-
-;\\########################################## SET PHASEMAP ################################################
-
-pro XDIConsole::set_phasemap, phasemap_base, phasemap_grad, phasemap_lambda
+;\D\<No Doc>
+pro XDIConsole::set_phasemap, phasemap_base, $     ;\A\<No Doc>
+                              phasemap_grad, $     ;\A\<No Doc>
+                              phasemap_lambda      ;\A\<No Doc>
 
 	*self.etalon.phasemap_base = phasemap_base
 	*self.etalon.phasemap_grad = phasemap_grad
@@ -2372,9 +2272,10 @@ pro XDIConsole::set_phasemap, phasemap_base, phasemap_grad, phasemap_lambda
 
 end
 
-;\\########################################## GET PHASEMAP ################################################
-
-pro XDIConsole::get_phasemap, phasemap_base, phasemap_grad, phasemap_lambda
+;\D\<No Doc>
+pro XDIConsole::get_phasemap, phasemap_base, $     ;\A\<No Doc>
+                              phasemap_grad, $     ;\A\<No Doc>
+                              phasemap_lambda      ;\A\<No Doc>
 
 	phasemap_base = *self.etalon.phasemap_base
 	phasemap_grad = *self.etalon.phasemap_grad
@@ -2382,9 +2283,7 @@ pro XDIConsole::get_phasemap, phasemap_base, phasemap_grad, phasemap_lambda
 
 end
 
-;\\########################################## REFRESH SPECTRUM PHASEMAPS #################################
-;\\ Called by phasemapper plugin when running automatically to refresh the phasemaps of any
-;\\ active spectrum plugins
+;\D\<No Doc>
 pro XDIConsole::refresh_spec_pmaps
 
 	struc = self.manager -> generate_list()
@@ -2398,61 +2297,52 @@ pro XDIConsole::refresh_spec_pmaps
 
 end
 
-
-;\\########################################## SET CENTER ################################################
-
-pro XDIConsole::set_center, xcen, ycen
+;\D\<No Doc>
+pro XDIConsole::set_center, xcen, $   ;\A\<No Doc>
+                            ycen      ;\A\<No Doc>
 
 	self.camera.xcen = xcen
 	self.camera.ycen = ycen
 
 end
 
-
-;\\########################################## SET SOURCE MAP ################################################
-
-pro XDIConsole::set_source_map, smap
+;\D\<No Doc>
+pro XDIConsole::set_source_map, smap  ;\A\<No Doc>
 
 	self.misc.source_map = smap
 
 end
 
-
-;\\########################################## GET SOURCE MAP ################################################
-
-pro XDIConsole::get_source_map, smap
+;\D\<No Doc>
+pro XDIConsole::get_source_map, smap  ;\A\<No Doc>
 
 	smap = self.misc.source_map
 
 end
 
-;\\########################################## GET DLL NAME ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_dll_name
 
 	return, self.misc.dll_name
 
 end
 
-;\\########################################## GET SNR PER SCAN ################################################
-
+;\D\<No Doc>
 function XDIConsole::get_snr_per_scan
 
 	return, self.runtime.snr_per_scan
 
 end
 
-;\\########################################## SET SNR PER SCAN ################################################
-
-pro XDIConsole::set_snr_per_scan, snr
+;\D\<No Doc>
+pro XDIConsole::set_snr_per_scan, snr  ;\A\<No Doc>
 
 	self.runtime.snr_per_scan = snr
 
 end
 
-;\\########################################## HOME MIRROR MOTOR FOR SKY ################################################
-
-pro XDIConsole::mot_home_sky, event
+;\D\<No Doc>
+pro XDIConsole::mot_home_sky, event  ;\A\<No Doc>
 
 	call_procedure, self.header.instrument_name + '_mirror', home_motor = 'sky', self.misc, self
 	fpos = 1L
@@ -2467,9 +2357,8 @@ pro XDIConsole::mot_home_sky, event
 
 end
 
-;\\########################################## HOME MIRROR MOTOR FOR CAL ################################################
-
-pro XDIConsole::mot_home_cal, event
+;\D\<No Doc>
+pro XDIConsole::mot_home_cal, event  ;\A\<No Doc>
 
 	call_procedure, self.header.instrument_name + '_mirror', home_motor = 'cal', self.misc, self
 	fpos = 1L
@@ -2488,19 +2377,16 @@ pro XDIConsole::mot_home_cal, event
 
 end
 
-
-;\\########################################## HOME SWITCH MOTOR TO WHITE SOURCE ################################################
-
-pro XDIConsole::mot_home_source, image
+;\D\<No Doc>
+pro XDIConsole::mot_home_source, image  ;\A\<No Doc>
 
 	self -> start_plugin, 'lockcalsource', new_obj=new_obj
 	new_obj -> start, 0
 
 end
 
-;\\########################################## DRIVE MIRROR MOTOR TO SKY ################################################
-
-pro XDIConsole::mot_drive_sky, event
+;\D\<No Doc>
+pro XDIConsole::mot_drive_sky, event  ;\A\<No Doc>
 
 	call_procedure, self.header.instrument_name + '_mirror', drive_to_pos = self.misc.motor_sky_pos, $
 															 self.misc, $
@@ -2514,9 +2400,8 @@ pro XDIConsole::mot_drive_sky, event
 
 end
 
-;\\########################################## DRIVE MIRROR MOTOR TO CAL ################################################
-
-pro XDIConsole::mot_drive_cal, event
+;\D\<No Doc>
+pro XDIConsole::mot_drive_cal, event  ;\A\<No Doc>
 
 	call_procedure, self.header.instrument_name + '_mirror', drive_to_pos = self.misc.motor_cal_pos, $
 															 self.misc, $
@@ -2530,10 +2415,8 @@ pro XDIConsole::mot_drive_cal, event
 
 end
 
-
-;\\########################################## SELECT FILTER ################################################
-
-pro XDIConsole::mot_sel_filter, event
+;\D\<No Doc>
+pro XDIConsole::mot_sel_filter, event  ;\A\<No Doc>
 
 	;\\ This allows the user to manually select the current filter
 		filter = self.misc.current_filter
@@ -2546,10 +2429,9 @@ pro XDIConsole::mot_sel_filter, event
 		self -> save_current_settings
 end
 
-
-;\\########################################## SELECT CALIBRATION SOURCE ################################################
-
-pro XDIConsole::mot_sel_cal, event, set_source = set_source
+;\D\<No Doc>
+pro XDIConsole::mot_sel_cal, event, $                   ;\A\<No Doc>
+                             set_source=set_source      ;\A\<No Doc>
 
 	homing = 0
 	source = -1
@@ -2596,10 +2478,8 @@ pro XDIConsole::mot_sel_cal, event, set_source = set_source
 
 end
 
-
-;\\########################################## PORT MAPPINGS ################################################
-
-pro XDIConsole::edit_ports, event
+;\D\<No Doc>
+pro XDIConsole::edit_ports, event  ;\A\<No Doc>
 
 	;\\ Get current port map, and XVAREDIT it
 		struc = self.misc.port_map
@@ -2629,27 +2509,21 @@ pro XDIConsole::edit_ports, event
 
 end
 
-
-;\\########################################## CLOSE MIRROR PORT 29/1/07 ################################################
-
-pro XDIConsole::close_mport, event
+;\D\<No Doc>
+pro XDIConsole::close_mport, event  ;\A\<No Doc>
 
 	res = drive_motor(self.misc.port_map.mirror.number, self.misc.dll_name, control = 'closeport')
 
 end
 
-;\\########################################## OPEN MIRROR PORT 29/1/07 ################################################
-
-pro XDIConsole::open_mport, event
+;\D\<No Doc>
+pro XDIConsole::open_mport, event  ;\A\<No Doc>
 
 	res = drive_motor(self.misc.port_map.mirror.number, self.misc.dll_name, control = 'openport')
 
 end
 
-
-
-;\\########################################## CLEANUP ################################################
-
+;\D\<No Doc>
 pro XDIConsole::cleanup
 
 	print, 'Console cleanup:'
@@ -2667,13 +2541,7 @@ pro XDIConsole::cleanup
 	call_procedure, self.header.instrument_name + '_cleanup', self.misc, self
 end
 
-
-
-
-
-;\\########################################## DEFINITION ################################################
-
-
+;\D\<No Doc>
 pro XDIConsole__define
 
 	;\\ Text between the hashed lines is executed by the settings editor,

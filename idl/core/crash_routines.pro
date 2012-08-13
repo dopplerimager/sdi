@@ -1,7 +1,9 @@
+;\\ Code formatted by DocGen
 
-;\\ This is called if the crash_test_batch thinks the console has crashed
 
-pro console_crash_routine, log_file
+;\D\<Check to see if the console `crash' file is present. If it is, it is likely that the>
+;\D\<SDI console has stopped running, and this gets logged.>
+pro console_crash_routine, log_file  ;\A\<The filename to send/append log output to>
 
 	if file_test(log_file) then begin
 		openw, file, log_file, /get_lun, /append
@@ -21,9 +23,8 @@ pro console_crash_routine, log_file
 end
 
 
-;\\ This makes the crash file which should be deleted by the console
-
-pro console_make_crash_file, crash_file
+;\D\<Create the console `crash' file.>
+pro console_make_crash_file, crash_file  ;\A\<Filename for the crash file>
 
 	openw, file, crash_file, /get_lun
 		printf, file, 'CRASH FILE - THIS SHOULD BE DELETED!!'
@@ -33,8 +34,9 @@ pro console_make_crash_file, crash_file
 end
 
 
-;\\ This tests for crash
-
+;\D\<This gets called by a Windows scheduled script, and checks to see if a crash file is>
+;\D\<present (the console should delete this file, so if it is present, the console has likely>
+;\D\<crashed), and if so it logs a crash. If not ,it recreates the file.>
 pro crash_routines
 
 	crash_file = 'C:\MawsonCode\Crash Folder\console_crash_file'
@@ -43,7 +45,6 @@ pro crash_routines
 	there = file_test(crash_file)
 
 	if there eq 1 then console_crash_routine, log_file
-
 	if there eq 0 then console_make_crash_file, crash_file
 
 end
