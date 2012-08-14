@@ -1,9 +1,9 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
-function XDIWidgetReg::init, ref=ref, $   ;\A\<No Doc>
-                             id=id        ;\A\<No Doc>
+;\D\<Initialize the plugin list with the id and object reference of the console.>
+function XDIWidgetReg::init, ref=ref, $   ;\A\<Console object reference>
+                             id=id        ;\A\<Console widget id>
 
 	self.id = id
 	self.ref = ref
@@ -16,13 +16,13 @@ function XDIWidgetReg::init, ref=ref, $   ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIWidgetReg::register, id, $      ;\A\<No Doc>
-                            ref, $     ;\A\<No Doc>
-                            type, $    ;\A\<No Doc>
-                            store, $   ;\A\<No Doc>
-                            timer, $   ;\A\<No Doc>
-                            frame      ;\A\<No Doc>
+;\D\<Add a plugin to the list.>
+pro XDIWidgetReg::register, id, $      ;\A\<Widget id of the plugin's main window>
+                            ref, $     ;\A\<Object reference for this instance of the plugin>
+                            type, $    ;\A\<Plugin type (string name)>
+                            store, $   ;\A\<Flag to indicate whether or not to save plugin settings>
+                            timer, $   ;\A\<Flag to indicate this plugin needs to recieve timer events>
+                            frame      ;\A\<Flag to indicate this plugin needs to recieve frame events>
 
 	current = self.next
 
@@ -44,8 +44,8 @@ pro XDIWidgetReg::register, id, $      ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIWidgetReg::match_register_ref, id  ;\A\<No Doc>
+;\D\<From a widget id, return the object reference of the plugin.>
+function XDIWidgetReg::match_register_ref, id  ;\A\<Widget if of the plugin's main window>
 
 	current = self.next
 	if self.id eq id then return, self.ref
@@ -61,8 +61,8 @@ function XDIWidgetReg::match_register_ref, id  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIWidgetReg::match_register_timer, id  ;\A\<No Doc>
+;\D\<From a widget id, return the need\_frame field of the plugin.>
+function XDIWidgetReg::match_register_timer, id  ;\A\<Widget if of the plugin's main window>
 
 	current = self.next
 
@@ -77,8 +77,8 @@ function XDIWidgetReg::match_register_timer, id  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIWidgetReg::match_register_frame, id  ;\A\<No Doc>
+;\D\<From a widget id, return the need\_frame field of the plugin.>
+function XDIWidgetReg::match_register_frame, id  ;\A\<Widget if of the plugin's main window>
 
 	current = self.next
 
@@ -93,8 +93,8 @@ function XDIWidgetReg::match_register_frame, id  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIWidgetReg::match_register_type, id  ;\A\<No Doc>
+;\D\<From a widget id, return the plugin type.>
+function XDIWidgetReg::match_register_type, id  ;\A\<Widget id of the plugin's main window>
 
 	current = self.next
 
@@ -109,8 +109,8 @@ function XDIWidgetReg::match_register_type, id  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIWidgetReg::match_register_from_type, type  ;\A\<No Doc>
+;\D\<From a plugin type, return the object reference of the plugin.>
+function XDIWidgetReg::match_register_from_type, type  ;\A\<String type of the plugin>
 
 	current = self.next
 
@@ -125,8 +125,8 @@ function XDIWidgetReg::match_register_from_type, type  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIWidgetReg::match_register_store, id  ;\A\<No Doc>
+;\D\<Given a widget id, return the value of the store field for the corresponding plugin.>
+function XDIWidgetReg::match_register_store, id  ;\A\<Widget id of the plugin's main window>
 
 	current = self.next
 
@@ -141,7 +141,7 @@ function XDIWidgetReg::match_register_store, id  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<Print out info about the list of plugins.>
 pro XDIWidgetReg::print_register
 
 	current = self.next
@@ -156,7 +156,8 @@ pro XDIWidgetReg::print_register
 
 end
 
-;\D\<No Doc>
+;\D\<Generate a structure whose fields are arrays, one element for each plugin, containing>
+;\D\<the plugin info.>
 function XDIWidgetReg::generate_list
 
 	current = self.next
@@ -190,7 +191,7 @@ function XDIWidgetReg::generate_list
 
 end
 
-;\D\<No Doc>
+;\D\<Count the number of plugins, and return the count.>
 function XDIWidgetReg::count_objects
 
 	current = self.next
@@ -208,7 +209,8 @@ function XDIWidgetReg::count_objects
 
 end
 
-;\D\<No Doc>
+;\D\<I have no idea what this does, and it does not appear to be called anywhere in the>
+;\D\<SDI code base, so it is probably a holdover from an early version.>
 pro XDIWidgetReg::set_control, id, $        ;\A\<No Doc>
                                ref, $       ;\A\<No Doc>
                                control      ;\A\<No Doc>
@@ -227,8 +229,8 @@ pro XDIWidgetReg::set_control, id, $        ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIWidgetReg::delete_instance, id  ;\A\<No Doc>
+;\D\<Remove a plugin from the list.>
+pro XDIWidgetReg::delete_instance, id  ;\A\<Widget id of the plugin to remove>
 
 		current = self.next
     	cnt = 0
@@ -280,11 +282,12 @@ pro XDIWidgetReg::delete_instance, id  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIWidgetReg::save_settings, path, $    ;\A\<No Doc>
-                                 id, $      ;\A\<No Doc>
-                                 owner, $   ;\A\<No Doc>
-                                 ref        ;\A\<No Doc>
+;\D\<This implements the ability of plugins to save their settings, to be restored>
+;\D\<next time they are opened.>
+pro XDIWidgetReg::save_settings, path, $    ;\A\<The settings save path>
+                                 id, $      ;\A\<The widget id of the plugin's main window>
+                                 owner, $   ;\A\<String name of the plugin>
+                                 ref        ;\A\<Object reference to the plugin>
 
 	;\\ First get the generic settings for the object
 
@@ -306,7 +309,8 @@ pro XDIWidgetReg::save_settings, path, $    ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<This class manages plugins, by storing their object references and names in a linked list>
+;\D\<and managing that list.>
 pro XDIWidgetReg__define
 
 	void = {XDIWidgetReg, id: 0L, type: '', ref: obj_new(), store: 0, need_timer: 0, need_frame:0, controller: 0, next: ptr_new()}

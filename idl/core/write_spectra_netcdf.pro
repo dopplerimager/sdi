@@ -1,20 +1,20 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
-pro Write_Spectra_NetCDF, ncdid, $                 ;\A\<No Doc>
-                          spectra, $               ;\A\<No Doc>
-                          start_time, $            ;\A\<No Doc>
-                          end_time, $              ;\A\<No Doc>
-                          nscans, $                ;\A\<No Doc>
-                          acc_im, $                ;\A\<No Doc>
-                          create=create, $         ;\A\<No Doc>
-                          fname=fname, $           ;\A\<No Doc>
-                          return_id=return_id, $   ;\A\<No Doc>
-                          header=header, $         ;\A\<No Doc>
-                          data=data, $             ;\A\<No Doc>
-                          reopen=reopen, $         ;\A\<No Doc>
-                          update=update            ;\A\<No Doc>
+;\D\<Wrapper for creating and writing to NETCDF files, used by the Spectrum plugin to save spectral data.>
+pro Write_Spectra_NetCDF, ncdid, $                 ;\A\<File id to write to, 0 if opening a new file>
+                          spectra, $               ;\A\<The array of spectra (nzones X nchannels>
+                          start_time, $            ;\A\<The time at which the exposure started>
+                          end_time, $              ;\A\<The time at which the exposure finished>
+                          nscans, $                ;\A\<The number of scans in the exposure>
+                          acc_im, $                ;\A\<The accumulated allsky image for the exposure>
+                          create=create, $         ;\A\<Set this to create a new file>
+                          fname=fname, $           ;\A\<Filename of the file>
+                          return_id=return_id, $   ;\A\<When creating a new file, the netcdf id is returned>
+                          header=header, $         ;\A\<Header info, when creating a new file>
+                          data=data, $             ;\A\<Misc data, see function body>
+                          reopen=reopen, $         ;\A\<Reopen a file and append to it, for example after a shutdown>
+                          update=update            ;\A\<Open for writing, see function body>
 
 	;\\ Find dimensions
 		nchannels = n_elements(spectra(0,*))
@@ -27,6 +27,8 @@ pro Write_Spectra_NetCDF, ncdid, $                 ;\A\<No Doc>
 			goto, END_WRITE_SPECTRA_NETCDF
 		endif
 
+		;\\ Not sure why i do this... file should already be open, but spectrum plugin
+		;\\ does use /update and fname, so it works...
 		if keyword_set(update) then begin
 			if keyword_set(fname) then ncdid = ncdf_open(fname, /write)
 			return_id = ncdid

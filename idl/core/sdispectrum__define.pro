@@ -1,11 +1,11 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
-function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<No Doc>
-                            data=data, $                           ;\A\<No Doc>
-                            zone_settings=zone_settings, $         ;\A\<No Doc>
-                            file_name_format=file_name_format      ;\A\<No Doc>
+;\D\<Spectrum initializer, make sure we have a filename format and a zone map.>
+function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored settings>
+                            data=data, $                           ;\A\<Misc data from the console>
+                            zone_settings=zone_settings, $         ;\A\<A zone settings file name>
+                            file_name_format=file_name_format      ;\A\<Format for generating the netcdf file name>
 
 	;\\ Generic Settings
 		self.need_timer = 0
@@ -140,8 +140,8 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDISpectrum::start_scan, event  ;\A\<No Doc>
+;\D\<Start scanning.>
+pro SDISpectrum::start_scan, event  ;\A\<Widget event>
 
 	if self.scanning ne 1 then begin
 
@@ -166,8 +166,8 @@ pro SDISpectrum::start_scan, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function SDISpectrum::auto_start, args  ;\A\<No Doc>
+;\D\<Auto-start method, called when running in auto-mode.>
+function SDISpectrum::auto_start, args  ;\A\<String array of arguments from the schedule file>
 
 	if n_elements(args) ne 3 then return, 'Error: wrong # of arguments'
 
@@ -192,7 +192,7 @@ function SDISpectrum::auto_start, args  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<Initialize plugin variables, prepare the phase map, create a zone map.>
 pro SDISpectrum::initializer
 
 
@@ -306,9 +306,13 @@ pro SDISpectrum::initializer
 
 end
 
-;\D\<No Doc>
-pro SDISpectrum::frame_event, image, $     ;\A\<No Doc>
-                              channel      ;\A\<No Doc>
+;\D\<Frame event where the spectral information from the latest camera image is extracted. The primary>
+;\D\<purpose of this function is to call "uUpdateSpectra" in the SDI\_External dll, which updates the>
+;\D\<current spectral information based on the latest camera frame. This function also checks to see>
+;\D\<if exposures are finished, sends real-time data snapshots to the console for ftp-ing, accumulates>
+;\D\<the background `allsky' image, and updates the display of spectra and signal/noise history.>
+pro SDISpectrum::frame_event, image, $     ;\A\<Latest camera image>
+                              channel      ;\A\<Current scan channel>
 common spec_save, spec, zone, phase, acc_im
 
 	now = systime(1)
@@ -553,8 +557,8 @@ common spec_save, spec, zone, phase, acc_im
 EXIT_FRAME_PROCESSING:
 end
 
-;\D\<No Doc>
-pro SDISpectrum::stop_scan, event  ;\A\<No Doc>
+;\D\<Stop a currently active scan.>
+pro SDISpectrum::stop_scan, event  ;\A\<Widget event>
 
 	if self.scanning eq 1 then begin
 		self.scanning = 0
@@ -575,13 +579,15 @@ pro SDISpectrum::stop_scan, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDISpectrum::finalize_scan, event  ;\A\<No Doc>
+;\D\<Called when a user clicks on the "Finalize" button, to indicate that an exposure should be>
+;\D\<finished after the next scan, regardless of signal-to-noise, etc.>
+pro SDISpectrum::finalize_scan, event  ;\A\<Widget event>
 	self.finalize_flag = 1
 end
 
-;\D\<No Doc>
-pro SDISpectrum::set_phasemap, failed  ;\A\<No Doc>
+;\D\<Set-up the phasemap, that is, retrieve phase map parameters from the console, interpolate>
+;\D\<to the spectrum wavelength, and wrap the phase map.>
+pro SDISpectrum::set_phasemap, failed  ;\A\<OUT: flag to indicate failure, not currently used (returns 0)>
 
 	failed = 0
 
@@ -606,8 +612,10 @@ pro SDISpectrum::set_phasemap, failed  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDISpectrum::fit_spectra, event  ;\A\<No Doc>
+;\D\<Fit spectra and create skymaps of peak position and temperature, and display them. This function>
+;\D\<was introduced to diagnose Mawson camera problems, and has stuck around since it may be generally>
+;\D\<useful.>
+pro SDISpectrum::fit_spectra, event  ;\A\<Widget event>
 
 	;\\ Get instrument profiles
 	if self.insprof_filename eq '' then begin
@@ -715,7 +723,7 @@ pro SDISpectrum::fit_spectra, event  ;\A\<No Doc>
 	plot, (positions - positions[0])*cnv
 end
 
-;\D\<No Doc>
+;\D\<Get settings to save.>
 function SDISpectrum::get_settings
 
 	struc = {id:self.id, geometry:self.geometry, need_timer:self.need_timer, need_frame:self.need_frame}
@@ -724,7 +732,7 @@ function SDISpectrum::get_settings
 
 end
 
-;\D\<No Doc>
+;\D\<Cleanup - stop any active scans, close the netcdf file, free pointers.>
 pro SDISpectrum::cleanup, log  ;\A\<No Doc>
 
 	if self.scanning eq 1 then self -> stop_scan, 0
@@ -733,7 +741,12 @@ pro SDISpectrum::cleanup, log  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<The Spectrum plugin acquires spectra and saves them to netcdf files. It requires a wavelength, a filename>
+;\D\<to save to and a zonemap file to use for dividing up the field of view. Some things are hard coded in this>
+;\D\<which should probably be made configurable (see the frame\_event method). After each complete exposure, this>
+;\D\<plugin will attempt to send back a snapshot of the most recent acquisition to an ftp server for real-time>
+;\D\<data processing (the snapshot is sent back if the logging.ftp\_snapshot field is populated in the settings file,>
+;\D\<see XDIConsole::spectrum\_snapshot for the details of this).>
 pro SDISpectrum__define
 
 	void = {SDISpectrum, id:0L, $

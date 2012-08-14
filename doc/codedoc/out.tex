@@ -44,21 +44,22 @@
 \addcontentsline{toc}{chapter}{Classes}
 \section*{SDIAutoParallel \label{SDIAutoParallel__define_lab}}
 \addcontentsline{toc}{section}{SDIAutoParallel}
+No Doc\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{string}) & status& (\textit{float}) & wavelength \\
-(\textit{double}) & start\_time& (\textit{float}) & param& (\textit{int}) & step \\
-(\textit{int}) & nominal& (\textit{int}) & leg1& (\textit{int}) & leg2 \\
-(\textit{int}) & leg3& (\textit{int}) & curr\_leg& (\textit{int}) & param\_pos \\
-(\textit{ptr}) & ref\_image& (\textit{int}) & get\_ref\_flag& (\textit{string}) & obj\_num \\
-(\textit{structure}) & geometry& (\textit{int}) & need\_frame& (\textit{int}) & need\_timer \\
-(\textit{int}) & auto& (\textit{structure}) & palette& (\textit{obj}) & manager \\
+(\verb"long") & id& (\verb"string") & status& (\verb"float") & wavelength \\
+(\verb"double") & start\_time& (\verb"float") & param& (\verb"int") & step \\
+(\verb"int") & nominal& (\verb"int") & leg1& (\verb"int") & leg2 \\
+(\verb"int") & leg3& (\verb"int") & curr\_leg& (\verb"int") & param\_pos \\
+(\verb"ptr") & ref\_image& (\verb"int") & get\_ref\_flag& (\verb"string") & obj\_num \\
+(\verb"structure") & geometry& (\verb"int") & need\_frame& (\verb"int") & need\_timer \\
+(\verb"int") & auto& (\verb"structure") & palette& (\verb"obj") & manager \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdiautoparallel\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
@@ -69,13 +70,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: No Doc
+\item[] \hspace{.5cm} \verb"data=data": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: No Doc
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDIAutoParallel}-\hspace{-.15cm}>\mathbf{init}(&data=data,\\ \ &restore\_struc=restore\_struc)
+result = \mathbf{SDIAutoParallel}-\hspace{-.15cm}>\mathbf{init}(&data=data,\\ \ &restore_struc=restore_struc)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CLEANUP \label{SDIAutoParallel::cleanup_lab}}
@@ -84,7 +85,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -97,9 +98,9 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channel}: No Doc
+\item[] \hspace{.5cm} \verb"channel": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -121,7 +122,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -134,7 +135,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -144,18 +145,19 @@ Example Call:
 \newpage
 \section*{SDIEtalonScanner \label{SDIEtalonScanner__define_lab}}
 \addcontentsline{toc}{section}{SDIEtalonScanner}
+The EtalonScanner plugin lets you continuously scan the etalon over one order of interference at a given wavelength, and optionally pause during a scan.\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{string}) & status& (\textit{float}) & wavelength \\
-(\textit{double}) & start\_time& (\textit{int}) & nchann& (\textit{string}) & obj\_num \\
-(\textit{structure}) & geometry& (\textit{int}) & need\_frame& (\textit{int}) & need\_timer \\
-(\textit{int}) & auto& (\textit{structure}) & palette& (\textit{obj}) & manager \\
+(\verb"long") & id& (\verb"string") & status& (\verb"float") & wavelength \\
+(\verb"double") & start\_time& (\verb"int") & nchann& (\verb"string") & obj\_num \\
+(\verb"structure") & geometry& (\verb"int") & need\_frame& (\verb"int") & need\_timer \\
+(\verb"int") & auto& (\verb"structure") & palette& (\verb"obj") & manager \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdietalonscanner\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
@@ -166,13 +168,13 @@ Initialize the EtalonScanner.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: Misc data
+\item[] \hspace{.5cm} \verb"data=data": Misc data
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: Restored settings
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": Restored settings
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDIEtalonScanner}-\hspace{-.15cm}>\mathbf{init}(&data=data,\\ \ &restore\_struc=restore\_struc)
+result = \mathbf{SDIEtalonScanner}-\hspace{-.15cm}>\mathbf{init}(&data=data,\\ \ &restore_struc=restore_struc)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CLEANUP \label{SDIEtalonScanner::cleanup_lab}}
@@ -181,7 +183,7 @@ Cleanup, stop any current scans.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -194,9 +196,9 @@ A new frame has been recieved. Update leg diagrams, decide if we need to start a
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: The new camera frame
+\item[] \hspace{.5cm} \verb"image": The new camera frame
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channel}: The current scan channel
+\item[] \hspace{.5cm} \verb"channel": The current scan channel
 \end{description}
 Example Call:
 \begin{align*}
@@ -218,7 +220,7 @@ Pause the current scan.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -231,7 +233,7 @@ Set the wavelength for scanning.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -244,7 +246,7 @@ Start a scan.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -257,7 +259,7 @@ Stop the current scan (will restart from beginning on next `start')\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -267,18 +269,19 @@ Example Call:
 \newpage
 \section*{SDIEtalonSpacer \label{SDIEtalonSpacer__define_lab}}
 \addcontentsline{toc}{section}{SDIEtalonSpacer}
+The EtalonSpacer plugin allows you to adjust the etalon plate separation at each leg. You can control each leg individually, or adjust paralellism along two orthogonal axes.\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{string}) & status& (\textit{int}) & step \\
-(\textit{int}) & leg1& (\textit{int}) & leg2& (\textit{int}) & leg3 \\
-(\textit{string}) & obj\_num& (\textit{structure}) & geometry& (\textit{int}) & need\_frame \\
-(\textit{int}) & need\_timer& (\textit{int}) & auto& (\textit{structure}) & palette \\
+(\verb"long") & id& (\verb"string") & status& (\verb"int") & step \\
+(\verb"int") & leg1& (\verb"int") & leg2& (\verb"int") & leg3 \\
+(\verb"string") & obj\_num& (\verb"structure") & geometry& (\verb"int") & need\_frame \\
+(\verb"int") & need\_timer& (\verb"int") & auto& (\verb"structure") & palette \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdietalonspacer\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
@@ -289,13 +292,13 @@ EtalonSpacer initialization.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: Misc data
+\item[] \hspace{.5cm} \verb"data=data": Misc data
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: Restored settings
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": Restored settings
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDIEtalonSpacer}-\hspace{-.15cm}>\mathbf{init}(&data=data,\\ \ &restore\_struc=restore\_struc)
+result = \mathbf{SDIEtalonSpacer}-\hspace{-.15cm}>\mathbf{init}(&data=data,\\ \ &restore_struc=restore_struc)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) ADJUST\_LEGS\_EVENT \label{SDIEtalonSpacer::adjust_legs_event_lab}}
@@ -304,7 +307,7 @@ An event from the widget sloders representing leg voltages.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -317,7 +320,7 @@ Cleanup - nothing to do\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -339,7 +342,7 @@ Change the size of the tilt adjustment.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -352,7 +355,7 @@ A tilt event, for adjusting along the two orthogonal axes.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -362,24 +365,25 @@ Example Call:
 \newpage
 \section*{SDIPhaseMapper \label{SDIPhaseMapper__define_lab}}
 \addcontentsline{toc}{section}{SDIPhaseMapper}
+The Phasemapper plugin records `phase maps' which encode the scan channel at which a spectrum recorded at the phasemap wavelength peaks for every pixel in the camera frame.\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{int}) & nscans& (\textit{int}) & current\_scan \\
-(\textit{int}) & scanning& (\textit{int}) & nchann& (\textit{float}) & wavelength \\
-(\textit{int}) & channel& (\textit{ptr}) & image& (\textit{ptr}) & phasemap \\
-(\textit{int}) & xdim& (\textit{int}) & ydim& (\textit{ptr}) & p \\
-(\textit{ptr}) & q& (\textit{ptr}) & px& (\textit{ptr}) & qx \\
-(\textit{int}) & source\_order& (\textit{float}) & source\_lambda& (\textit{ptr}) & source\_pmap \\
-(\textit{int}) & current\_source& (\textit{float}) & gain& (\textit{float}) & exptime \\
-(\textit{float}) & smooth\_window& (\textit{string}) & obj\_num& (\textit{structure}) & geometry \\
-(\textit{int}) & need\_frame& (\textit{int}) & need\_timer& (\textit{int}) & auto \\
-(\textit{structure}) & palette& (\textit{obj}) & manager& (\textit{obj}) & console \\
+(\verb"long") & id& (\verb"int") & nscans& (\verb"int") & current\_scan \\
+(\verb"int") & scanning& (\verb"int") & nchann& (\verb"float") & wavelength \\
+(\verb"int") & channel& (\verb"ptr") & image& (\verb"ptr") & phasemap \\
+(\verb"int") & xdim& (\verb"int") & ydim& (\verb"ptr") & p \\
+(\verb"ptr") & q& (\verb"ptr") & px& (\verb"ptr") & qx \\
+(\verb"int") & source\_order& (\verb"float") & source\_lambda& (\verb"ptr") & source\_pmap \\
+(\verb"int") & current\_source& (\verb"float") & gain& (\verb"float") & exptime \\
+(\verb"float") & smooth\_window& (\verb"string") & obj\_num& (\verb"structure") & geometry \\
+(\verb"int") & need\_frame& (\verb"int") & need\_timer& (\verb"int") & auto \\
+(\verb"structure") & palette& (\verb"obj") & manager& (\verb"obj") & console \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdiphasemapper\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
@@ -390,13 +394,13 @@ Phasemapper initialization.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: Misc data
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": Misc data
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: Restored settings
+\item[] \hspace{.5cm} \verb"data=data": Restored settings
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDIPhaseMapper}-\hspace{-.15cm}>\mathbf{init}(&restore\_struc=restore\_struc,\\ \ &data=data)
+result = \mathbf{SDIPhaseMapper}-\hspace{-.15cm}>\mathbf{init}(&restore_struc=restore_struc,\\ \ &data=data)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) AUTO\_START \label{SDIPhaseMapper::auto_start_lab}}
@@ -405,7 +409,7 @@ Auto start the Phasemapper - called whn running in auto mode, and plugin is star
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{args}: String of arguments passed from the schedule file
+\item[] \hspace{.5cm} \verb"args": String of arguments passed from the schedule file
 \end{description}
 Example Call:
 \begin{align*}
@@ -418,7 +422,7 @@ Cleanup, close any active scans.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -431,9 +435,9 @@ Frame event - update the Fourier summations for every pixel, if scan is finished
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: Latest frame from the camera
+\item[] \hspace{.5cm} \verb"image": Latest frame from the camera
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channel}: Current scan channel
+\item[] \hspace{.5cm} \verb"channel": Current scan channel
 \end{description}
 Example Call:
 \begin{align*}
@@ -455,7 +459,7 @@ When using more than one wavelength to generate a phasemap, we set the order of 
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -468,7 +472,7 @@ Set the number of scans to co-add.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -481,7 +485,7 @@ Set the width of the smoothing window, applied after phasemap is unwrapped.\newl
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -494,7 +498,7 @@ Start scanning.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -507,7 +511,7 @@ Stop the current scan.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -517,21 +521,22 @@ Example Call:
 \newpage
 \section*{SDISharpness \label{SDISharpness__define_lab}}
 \addcontentsline{toc}{section}{SDISharpness}
+No Doc\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{float}) & sbuffer& (\textit{float}) & history \\
-(\textit{int}) & count& (\textit{int}) & bcount& (\textit{float}) & best \\
-(\textit{int}) & leg1\_best& (\textit{int}) & leg2\_best& (\textit{int}) & leg3\_best \\
-(\textit{int}) & xcen& (\textit{int}) & ycen& (\textit{int}) & xdim \\
-(\textit{int}) & ydim& (\textit{string}) & obj\_num& (\textit{structure}) & geometry \\
-(\textit{int}) & need\_frame& (\textit{int}) & need\_timer& (\textit{int}) & auto \\
-(\textit{structure}) & palette& (\textit{obj}) & manager& (\textit{obj}) & console \\
+(\verb"long") & id& (\verb"float") & sbuffer& (\verb"float") & history \\
+(\verb"int") & count& (\verb"int") & bcount& (\verb"float") & best \\
+(\verb"int") & leg1\_best& (\verb"int") & leg2\_best& (\verb"int") & leg3\_best \\
+(\verb"int") & xcen& (\verb"int") & ycen& (\verb"int") & xdim \\
+(\verb"int") & ydim& (\verb"string") & obj\_num& (\verb"structure") & geometry \\
+(\verb"int") & need\_frame& (\verb"int") & need\_timer& (\verb"int") & auto \\
+(\verb"structure") & palette& (\verb"obj") & manager& (\verb"obj") & console \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdisharpness\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
@@ -542,13 +547,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: No Doc
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: No Doc
+\item[] \hspace{.5cm} \verb"data=data": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDISharpness}-\hspace{-.15cm}>\mathbf{init}(&restore\_struc=restore\_struc,\\ \ &data=data)
+result = \mathbf{SDISharpness}-\hspace{-.15cm}>\mathbf{init}(&restore_struc=restore_struc,\\ \ &data=data)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CLEANUP \label{SDISharpness::cleanup_lab}}
@@ -557,7 +562,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -570,11 +575,11 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channel}: No Doc
+\item[] \hspace{.5cm} \verb"channel": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{scan}: No Doc
+\item[] \hspace{.5cm} \verb"scan": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -587,7 +592,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -606,58 +611,59 @@ result = \mathbf{SDISharpness}-\hspace{-.15cm}>\mathbf{get\_settings}(&)
 \newpage
 \section*{SDISpectrum \label{SDISpectrum__define_lab}}
 \addcontentsline{toc}{section}{SDISpectrum}
+The Spectrum plugin acquires spectra and saves them to netcdf files. It requires a wavelength, a filename to save to and a zonemap file to use for dividing up the field of view. Some things are hard coded in this which should probably be made configurable (see the frame\_event method). After each complete exposure, this plugin will attempt to send back a snapshot of the most recent acquisition to an ftp server for real-time data processing (the snapshot is sent back if the logging.ftp\_snapshot field is populated in the settings file, see XDIConsole::spectrum\_snapshot for the details of this).\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{int}) & scanning& (\textit{int}) & nchann \\
-(\textit{int}) & xdim& (\textit{int}) & ydim& (\textit{int}) & save\_file\_id \\
-(\textit{ptr}) & spectra& (\textit{ptr}) & last\_spectra& (\textit{ptr}) & zonemap \\
-(\textit{ptr}) & zonemap\_boundaries& (\textit{ptr}) & phasemap& (\textit{float}) & signal\_noise\_history \\
-(\textit{float}) & channel\_background\_history& (\textit{float}) & scan\_background\_history& (\textit{ptr}) & zone\_centers \\
-(\textit{int}) & nzones& (\textit{string}) & dll& (\textit{int}) & nscans \\
-(\textit{int}) & file\_id& (\textit{string}) & zone\_settings& (\textit{float}) & wavelength \\
-(\textit{float}) & a& (\textit{float}) & b& (\textit{float}) & c \\
-(\textit{double}) & scan\_start\_time& (\textit{string}) & spec\_path& (\textit{int}) & nrings \\
-(\textit{string}) & file\_name\_format& (\textit{string}) & filename& (\textit{ptr}) & rads \\
-(\textit{ptr}) & secs& (\textit{ptr}) & accumulated\_image& (\textit{int}) & finalize\_flag \\
-(\textit{string}) & insprof\_filename& (\textit{float}) & etalon\_gap& (\textit{string}) & obj\_num \\
-(\textit{structure}) & geometry& (\textit{int}) & need\_frame& (\textit{int}) & need\_timer \\
-(\textit{int}) & auto& (\textit{structure}) & palette& (\textit{obj}) & manager \\
+(\verb"long") & id& (\verb"int") & scanning& (\verb"int") & nchann \\
+(\verb"int") & xdim& (\verb"int") & ydim& (\verb"int") & save\_file\_id \\
+(\verb"ptr") & spectra& (\verb"ptr") & last\_spectra& (\verb"ptr") & zonemap \\
+(\verb"ptr") & zonemap\_boundaries& (\verb"ptr") & phasemap& (\verb"float") & signal\_noise\_history \\
+(\verb"float") & channel\_background\_history& (\verb"float") & scan\_background\_history& (\verb"ptr") & zone\_centers \\
+(\verb"int") & nzones& (\verb"string") & dll& (\verb"int") & nscans \\
+(\verb"int") & file\_id& (\verb"string") & zone\_settings& (\verb"float") & wavelength \\
+(\verb"float") & a& (\verb"float") & b& (\verb"float") & c \\
+(\verb"double") & scan\_start\_time& (\verb"string") & spec\_path& (\verb"int") & nrings \\
+(\verb"string") & file\_name\_format& (\verb"string") & filename& (\verb"ptr") & rads \\
+(\verb"ptr") & secs& (\verb"ptr") & accumulated\_image& (\verb"int") & finalize\_flag \\
+(\verb"string") & insprof\_filename& (\verb"float") & etalon\_gap& (\verb"string") & obj\_num \\
+(\verb"structure") & geometry& (\verb"int") & need\_frame& (\verb"int") & need\_timer \\
+(\verb"int") & auto& (\verb"structure") & palette& (\verb"obj") & manager \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdispectrum\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
 \subsection*{METHODS:}
 \subsubsection*{(function) INIT \label{SDISpectrum::init_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Spectrum initializer, make sure we have a filename format and a zone map.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: No Doc
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": Restored settings
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: No Doc
+\item[] \hspace{.5cm} \verb"data=data": Misc data from the console
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{zone\_settings=zone\_settings}: No Doc
+\item[] \hspace{.5cm} \verb"zone_settings=zone_settings": A zone settings file name
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{file\_name\_format=file\_name\_format}: No Doc
+\item[] \hspace{.5cm} \verb"file_name_format=file_name_format": Format for generating the netcdf file name
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDISpectrum}-\hspace{-.15cm}>\mathbf{init}(&restore\_struc=restore\_struc,\\ \ &data=data,\\ \ &zone\_settings=zone\_settings,\\ \ &file\_name\_format=file\_name\_format)
+result = \mathbf{SDISpectrum}-\hspace{-.15cm}>\mathbf{init}(&restore_struc=restore_struc,\\ \ &data=data,\\ \ &zone_settings=zone_settings,\\ \ &file_name_format=file_name_format)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) AUTO\_START \label{SDISpectrum::auto_start_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Auto-start method, called when running in auto-mode.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{args}: No Doc
+\item[] \hspace{.5cm} \verb"args": String array of arguments from the schedule file
 \end{description}
 Example Call:
 \begin{align*}
@@ -666,11 +672,11 @@ result = \mathbf{SDISpectrum}-\hspace{-.15cm}>\mathbf{auto\_start}(&args)
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CLEANUP \label{SDISpectrum::cleanup_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Cleanup - stop any active scans, close the netcdf file, free pointers.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -679,11 +685,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) FINALIZE\_SCAN \label{SDISpectrum::finalize_scan_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Called when a user clicks on the "Finalize" button, to indicate that an exposure should be finished after the next scan, regardless of signal-to-noise, etc.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -692,11 +698,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) FIT\_SPECTRA \label{SDISpectrum::fit_spectra_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Fit spectra and create skymaps of peak position and temperature, and display them. This function was introduced to diagnose Mawson camera problems, and has stuck around since it may be generally useful.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -705,13 +711,13 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) FRAME\_EVENT \label{SDISpectrum::frame_event_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Frame event where the spectral information from the latest camera image is extracted. The primary purpose of this function is to call "uUpdateSpectra" in the SDI\_External dll, which updates the current spectral information based on the latest camera frame. This function also checks to see if exposures are finished, sends real-time data snapshots to the console for ftp-ing, accumulates the background `allsky' image, and updates the display of spectra and signal/noise history.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": Latest camera image
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channel}: No Doc
+\item[] \hspace{.5cm} \verb"channel": Current scan channel
 \end{description}
 Example Call:
 \begin{align*}
@@ -720,7 +726,7 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) GET\_SETTINGS \label{SDISpectrum::get_settings_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Get settings to save.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -729,7 +735,7 @@ result = \mathbf{SDISpectrum}-\hspace{-.15cm}>\mathbf{get\_settings}(&)
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) INITIALIZER \label{SDISpectrum::initializer_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Initialize plugin variables, prepare the phase map, create a zone map.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -738,11 +744,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_PHASEMAP \label{SDISpectrum::set_phasemap_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Set-up the phasemap, that is, retrieve phase map parameters from the console, interpolate to the spectrum wavelength, and wrap the phase map.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{failed}: No Doc
+\item[] \hspace{.5cm} \verb"failed": OUT: flag to indicate failure, not currently used (returns 0)
 \end{description}
 Example Call:
 \begin{align*}
@@ -751,11 +757,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) START\_SCAN \label{SDISpectrum::start_scan_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Start scanning.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -764,11 +770,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) STOP\_SCAN \label{SDISpectrum::stop_scan_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Stop a currently active scan.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -778,50 +784,51 @@ Example Call:
 \newpage
 \section*{SDIStepsPerOrder \label{SDIStepsPerOrder__define_lab}}
 \addcontentsline{toc}{section}{SDIStepsPerOrder}
+The StepsPerOrder plugin is used to calculate the size of the `voltage' increment that needs to be applied to each etalon leg at each channel in a scan such that a full scan corresponds to a unit change in interference order.\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{ptr}) & corr& (\textit{int}) & num\_chords \\
-(\textit{int}) & curr\_chord& (\textit{int}) & scanning& (\textit{int}) & nchann \\
-(\textit{int}) & start\_volt\_offset& (\textit{int}) & stop\_volt\_offset& (\textit{float}) & volt\_step\_size \\
-(\textit{obj}) & scan\_obj& (\textit{int}) & curr\_chann& (\textit{int}) & last\_chann \\
-(\textit{ptr}) & image& (\textit{ptr}) & ref\_image& (\textit{int}) & xdim \\
-(\textit{int}) & ydim& (\textit{int}) & counter& (\textit{int}) & last\_counter \\
-(\textit{ptr}) & chord\_hist& (\textit{float}) & wavelength& (\textit{int}) & record\_value \\
-(\textit{string}) & record\_file& (\textit{float}) & gain& (\textit{float}) & exptime \\
-(\textit{string}) & obj\_num& (\textit{structure}) & geometry& (\textit{int}) & need\_frame \\
-(\textit{int}) & need\_timer& (\textit{int}) & auto& (\textit{structure}) & palette \\
+(\verb"long") & id& (\verb"ptr") & corr& (\verb"int") & num\_chords \\
+(\verb"int") & curr\_chord& (\verb"int") & scanning& (\verb"int") & nchann \\
+(\verb"int") & start\_volt\_offset& (\verb"int") & stop\_volt\_offset& (\verb"float") & volt\_step\_size \\
+(\verb"obj") & scan\_obj& (\verb"int") & curr\_chann& (\verb"int") & last\_chann \\
+(\verb"ptr") & image& (\verb"ptr") & ref\_image& (\verb"int") & xdim \\
+(\verb"int") & ydim& (\verb"int") & counter& (\verb"int") & last\_counter \\
+(\verb"ptr") & chord\_hist& (\verb"float") & wavelength& (\verb"int") & record\_value \\
+(\verb"string") & record\_file& (\verb"float") & gain& (\verb"float") & exptime \\
+(\verb"string") & obj\_num& (\verb"structure") & geometry& (\verb"int") & need\_frame \\
+(\verb"int") & need\_timer& (\verb"int") & auto& (\verb"structure") & palette \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdistepsperorder\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
 \subsection*{METHODS:}
 \subsubsection*{(function) INIT \label{SDIStepsPerOrder::init_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Initialize the StepsPerOrder plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: No Doc
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": Restored settings
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: No Doc
+\item[] \hspace{.5cm} \verb"data=data": Misc data from the console
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDIStepsPerOrder}-\hspace{-.15cm}>\mathbf{init}(&restore\_struc=restore\_struc,\\ \ &data=data)
+result = \mathbf{SDIStepsPerOrder}-\hspace{-.15cm}>\mathbf{init}(&restore_struc=restore_struc,\\ \ &data=data)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) AUTO\_START \label{SDIStepsPerOrder::auto_start_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Auto-start called when running in auto-mode.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{args}: No Doc
+\item[] \hspace{.5cm} \verb"args": String array of arguments from the schedule file
 \end{description}
 Example Call:
 \begin{align*}
@@ -830,11 +837,11 @@ result = \mathbf{SDIStepsPerOrder}-\hspace{-.15cm}>\mathbf{auto\_start}(&args)
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CLEANUP \label{SDIStepsPerOrder::cleanup_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Cleanup - free pointers, stop any active scan.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -843,13 +850,13 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) FRAME\_EVENT \label{SDIStepsPerOrder::frame_event_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Process the latest camera frame: bascially calculate the correlation between the current camera image and a reference image, store this value in a vector. If finished scanning, fit the vector of correlation values to find the peak, and calculate the steps/order value based on the position of that peak and the number of channels in a scan.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": Latest camera image
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channel}: No Doc
+\item[] \hspace{.5cm} \verb"channel": Current scan channel
 \end{description}
 Example Call:
 \begin{align*}
@@ -858,7 +865,7 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) GET\_SETTINGS \label{SDIStepsPerOrder::get_settings_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Get settings to save.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -867,11 +874,11 @@ result = \mathbf{SDIStepsPerOrder}-\hspace{-.15cm}>\mathbf{get\_settings}(&)
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) START\_SCAN \label{SDIStepsPerOrder::start_scan_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Start scanning, set-up variables.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -880,11 +887,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) STOP\_SCAN \label{SDIStepsPerOrder::stop_scan_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Stop the current scan, no steps/order value will be saved.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -893,11 +900,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) TOGGLE\_RECORD \label{SDIStepsPerOrder::Toggle_Record_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Toggle on/off the option to record steps/order values to a dedicated log file. This option is located under the file menu of the plugin, and will be rememberd for this plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -907,47 +914,48 @@ Example Call:
 \newpage
 \section*{SDIVidshow \label{SDIVidshow__define_lab}}
 \addcontentsline{toc}{section}{SDIVidshow}
+The Vidshow plugin displays the latest camera images as they are recorded.\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{int}) & inst& (\textit{float}) & exp\_time \\
-(\textit{int}) & xdim& (\textit{int}) & ydim& (\textit{int}) & scale \\
-(\textit{float}) & scale\_fac& (\textit{int}) & crosshairs& (\textit{int}) & crosshairs\_point \\
-(\textit{int}) & grid& (\textit{int}) & color\_table& (\textit{long}) & framecount \\
-(\textit{double}) & tstrt& (\textit{int}) & mask\_quadrants& (\textit{string}) & obj\_num \\
-(\textit{structure}) & geometry& (\textit{int}) & need\_frame& (\textit{int}) & need\_timer \\
-(\textit{int}) & auto& (\textit{structure}) & palette& (\textit{obj}) & manager \\
+(\verb"long") & id& (\verb"int") & inst& (\verb"float") & exp\_time \\
+(\verb"int") & xdim& (\verb"int") & ydim& (\verb"int") & scale \\
+(\verb"float") & scale\_fac& (\verb"int") & crosshairs& (\verb"int") & crosshairs\_point \\
+(\verb"int") & grid& (\verb"int") & color\_table& (\verb"long") & framecount \\
+(\verb"double") & tstrt& (\verb"int") & mask\_quadrants& (\verb"string") & obj\_num \\
+(\verb"structure") & geometry& (\verb"int") & need\_frame& (\verb"int") & need\_timer \\
+(\verb"int") & auto& (\verb"structure") & palette& (\verb"obj") & manager \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/sdividshow\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
 \subsection*{METHODS:}
 \subsubsection*{(function) INIT \label{SDIVidshow::init_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Initialize the Vidshow plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{restore\_struc=restore\_struc}: No Doc
+\item[] \hspace{.5cm} \verb"restore_struc=restore_struc": Restored settings
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: No Doc
+\item[] \hspace{.5cm} \verb"data=data": Misc data from the console
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{SDIVidshow}-\hspace{-.15cm}>\mathbf{init}(&restore\_struc=restore\_struc,\\ \ &data=data)
+result = \mathbf{SDIVidshow}-\hspace{-.15cm}>\mathbf{init}(&restore_struc=restore_struc,\\ \ &data=data)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CLEANUP \label{SDIVidshow::cleanup_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Cleanup - nothing to do.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log}: No Doc
+\item[] \hspace{.5cm} \verb"log": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -956,11 +964,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) FIT\_WINDOW \label{SDIVidshow::fit_window_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Resize the window to fit the native resolution of the camera image, called from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -969,13 +977,13 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) FRAME\_EVENT \label{SDIVidshow::frame_event_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Receive a new camera frame, scale it and display.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": Latest camera image
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channel}: No Doc
+\item[] \hspace{.5cm} \verb"channel": Current scan channel
 \end{description}
 Example Call:
 \begin{align*}
@@ -984,7 +992,7 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) GET\_SETTINGS \label{SDIVidshow::get_settings_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Get settings to save.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -993,11 +1001,11 @@ result = \mathbf{SDIVidshow}-\hspace{-.15cm}>\mathbf{get\_settings}(&)
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) MASK\_QUADRANTS \label{SDIVidshow::mask_quadrants_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Mask out most of the four quadrants of the image, leaving only a small `cross' of the image left to display, helps for slow connections, called from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -1006,11 +1014,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SCALING \label{SDIVidshow::scaling_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Toggle between using the manual scale factor and auto scaling, called from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -1019,11 +1027,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_COLOR\_TABLE \label{SDIVidshow::set_color_table_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Set the color table, called when user selects this option from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -1032,11 +1040,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_CROSSHAIRS \label{SDIVidshow::set_crosshairs_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Toggle on/off diaplying the crosshairs, called from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -1045,11 +1053,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_CROSSHAIRS\_POINT \label{SDIVidshow::set_crosshairs_point_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Set where the crosshairs intersect (x, y), called from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -1058,11 +1066,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_GRID \label{SDIVidshow::set_grid_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Toggle on/off displaying a grid overlay, called from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -1071,11 +1079,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_SCALE \label{SDIVidshow::set_scale_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Set a manual scale value applied to image prior to display, called from the menu.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": Widget event
 \end{description}
 Example Call:
 \begin{align*}
@@ -1085,35 +1093,37 @@ Example Call:
 \newpage
 \section*{XDIBase \label{XDIBase__define_lab}}
 \addcontentsline{toc}{section}{XDIBase}
+This class defined basic properties all plugins inherit, like geometry, references to the console and widget manager, flags like need\_timer and need\_frame, etc. For a plugin to work, it must inherit from XDIBase.\newline \newline
 Inherits from: \textbf{None} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{string}) & obj\_num& (\textit{structure}) & geometry& (\textit{int}) & need\_frame \\
-(\textit{int}) & need\_timer& (\textit{int}) & auto& (\textit{structure}) & palette \\
+(\verb"string") & obj\_num& (\verb"structure") & geometry& (\verb"int") & need\_frame \\
+(\verb"int") & need\_timer& (\verb"int") & auto& (\verb"structure") & palette \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/xdibase\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
 \newpage
 \section*{XDIConsole \label{XDIConsole__define_lab}}
 \addcontentsline{toc}{section}{XDIConsole}
+No Doc\newline \newline
 Inherits from: \textbf{XDIBASE} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{structure}) & etalon& (\textit{structure}) & camera& (\textit{structure}) & header \\
-(\textit{structure}) & logging& (\textit{structure}) & misc& (\textit{structure}) & runtime \\
-(\textit{structure}) & buffer& (\textit{string}) & obj\_num& (\textit{structure}) & geometry \\
-(\textit{int}) & need\_frame& (\textit{int}) & need\_timer& (\textit{int}) & auto \\
-(\textit{structure}) & palette& (\textit{obj}) & manager& (\textit{obj}) & console \\
+(\verb"structure") & etalon& (\verb"structure") & camera& (\verb"structure") & header \\
+(\verb"structure") & logging& (\verb"structure") & misc& (\verb"structure") & runtime \\
+(\verb"structure") & buffer& (\verb"string") & obj\_num& (\verb"structure") & geometry \\
+(\verb"int") & need\_frame& (\verb"int") & need\_timer& (\verb"int") & auto \\
+(\verb"structure") & palette& (\verb"obj") & manager& (\verb"obj") & console \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/xdiconsole\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
@@ -1124,17 +1134,17 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{schedule=schedule}: No Doc
+\item[] \hspace{.5cm} \verb"schedule=schedule": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{mode=mode}: No Doc
+\item[] \hspace{.5cm} \verb"mode=mode": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{settings=settings}: No Doc
+\item[] \hspace{.5cm} \verb"settings=settings": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{start\_line=start\_line}: No Doc
+\item[] \hspace{.5cm} \verb"start_line=start_line": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{init}(&schedule=schedule,\\ \ &mode=mode,\\ \ &settings=settings,\\ \ &start\_line=start\_line)
+result = \mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{init}(&schedule=schedule,\\ \ &mode=mode,\\ \ &settings=settings,\\ \ &start_line=start_line)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CAM\_COOLER \label{XDIConsole::cam_cooler_lab}}
@@ -1143,7 +1153,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1156,7 +1166,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1169,13 +1179,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{new\_time=new\_time}: No Doc
+\item[] \hspace{.5cm} \verb"new_time=new_time": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{cam\_exptime}, \ &event,\\ \ &new\_time=new\_time
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{cam\_exptime}, \ &event,\\ \ &new_time=new_time
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CAM\_GAIN \label{XDIConsole::cam_gain_lab}}
@@ -1184,13 +1194,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{new\_gain=new\_gain}: No Doc
+\item[] \hspace{.5cm} \verb"new_gain=new_gain": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{cam\_gain}, \ &event,\\ \ &new\_gain=new\_gain
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{cam\_gain}, \ &event,\\ \ &new_gain=new_gain
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) CAM\_INITIALIZE \label{XDIConsole::cam_initialize_lab}}
@@ -1199,7 +1209,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1212,7 +1222,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1225,9 +1235,9 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{shutdown=shutdown}: No Doc
+\item[] \hspace{.5cm} \verb"shutdown=shutdown": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1240,7 +1250,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1253,7 +1263,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1266,7 +1276,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1288,7 +1298,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1301,7 +1311,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1314,7 +1324,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1327,7 +1337,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1340,11 +1350,11 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ref}: No Doc
+\item[] \hspace{.5cm} \verb"ref": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{kill=kill}: No Doc
+\item[] \hspace{.5cm} \verb"kill=kill": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1357,7 +1367,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1379,7 +1389,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1392,7 +1402,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1405,7 +1415,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1418,7 +1428,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1440,15 +1450,15 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{temp}: No Doc
+\item[] \hspace{.5cm} \verb"temp": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{temp\_state}: No Doc
+\item[] \hspace{.5cm} \verb"temp_state": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{set\_point}: No Doc
+\item[] \hspace{.5cm} \verb"set_point": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{get\_camera\_temp}, \ &temp,\\ \ &temp\_state,\\ \ &set\_point
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{get\_camera\_temp}, \ &temp,\\ \ &temp_state,\\ \ &set_point
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) GET\_DEFAULT\_PATH \label{XDIConsole::get_default_path_lab}}
@@ -1493,7 +1503,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1533,15 +1543,15 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{phasemap\_base}: No Doc
+\item[] \hspace{.5cm} \verb"phasemap_base": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{phasemap\_grad}: No Doc
+\item[] \hspace{.5cm} \verb"phasemap_grad": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{phasemap\_lambda}: No Doc
+\item[] \hspace{.5cm} \verb"phasemap_lambda": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{get\_phasemap}, \ &phasemap\_base,\\ \ &phasemap\_grad,\\ \ &phasemap\_lambda
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{get\_phasemap}, \ &phasemap_base,\\ \ &phasemap_grad,\\ \ &phasemap_lambda
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) GET\_PORT\_MAP \label{XDIConsole::get_port_map_lab}}
@@ -1559,7 +1569,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1581,7 +1591,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{smap}: No Doc
+\item[] \hspace{.5cm} \verb"smap": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1594,7 +1604,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{nrings}: No Doc
+\item[] \hspace{.5cm} \verb"nrings": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1634,7 +1644,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1647,13 +1657,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{kill\_widget=kill\_widget}: No Doc
+\item[] \hspace{.5cm} \verb"kill_widget=kill_widget": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{Kill\_Handler}, \ &id,\\ \ &kill\_widget=kill\_widget
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{Kill\_Handler}, \ &id,\\ \ &kill_widget=kill_widget
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) LOAD\_SETTINGS \label{XDIConsole::load_settings_lab}}
@@ -1662,17 +1672,17 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{filename=filename}: No Doc
+\item[] \hspace{.5cm} \verb"filename=filename": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{error=error}: No Doc
+\item[] \hspace{.5cm} \verb"error=error": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{first\_call=first\_call}: No Doc
+\item[] \hspace{.5cm} \verb"first_call=first_call": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{load\_settings}, \ &event,\\ \ &filename=filename,\\ \ &error=error,\\ \ &first\_call=first\_call
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{load\_settings}, \ &event,\\ \ &filename=filename,\\ \ &error=error,\\ \ &first_call=first_call
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) LOG \label{XDIConsole::log_lab}}
@@ -1681,15 +1691,15 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{entry}: No Doc
+\item[] \hspace{.5cm} \verb"entry": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{sender}: No Doc
+\item[] \hspace{.5cm} \verb"sender": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{display\_entry=display\_entry}: No Doc
+\item[] \hspace{.5cm} \verb"display_entry=display_entry": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{log}, \ &entry,\\ \ &sender,\\ \ &display\_entry=display\_entry
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{log}, \ &entry,\\ \ &sender,\\ \ &display_entry=display_entry
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) MODE\_SWITCH \label{XDIConsole::mode_switch_lab}}
@@ -1698,7 +1708,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1711,7 +1721,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1724,7 +1734,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1737,7 +1747,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1750,7 +1760,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1763,7 +1773,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{image}: No Doc
+\item[] \hspace{.5cm} \verb"image": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1776,13 +1786,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{set\_source=set\_source}: No Doc
+\item[] \hspace{.5cm} \verb"set_source=set_source": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{mot\_sel\_cal}, \ &event,\\ \ &set\_source=set\_source
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{mot\_sel\_cal}, \ &event,\\ \ &set_source=set_source
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) MOT\_SEL\_FILTER \label{XDIConsole::mot_sel_filter_lab}}
@@ -1791,7 +1801,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1804,7 +1814,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1826,7 +1836,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{filename=filename}: No Doc
+\item[] \hspace{.5cm} \verb"filename=filename": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1839,35 +1849,35 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{caller}: No Doc
+\item[] \hspace{.5cm} \verb"caller": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{start\_scan=start\_scan}: No Doc
+\item[] \hspace{.5cm} \verb"start_scan=start_scan": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{stop\_scan=stop\_scan}: No Doc
+\item[] \hspace{.5cm} \verb"stop_scan=stop_scan": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{pause\_scan=pause\_scan}: No Doc
+\item[] \hspace{.5cm} \verb"pause_scan=pause_scan": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{cont\_scan=cont\_scan}: No Doc
+\item[] \hspace{.5cm} \verb"cont_scan=cont_scan": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{start\_volt\_offset=start\_volt\_offset}: No Doc
+\item[] \hspace{.5cm} \verb"start_volt_offset=start_volt_offset": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{stop\_volt\_offset=stop\_volt\_offset}: No Doc
+\item[] \hspace{.5cm} \verb"stop_volt_offset=stop_volt_offset": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{volt\_step\_size=volt\_step\_size}: No Doc
+\item[] \hspace{.5cm} \verb"volt_step_size=volt_step_size": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{status=status}: No Doc
+\item[] \hspace{.5cm} \verb"status=status": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{reference=reference}: No Doc
+\item[] \hspace{.5cm} \verb"reference=reference": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{get\_ref=get\_ref}: No Doc
+\item[] \hspace{.5cm} \verb"get_ref=get_ref": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{wavelength=wavelength}: No Doc
+\item[] \hspace{.5cm} \verb"wavelength=wavelength": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{force\_start=force\_start}: No Doc
+\item[] \hspace{.5cm} \verb"force_start=force_start": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{scan\_etalon}, \ &caller,\\ \ &start\_scan=start\_scan,\\ \ &stop\_scan=stop\_scan,\\ \ &pause\_scan=pause\_scan,\\ \ &cont\_scan=cont\_scan,\\ \ &start\_volt\_offset=start\_volt\_offset,\\ \ &stop\_volt\_offset=stop\_volt\_offset,\\ \ &volt\_step\_size=volt\_step\_size,\\ \ &status=status,\\ \ &reference=reference,\\ \ &get\_ref=get\_ref,\\ \ &wavelength=wavelength,\\ \ &force\_start=force\_start
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{scan\_etalon}, \ &caller,\\ \ &start_scan=start_scan,\\ \ &stop_scan=stop_scan,\\ \ &pause_scan=pause_scan,\\ \ &cont_scan=cont_scan,\\ \ &start_volt_offset=start_volt_offset,\\ \ &stop_volt_offset=stop_volt_offset,\\ \ &volt_step_size=volt_step_size,\\ \ &status=status,\\ \ &reference=reference,\\ \ &get_ref=get_ref,\\ \ &wavelength=wavelength,\\ \ &force_start=force_start
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SEE\_CALIBRATION \label{XDIConsole::see_calibration_lab}}
@@ -1876,7 +1886,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1889,9 +1899,9 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{xcen}: No Doc
+\item[] \hspace{.5cm} \verb"xcen": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ycen}: No Doc
+\item[] \hspace{.5cm} \verb"ycen": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1904,11 +1914,11 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{nm\_per\_step}: No Doc
+\item[] \hspace{.5cm} \verb"nm_per_step": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{set\_nm\_per\_step}, \ &nm\_per\_step
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{set\_nm\_per\_step}, \ &nm_per_step
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_PHASEMAP \label{XDIConsole::set_phasemap_lab}}
@@ -1917,15 +1927,15 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{phasemap\_base}: No Doc
+\item[] \hspace{.5cm} \verb"phasemap_base": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{phasemap\_grad}: No Doc
+\item[] \hspace{.5cm} \verb"phasemap_grad": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{phasemap\_lambda}: No Doc
+\item[] \hspace{.5cm} \verb"phasemap_lambda": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{set\_phasemap}, \ &phasemap\_base,\\ \ &phasemap\_grad,\\ \ &phasemap\_lambda
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{set\_phasemap}, \ &phasemap_base,\\ \ &phasemap_grad,\\ \ &phasemap_lambda
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_SNR\_PER\_SCAN \label{XDIConsole::set_snr_per_scan_lab}}
@@ -1934,7 +1944,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{snr}: No Doc
+\item[] \hspace{.5cm} \verb"snr": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1947,7 +1957,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{smap}: No Doc
+\item[] \hspace{.5cm} \verb"smap": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1969,7 +1979,7 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{snapshot}: No Doc
+\item[] \hspace{.5cm} \verb"snapshot": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -1982,15 +1992,15 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: No Doc
+\item[] \hspace{.5cm} \verb"event": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{args=args}: No Doc
+\item[] \hspace{.5cm} \verb"args=args": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{new\_obj=new\_obj}: No Doc
+\item[] \hspace{.5cm} \verb"new_obj=new_obj": No Doc
 \end{description}
 Example Call:
 \begin{align*}
-\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{start\_plugin}, \ &event,\\ \ &args=args,\\ \ &new\_obj=new\_obj
+\mathbf{XDIConsole}-\hspace{-.15cm}>\mathbf{start\_plugin}, \ &event,\\ \ &args=args,\\ \ &new_obj=new_obj
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) TIMER\_EVENT \label{XDIConsole::timer_event_lab}}
@@ -2008,9 +2018,9 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{commands}: No Doc
+\item[] \hspace{.5cm} \verb"commands": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{results}: No Doc
+\item[] \hspace{.5cm} \verb"results": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -2023,13 +2033,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{leg1=leg1}: No Doc
+\item[] \hspace{.5cm} \verb"leg1=leg1": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{leg2=leg2}: No Doc
+\item[] \hspace{.5cm} \verb"leg2=leg2": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{leg3=leg3}: No Doc
+\item[] \hspace{.5cm} \verb"leg3=leg3": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{legs=legs}: No Doc
+\item[] \hspace{.5cm} \verb"legs=legs": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -2039,48 +2049,49 @@ Example Call:
 \newpage
 \section*{XDILog \label{XDILog__define_lab}}
 \addcontentsline{toc}{section}{XDILog}
+The Log class manages writing log output, both to the console log window and to a text file.\newline \newline
 Inherits from: \textbf{None} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{string}) & log& (\textit{long}) & log\_window& (\textit{string}) & prog\_name \\
-(\textit{string}) & log\_path& (\textit{int}) & show\_log& (\textit{string}) & curdate \\
+(\verb"string") & log& (\verb"long") & log\_window& (\verb"string") & prog\_name \\
+(\verb"string") & log\_path& (\verb"int") & show\_log& (\verb"string") & curdate \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/XDILog\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
 \subsection*{METHODS:}
 \subsubsection*{(function) INIT \label{XDILog::init_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Initialize the log.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log\_window=log\_window}: No Doc
+\item[] \hspace{.5cm} \verb"log_window=log_window": Widget window for the log, optional
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{show\_log=show\_log}: No Doc
+\item[] \hspace{.5cm} \verb"show_log=show_log": Show the log
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{prog\_name=prog\_name}: No Doc
+\item[] \hspace{.5cm} \verb"prog_name=prog_name": The name of the plugin, used for naming log files
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log\_path=log\_path}: No Doc
+\item[] \hspace{.5cm} \verb"log_path=log_path": Path to store the log files
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log\_append=log\_append}: No Doc
+\item[] \hspace{.5cm} \verb"log_append=log_append": Append to existing logs
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{enabled=enabled}: No Doc
+\item[] \hspace{.5cm} \verb"enabled=enabled": Is logging enabled?
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{header=header}: No Doc
+\item[] \hspace{.5cm} \verb"header=header": A header for the log file, used when creating a new log
 \end{description}
 Example Call:
 \begin{align*}
-result = \mathbf{XDILog}-\hspace{-.15cm}>\mathbf{init}(&log\_window=log\_window,\\ \ &show\_log=show\_log,\\ \ &prog\_name=prog\_name,\\ \ &log\_path=log\_path,\\ \ &log\_append=log\_append,\\ \ &enabled=enabled,\\ \ &header=header)
+result = \mathbf{XDILog}-\hspace{-.15cm}>\mathbf{init}(&log_window=log_window,\\ \ &show_log=show_log,\\ \ &prog_name=prog_name,\\ \ &log_path=log_path,\\ \ &log_append=log_append,\\ \ &enabled=enabled,\\ \ &header=header)
 \end{align*}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) REFRESH \label{XDILog::refresh_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Refresh the log window with the current log contents.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -2089,11 +2100,11 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) UPDATE \label{XDILog::update_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Add an entry to the log, prepending a date/time string.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{entry}: No Doc
+\item[] \hspace{.5cm} \verb"entry": String entry to add to the log
 \end{description}
 Example Call:
 \begin{align*}
@@ -2103,29 +2114,30 @@ Example Call:
 \newpage
 \section*{XDIWidgetReg \label{XDIWidgetReg__define_lab}}
 \addcontentsline{toc}{section}{XDIWidgetReg}
+This class manages plugins, by storing their object references and names in a linked list and managing that list.\newline \newline
 Inherits from: \textbf{None} \newline
 Class Data: 
 \begin{table}[!h]
-\begin{small}\vspace{-.1cm}\begin{center}
+\begin{tiny}\vspace{-.1cm}\begin{center}
 \begin{tabular}{rl|rl|rl}
 \hline
-(\textit{long}) & id& (\textit{string}) & type& (\textit{obj}) & ref \\
-(\textit{int}) & store& (\textit{int}) & need\_timer& (\textit{int}) & need\_frame \\
+(\verb"long") & id& (\verb"string") & type& (\verb"obj") & ref \\
+(\verb"int") & store& (\verb"int") & need\_timer& (\verb"int") & need\_frame \\
 \hline
-\end{tabular}\end{center}\end{small}\end{table}\vspace{-.5cm} \\
+\end{tabular}\end{center}\end{tiny}\end{table}\vspace{-.5cm} \\
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/xdiwidgetreg\_\_define.pro}
 \begin{center}\rule{1\textwidth}{.02cm}\end{center}
 \subsection*{METHODS:}
 \subsubsection*{(function) INIT \label{XDIWidgetReg::init_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Initialize the plugin list with the id and object reference of the console.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ref=ref}: No Doc
+\item[] \hspace{.5cm} \verb"ref=ref": Console object reference
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id=id}: No Doc
+\item[] \hspace{.5cm} \verb"id=id": Console widget id
 \end{description}
 Example Call:
 \begin{align*}
@@ -2134,7 +2146,7 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{init}(&ref=ref,\\ \ &id=i
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) COUNT\_OBJECTS \label{XDIWidgetReg::count_objects_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Count the number of plugins, and return the count.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -2143,11 +2155,11 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{count\_objects}(&)
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) DELETE\_INSTANCE \label{XDIWidgetReg::delete_instance_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Remove a plugin from the list.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": Widget id of the plugin to remove
 \end{description}
 Example Call:
 \begin{align*}
@@ -2156,7 +2168,7 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) GENERATE\_LIST \label{XDIWidgetReg::generate_list_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Generate a structure whose fields are arrays, one element for each plugin, containing the plugin info.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -2165,11 +2177,11 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{generate\_list}(&)
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) MATCH\_REGISTER\_FRAME \label{XDIWidgetReg::match_register_frame_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+From a widget id, return the need\_frame field of the plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": Widget if of the plugin's main window
 \end{description}
 Example Call:
 \begin{align*}
@@ -2178,11 +2190,11 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{match\_register\_frame}(&
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) MATCH\_REGISTER\_FROM\_TYPE \label{XDIWidgetReg::match_register_from_type_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+From a plugin type, return the object reference of the plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{type}: No Doc
+\item[] \hspace{.5cm} \verb"type": String type of the plugin
 \end{description}
 Example Call:
 \begin{align*}
@@ -2191,11 +2203,11 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{match\_register\_from\_ty
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) MATCH\_REGISTER\_REF \label{XDIWidgetReg::match_register_ref_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+From a widget id, return the object reference of the plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": Widget if of the plugin's main window
 \end{description}
 Example Call:
 \begin{align*}
@@ -2204,11 +2216,11 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{match\_register\_ref}(&id
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) MATCH\_REGISTER\_STORE \label{XDIWidgetReg::match_register_store_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Given a widget id, return the value of the store field for the corresponding plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": Widget id of the plugin's main window
 \end{description}
 Example Call:
 \begin{align*}
@@ -2217,11 +2229,11 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{match\_register\_store}(&
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) MATCH\_REGISTER\_TIMER \label{XDIWidgetReg::match_register_timer_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+From a widget id, return the need\_frame field of the plugin.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": Widget if of the plugin's main window
 \end{description}
 Example Call:
 \begin{align*}
@@ -2230,11 +2242,11 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{match\_register\_timer}(&
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(function) MATCH\_REGISTER\_TYPE \label{XDIWidgetReg::match_register_type_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+From a widget id, return the plugin type.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": Widget id of the plugin's main window
 \end{description}
 Example Call:
 \begin{align*}
@@ -2243,7 +2255,7 @@ result = \mathbf{XDIWidgetReg}-\hspace{-.15cm}>\mathbf{match\_register\_type}(&i
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) PRINT\_REGISTER \label{XDIWidgetReg::print_register_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Print out info about the list of plugins.\newline
 Takes no arguments \\
 Example Call:
 \begin{align*}
@@ -2252,21 +2264,21 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) REGISTER \label{XDIWidgetReg::register_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+Add a plugin to the list.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": Widget id of the plugin's main window
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ref}: No Doc
+\item[] \hspace{.5cm} \verb"ref": Object reference for this instance of the plugin
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{type}: No Doc
+\item[] \hspace{.5cm} \verb"type": Plugin type (string name)
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{store}: No Doc
+\item[] \hspace{.5cm} \verb"store": Flag to indicate whether or not to save plugin settings
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{timer}: No Doc
+\item[] \hspace{.5cm} \verb"timer": Flag to indicate this plugin needs to recieve timer events
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{frame}: No Doc
+\item[] \hspace{.5cm} \verb"frame": Flag to indicate this plugin needs to recieve frame events
 \end{description}
 Example Call:
 \begin{align*}
@@ -2275,17 +2287,17 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SAVE\_SETTINGS \label{XDIWidgetReg::save_settings_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+This implements the ability of plugins to save their settings, to be restored next time they are opened.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{path}: No Doc
+\item[] \hspace{.5cm} \verb"path": The settings save path
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": The widget id of the plugin's main window
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{owner}: No Doc
+\item[] \hspace{.5cm} \verb"owner": String name of the plugin
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ref}: No Doc
+\item[] \hspace{.5cm} \verb"ref": Object reference to the plugin
 \end{description}
 Example Call:
 \begin{align*}
@@ -2294,15 +2306,15 @@ Example Call:
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \subsubsection*{(pro) SET\_CONTROL \label{XDIWidgetReg::set_control_lab}}
 \textbf{Method Documentation:} \\
-No Doc\newline
+I have no idea what this does, and it does not appear to be called anywhere in the SDI code base, so it is probably a holdover from an early version.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: No Doc
+\item[] \hspace{.5cm} \verb"id": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ref}: No Doc
+\item[] \hspace{.5cm} \verb"ref": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{control}: No Doc
+\item[] \hspace{.5cm} \verb"control": No Doc
 \end{description}
 Example Call:
 \begin{align*}
@@ -2320,7 +2332,7 @@ Return an ANDOR error string given an error code.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{err\_code}: Error code
+\item[] \hspace{.5cm} \verb"err_code": Error code
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(function) GET\_NAMES \label{Get_Names_lab}}
@@ -2332,7 +2344,7 @@ From a full path list of plugins, return only the plugin names\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{path\_list}: Vector of plugin full path names
+\item[] \hspace{.5cm} \verb"path_list": Vector of plugin full path names
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(function) ACE\_FILTER\_INTERFACE \label{ace_filter_interface_lab}}
@@ -2340,12 +2352,11 @@ From a full path list of plugins, return only the plugin names\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/ace\_filter\_interface.pro} \newline
 \textbf{Function Documentation:} \\
-Sends commands to an ACE filter wheel (used only at Poker I guess,\newline
-since com ports are hard coded here.\newline
+Sends commands to an ACE filter wheel (used only at Poker I guess, since com ports are hard coded here.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{command=command}: Command to send
+\item[] \hspace{.5cm} \verb"command=command": Command to send
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(function) DRIVE\_MOTOR \label{drive_motor_lab}}
@@ -2353,37 +2364,35 @@ since com ports are hard coded here.\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/drive\_motor.pro} \newline
 \textbf{Function Documentation:} \\
-Wrapper for controlling Fualhaber motors. Open/close ports, enable/disable motor,\newline
-get status, set position, drive to position, set speed/accel, drive in a direction\newline
-in small increments until blocked (i.e. when homing the mirror motor) etc.\newline
+Wrapper for controlling Fualhaber motors. Open/close ports, enable/disable motor, get status, set position, drive to position, set speed/accel, drive in a direction in small increments until blocked (i.e. when homing the mirror motor) etc.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{port}: Com port of the motor
+\item[] \hspace{.5cm} \verb"port": Com port of the motor
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{dll\_name}: SDI\_External dll name (full path)
+\item[] \hspace{.5cm} \verb"dll_name": SDI\_External dll name (full path)
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{direction=direction}: String direction ("forwards" or "backwards") to drive until blocked
+\item[] \hspace{.5cm} \verb"direction=direction": String direction ("forwards" or "backwards") to drive until blocked
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{gohix=gohix}: Drive to nearest hall index
+\item[] \hspace{.5cm} \verb"gohix=gohix": Drive to nearest hall index
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{goix=goix}: 
+\item[] \hspace{.5cm} \verb"goix=goix": 
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{drive\_to=drive\_to}: Drive to absolute position
+\item[] \hspace{.5cm} \verb"drive_to=drive_to": Drive to absolute position
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{control=control}: String control command (see function body)
+\item[] \hspace{.5cm} \verb"control=control": String control command (see function body)
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{readpos=readpos}: Read the motor position (returned from the function)
+\item[] \hspace{.5cm} \verb"readpos=readpos": Read the motor position (returned from the function)
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{speed=speed}: Set the speed
+\item[] \hspace{.5cm} \verb"speed=speed": Set the speed
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{accel=accel}: Set the acceleration
+\item[] \hspace{.5cm} \verb"accel=accel": Set the acceleration
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{verbatim=verbatim}: Send a string command verbatim to the motor, appending a carriage return
+\item[] \hspace{.5cm} \verb"verbatim=verbatim": Send a string command verbatim to the motor, appending a carriage return
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{home\_max\_spin\_time=home\_max\_spin\_time}: Max time to spin (for every small increment) when homing
+\item[] \hspace{.5cm} \verb"home_max_spin_time=home_max_spin_time": Max time to spin (for every small increment) when homing
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{timeout=timeout}: Timeout in seconds
+\item[] \hspace{.5cm} \verb"timeout=timeout": Timeout in seconds
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(function) GET\_PATHS \label{get_paths_lab}}
@@ -2403,9 +2412,9 @@ Get the current sun elevation for a given latitude and longitude.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{lat}: Geographic latitude
+\item[] \hspace{.5cm} \verb"lat": Geographic latitude
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{lon}: Geographic longitude
+\item[] \hspace{.5cm} \verb"lon": Geographic longitude
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(function) PHASEMAP\_UNWRAP \label{phasemap_unwrap_lab}}
@@ -2417,25 +2426,25 @@ Get the current sun elevation for a given latitude and longitude.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{xcen}: Nominal x center
+\item[] \hspace{.5cm} \verb"xcen": Nominal x center
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ycen}: Nominal y center
+\item[] \hspace{.5cm} \verb"ycen": Nominal y center
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{radial\_chunk}: Size of the chunk over which to average the phase (value of 50 is used in phasemapper)
+\item[] \hspace{.5cm} \verb"radial_chunk": Size of the chunk over which to average the phase (value of 50 is used in phasemapper)
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{channels}: Number of channels in the scan
+\item[] \hspace{.5cm} \verb"channels": Number of channels in the scan
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{threshold}: Value of 80 is used by the phasemapper
+\item[] \hspace{.5cm} \verb"threshold": Value of 80 is used by the phasemapper
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{wavelength}: The wavelength at which the phasemap was recorded
+\item[] \hspace{.5cm} \verb"wavelength": The wavelength at which the phasemap was recorded
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{phasemap}: The actual phasemap 2D array
+\item[] \hspace{.5cm} \verb"phasemap": The actual phasemap 2D array
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{show=show}: Show the unwrap as it occurs
+\item[] \hspace{.5cm} \verb"show=show": Show the unwrap as it occurs
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{tv\_id=tv\_id}: Id of the tv window for showing the unwrap
+\item[] \hspace{.5cm} \verb"tv_id=tv_id": Id of the tv window for showing the unwrap
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{dims=dims}: Dimensions of the tv window for drawing
+\item[] \hspace{.5cm} \verb"dims=dims": Dimensions of the tv window for drawing
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(function) ZONEMAPPER \label{zonemapper_lab}}
@@ -2443,27 +2452,27 @@ Get the current sun elevation for a given latitude and longitude.\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/zonemapper.pro} \newline
 \textbf{Function Documentation:} \\
-Function/method/pro documentation here\newline
+Creates a zone map, a 2D array of numbers indicating the zone number of each pixel.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{nx}: Arg0
+\item[] \hspace{.5cm} \verb"nx": X dimension
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ny}: Arg1
+\item[] \hspace{.5cm} \verb"ny": Y dimension
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{cent}: Arg2
+\item[] \hspace{.5cm} \verb"cent": 2-element vector containing x and y center pixels
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{rads}: Arg3
+\item[] \hspace{.5cm} \verb"rads": Vector containing the radius of each ring
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{secs}: Arg4
+\item[] \hspace{.5cm} \verb"secs": Vector containing the number of sectors in each ring
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{nums}: Arg5
+\item[] \hspace{.5cm} \verb"nums": This should be set to 0, it is not needed
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{show=show}: Arg6
+\item[] \hspace{.5cm} \verb"show=show": Show the resulting zonemap
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{outang=outang}: No Arg Doc
+\item[] \hspace{.5cm} \verb"outang=outang": OUT: return the `azimuth' of each zone
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{outrad=outrad}: No Arg Doc
+\item[] \hspace{.5cm} \verb"outrad=outrad": OUT: return the radius of each zone
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \chapter*{Procedures}
@@ -2477,19 +2486,19 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{save\_name=save\_name}: No Doc
+\item[] \hspace{.5cm} \verb"save_name=save_name": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{safe\_sea=safe\_sea}: No Doc
+\item[] \hspace{.5cm} \verb"safe_sea=safe_sea": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{lat=lat}: No Doc
+\item[] \hspace{.5cm} \verb"lat=lat": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{lon=lon}: No Doc
+\item[] \hspace{.5cm} \verb"lon=lon": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{timeres=timeres}: No Doc
+\item[] \hspace{.5cm} \verb"timeres=timeres": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{start\_stop\_times=start\_stop\_times}: No Doc
+\item[] \hspace{.5cm} \verb"start_stop_times=start_stop_times": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{get\_sea=get\_sea}: No Doc
+\item[] \hspace{.5cm} \verb"get_sea=get_sea": No Doc
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) HANDLE\_ERROR \label{Handle_Error_lab}}
@@ -2501,7 +2510,7 @@ Error handler.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{error}: Error recieved
+\item[] \hspace{.5cm} \verb"error": Error recieved
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) HANDLE\_EVENT \label{Handle_Event_lab}}
@@ -2513,7 +2522,7 @@ Handle widget events. These are rerouted to the console's event handler.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event structure
+\item[] \hspace{.5cm} \verb"event": Widget event structure
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) KILL\_ENTRY \label{Kill_Entry_lab}}
@@ -2525,7 +2534,7 @@ Handle widget destroy events. These are rerouted to the consoles kill handler.\n
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: Widget id
+\item[] \hspace{.5cm} \verb"id": Widget id
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) MARKS\_PALETTE \label{MARKS_PALETTE_lab}}
@@ -2545,11 +2554,11 @@ SDI entry point, called with a settings file, optional schedule and optional mod
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{settings=settings}: Settings file (required)
+\item[] \hspace{.5cm} \verb"settings=settings": Settings file (required)
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{schedule=schedule}: Schedule file (required if mode is "auto")
+\item[] \hspace{.5cm} \verb"schedule=schedule": Schedule file (required if mode is "auto")
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{mode=mode}: String mode, "auto" or "manual", defaults to "manual"
+\item[] \hspace{.5cm} \verb"mode=mode": String mode, "auto" or "manual", defaults to "manual"
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) TREE\_CLEANUP \label{Tree_Cleanup_lab}}
@@ -2561,7 +2570,7 @@ If this editor was created by the SDI console, alert it that we have closed.\new
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{id}: Widget id
+\item[] \hspace{.5cm} \verb"id": Widget id
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) TREE\_EVENT \label{Tree_Event_lab}}
@@ -2573,7 +2582,7 @@ Handle events generated by the tree widget.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{event}: Widget event structure
+\item[] \hspace{.5cm} \verb"event": Widget event structure
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) WRITE\_SPECTRA\_NETCDF \label{Write_Spectra_NetCDF_lab}}
@@ -2581,35 +2590,35 @@ Handle events generated by the tree widget.\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/write\_spectra\_netcdf.pro} \newline
 \textbf{Procedure Documentation:} \\
-No Doc\newline
+Wrapper for creating and writing to NETCDF files, used by the Spectrum plugin to save spectral data.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{ncdid}: No Doc
+\item[] \hspace{.5cm} \verb"ncdid": File id to write to, 0 if opening a new file
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{spectra}: No Doc
+\item[] \hspace{.5cm} \verb"spectra": The array of spectra (nzones X nchannels
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{start\_time}: No Doc
+\item[] \hspace{.5cm} \verb"start_time": The time at which the exposure started
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{end\_time}: No Doc
+\item[] \hspace{.5cm} \verb"end_time": The time at which the exposure finished
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{nscans}: No Doc
+\item[] \hspace{.5cm} \verb"nscans": The number of scans in the exposure
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{acc\_im}: No Doc
+\item[] \hspace{.5cm} \verb"acc_im": The accumulated allsky image for the exposure
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{create=create}: No Doc
+\item[] \hspace{.5cm} \verb"create=create": Set this to create a new file
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{fname=fname}: No Doc
+\item[] \hspace{.5cm} \verb"fname=fname": Filename of the file
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{return\_id=return\_id}: No Doc
+\item[] \hspace{.5cm} \verb"return_id=return_id": When creating a new file, the netcdf id is returned
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{header=header}: No Doc
+\item[] \hspace{.5cm} \verb"header=header": Header info, when creating a new file
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{data=data}: No Doc
+\item[] \hspace{.5cm} \verb"data=data": Misc data, see function body
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{reopen=reopen}: No Doc
+\item[] \hspace{.5cm} \verb"reopen=reopen": Reopen a file and append to it, for example after a shutdown
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{update=update}: No Doc
+\item[] \hspace{.5cm} \verb"update=update": Open for writing, see function body
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) COMMS\_WRAPPER \label{comms_wrapper_lab}}
@@ -2621,13 +2630,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{port}: No Doc
+\item[] \hspace{.5cm} \verb"port": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{dll\_name}: No Doc
+\item[] \hspace{.5cm} \verb"dll_name": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{type=type}: No Doc
+\item[] \hspace{.5cm} \verb"type=type": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{}: No Doc
+\item[] \hspace{.5cm} \verb"": No Doc
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) CONSOLE\_CRASH\_ROUTINE \label{console_crash_routine_lab}}
@@ -2635,12 +2644,11 @@ No Doc\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/crash\_routines.pro} \newline
 \textbf{Procedure Documentation:} \\
-Check to see if the console `crash' file is present. If it is, it is likely that the\newline
-SDI console has stopped running, and this gets logged.\newline
+Check to see if the console `crash' file is present. If it is, it is likely that the SDI console has stopped running, and this gets logged.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{log\_file}: The filename to send/append log output to
+\item[] \hspace{.5cm} \verb"log_file": The filename to send/append log output to
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) CONSOLE\_MAKE\_CRASH\_FILE \label{console_make_crash_file_lab}}
@@ -2652,7 +2660,7 @@ Create the console `crash' file.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{crash\_file}: Filename for the crash file
+\item[] \hspace{.5cm} \verb"crash_file": Filename for the crash file
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) CRASH\_ROUTINES \label{crash_routines_lab}}
@@ -2660,9 +2668,7 @@ Create the console `crash' file.\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/crash\_routines.pro} \newline
 \textbf{Procedure Documentation:} \\
-This gets called by a Windows scheduled script, and checks to see if a crash file is\newline
-present (the console should delete this file, so if it is present, the console has likely\newline
-crashed), and if so it logs a crash. If not ,it recreates the file.\newline
+This gets called by a Windows scheduled script, and checks to see if a crash file is present (the console should delete this file, so if it is present, the console has likely crashed), and if so it logs a crash. If not ,it recreates the file.\newline
 Takes no arguments \\
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) DEFINE\_VARIABLES \label{define_variables_lab}}
@@ -2674,7 +2680,7 @@ Create the SDI variables/structures.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{var\_holder}: Variables will be returned in this structure
+\item[] \hspace{.5cm} \verb"var_holder": Variables will be returned in this structure
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) DRIVE\_MOTOR\_WAIT\_FOR\_POSITION \label{drive_motor_wait_for_position_lab}}
@@ -2682,20 +2688,19 @@ Create the SDI variables/structures.\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/drive\_motor.pro} \newline
 \textbf{Procedure Documentation:} \\
-Wait for a position reached notification from the motor (a `p' character). A timeout\newline
-can be provided to prevent waiting forever.\newline
+Wait for a position reached notification from the motor (a `p' character). A timeout can be provided to prevent waiting forever.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{port}: Com port for the motor
+\item[] \hspace{.5cm} \verb"port": Com port for the motor
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{dll\_name}: Name of the SDI\_External dll
+\item[] \hspace{.5cm} \verb"dll_name": Name of the SDI\_External dll
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{com}: String `com' type, e.g. "moxa"
+\item[] \hspace{.5cm} \verb"com": String `com' type, e.g. "moxa"
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{max\_wait\_time=max\_wait\_time}: Max time to wait in seconds
+\item[] \hspace{.5cm} \verb"max_wait_time=max_wait_time": Max time to wait in seconds
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{errcode=errcode}: Returned error code
+\item[] \hspace{.5cm} \verb"errcode=errcode": Returned error code
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) EDIT\_CONSOLE\_SETTINGS \label{edit_console_settings_lab}}
@@ -2703,16 +2708,15 @@ can be provided to prevent waiting forever.\newline
 \textbf{Defined in file:} \newline
 \small{C:/cal/Operations/SDI\_Instruments/common/idl/core/edit\_console\_settings.pro} \newline
 \textbf{Procedure Documentation:} \\
-Entry point for the console settings editor. Can be called ddirectly from IDL command line,\newline
-or from the SDI console.\newline
+Entry point for the console settings editor. Can be called ddirectly from IDL command line, or from the SDI console.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{filename=filename}: Pass in a filename to load upon startup
+\item[] \hspace{.5cm} \verb"filename=filename": Pass in a filename to load upon startup
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{leader=leader}: Widget leader, when called from the console
+\item[] \hspace{.5cm} \verb"leader=leader": Widget leader, when called from the console
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{console=console}: The console object reference, if started from the console
+\item[] \hspace{.5cm} \verb"console=console": The console object reference, if started from the console
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) EDIT\_LOAD\_SETTINGS \label{edit_load_settings_lab}}
@@ -2724,7 +2728,7 @@ Load a settings file from disk.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{filename=filename}: Filename to load
+\item[] \hspace{.5cm} \verb"filename=filename": Filename to load
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) EDIT\_PORT\_SETTINGS \label{edit_port_settings_lab}}
@@ -2744,9 +2748,9 @@ Save the current settings.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{filename=filename}: Filename to save to
+\item[] \hspace{.5cm} \verb"filename=filename": Filename to save to
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{nosplash=nosplash}: Optionally hide the "File saved" dialog
+\item[] \hspace{.5cm} \verb"nosplash=nosplash": Optionally hide the "File saved" dialog
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) GET\_JD0\_SEC \label{get_jd0_sec_lab}}
@@ -2758,9 +2762,9 @@ Get the current julian date and the seconds into the day.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{jd0}: OUT: Julian date at midnight I think...
+\item[] \hspace{.5cm} \verb"jd0": OUT: Julian date at midnight I think...
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{sec}: OUT: Seconds into the julian day
+\item[] \hspace{.5cm} \verb"sec": OUT: Seconds into the julian day
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) LOAD\_PAL \label{load_pal_lab}}
@@ -2772,13 +2776,13 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{culz}: No Doc
+\item[] \hspace{.5cm} \verb"culz": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{idl\_table=itbl}: No Doc
+\item[] \hspace{.5cm} \verb"idl_table=itbl": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{bright=brt}: No Doc
+\item[] \hspace{.5cm} \verb"bright=brt": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{proportion=prp}: No Doc
+\item[] \hspace{.5cm} \verb"proportion=prp": No Doc
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) PAL\_SUBSAMP \label{pal_subsamp_lab}}
@@ -2790,21 +2794,21 @@ No Doc\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{idxlo}: No Doc
+\item[] \hspace{.5cm} \verb"idxlo": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{idxhi}: No Doc
+\item[] \hspace{.5cm} \verb"idxhi": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{sred}: No Doc
+\item[] \hspace{.5cm} \verb"sred": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{sgrn}: No Doc
+\item[] \hspace{.5cm} \verb"sgrn": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{sblu}: No Doc
+\item[] \hspace{.5cm} \verb"sblu": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{brt}: No Doc
+\item[] \hspace{.5cm} \verb"brt": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{satval}: No Doc
+\item[] \hspace{.5cm} \verb"satval": No Doc
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{sign}: No Doc
+\item[] \hspace{.5cm} \verb"sign": No Doc
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \section*{(pro) RESTART\_MOXA \label{restart_moxa_lab}}
@@ -2824,23 +2828,23 @@ Query an SDI schedule file for the next command.\newline
 \textbf{Arguments:}
 \begin{description}
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{schedule\_file}: Schedule file name
+\item[] \hspace{.5cm} \verb"schedule_file": Schedule file name
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{schedule\_line}: The current schedule line
+\item[] \hspace{.5cm} \verb"schedule_line": The current schedule line
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{xcomm}: OUT: string command
+\item[] \hspace{.5cm} \verb"xcomm": OUT: string command
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{xargs}: OUT: string array of arguments
+\item[] \hspace{.5cm} \verb"xargs": OUT: string array of arguments
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{lat}: Geographic latitude
+\item[] \hspace{.5cm} \verb"lat": Geographic latitude
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{lon}: Geographic longitude
+\item[] \hspace{.5cm} \verb"lon": Geographic longitude
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{console\_ref}: Object reference for the console
+\item[] \hspace{.5cm} \verb"console_ref": Object reference for the console
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{refresh\_nm\_per\_step=refresh\_nm\_per\_step}: Look for a nm per step refresh command (special syntax)
+\item[] \hspace{.5cm} \verb"refresh_nm_per_step=refresh_nm_per_step": Look for a nm per step refresh command (special syntax)
 \vspace{-.15cm}
-\item[] \hspace{.5cm} \textit{refresh\_phasemap=refresh\_phasemap}: Look for a phasemap refresh command (special syntax)
+\item[] \hspace{.5cm} \verb"refresh_phasemap=refresh_phasemap": Look for a phasemap refresh command (special syntax)
 \end{description}
 \begin{center}\rule{.85\textwidth}{.01cm}\end{center}
 \end{document}

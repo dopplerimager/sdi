@@ -1,9 +1,9 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
-function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<No Doc>
-                           data=data                        ;\A\<No Doc>
+;\D\<Initialize the Vidshow plugin.>
+function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<Restored settings>
+                           data=data                        ;\A\<Misc data from the console>
 
 	self.need_timer = 0
 	self.need_frame = 1
@@ -70,8 +70,8 @@ function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::scaling, event  ;\A\<No Doc>
+;\D\<Toggle between using the manual scale factor and auto scaling, called from the menu.>
+pro SDIVidshow::scaling, event  ;\A\<Widget event>
 
 	if self.scale eq 1 then self.scale = 0 else self.scale = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_Scaler')
@@ -80,8 +80,9 @@ pro SDIVidshow::scaling, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::mask_quadrants, event  ;\A\<No Doc>
+;\D\<Mask out most of the four quadrants of the image, leaving only a small `cross' of the>
+;\D\<image left to display, helps for slow connections, called from the menu.>
+pro SDIVidshow::mask_quadrants, event  ;\A\<Widget event>
 
 	if self.mask_quadrants eq 1 then self.mask_quadrants = 0 else self.mask_quadrants = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_masker')
@@ -90,8 +91,8 @@ pro SDIVidshow::mask_quadrants, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::set_scale, event  ;\A\<No Doc>
+;\D\<Set a manual scale value applied to image prior to display, called from the menu.>
+pro SDIVidshow::set_scale, event  ;\A\<Widget event>
 
 	s = self.scale_fac
 	xvaredit, s, name = 'Set Image Gain Factor', group = self.id
@@ -99,8 +100,8 @@ pro SDIVidshow::set_scale, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::set_grid, event  ;\A\<No Doc>
+;\D\<Toggle on/off displaying a grid overlay, called from the menu.>
+pro SDIVidshow::set_grid, event  ;\A\<Widget event>
 
 	if self.grid eq 1 then self.grid = 0 else self.grid = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_grid')
@@ -109,8 +110,8 @@ pro SDIVidshow::set_grid, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::set_crosshairs, event  ;\A\<No Doc>
+;\D\<Toggle on/off diaplying the crosshairs, called from the menu.>
+pro SDIVidshow::set_crosshairs, event  ;\A\<Widget event>
 
 	if self.crosshairs eq 1 then self.crosshairs = 0 else self.crosshairs = 1
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_crosshairs')
@@ -119,8 +120,8 @@ pro SDIVidshow::set_crosshairs, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::set_crosshairs_point, event  ;\A\<No Doc>
+;\D\<Set where the crosshairs intersect (x, y), called from the menu.>
+pro SDIVidshow::set_crosshairs_point, event  ;\A\<Widget event>
 
 	pnt = self.crosshairs_point
 	xvaredit, pnt, name = 'Set Crosshair X and Y Intersect', group = self.id
@@ -128,9 +129,9 @@ pro SDIVidshow::set_crosshairs_point, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::frame_event, image, $     ;\A\<No Doc>
-                             channel      ;\A\<No Doc>
+;\D\<Receive a new camera frame, scale it and display.>
+pro SDIVidshow::frame_event, image, $     ;\A\<Latest camera image>
+                             channel      ;\A\<Current scan channel>
 
 	vid_image = image - min(image)
 
@@ -185,8 +186,8 @@ pro SDIVidshow::frame_event, image, $     ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::fit_window, event  ;\A\<No Doc>
+;\D\<Resize the window to fit the native resolution of the camera image, called from the menu.>
+pro SDIVidshow::fit_window, event  ;\A\<Widget event>
 
 	view_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_Vidarea')
 	widget_control, xsize = self.xdim, ysize = self.ydim, view_id
@@ -194,8 +195,8 @@ pro SDIVidshow::fit_window, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIVidshow::set_color_table, event  ;\A\<No Doc>
+;\D\<Set the color table, called when user selects this option from the menu.>
+pro SDIVidshow::set_color_table, event  ;\A\<Widget event>
 
 	c = self.color_table
 	xvaredit, c, name = 'Set Color Table Index:', group = self.id
@@ -203,7 +204,7 @@ pro SDIVidshow::set_color_table, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<Get settings to save.>
 function SDIVidshow::get_settings
 
 	struc = {id:self.id, scale:self.scale, scale_fac: self.scale_fac, exp_time:self.exp_time, geometry:self.geometry, need_timer:self.need_timer, $
@@ -214,13 +215,13 @@ function SDIVidshow::get_settings
 
 end
 
-;\D\<No Doc>
+;\D\<Cleanup - nothing to do.>
 pro SDIVidshow::cleanup, log  ;\A\<No Doc>
 
 
 end
 
-;\D\<No Doc>
+;\D\<The Vidshow plugin displays the latest camera images as they are recorded.>
 pro SDIVidshow__define
 
 	void = {SDIVidshow, id: 0L, inst:0, exp_time: 0.03, xdim:0, ydim:0, scale:0, scale_fac:0.005, $

@@ -1,9 +1,9 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
-function SDIStepsPerOrder::init, restore_struc=restore_struc, $   ;\A\<No Doc>
-                                 data=data                        ;\A\<No Doc>
+;\D\<Initialize the StepsPerOrder plugin.>
+function SDIStepsPerOrder::init, restore_struc=restore_struc, $   ;\A\<Restored settings>
+                                 data=data                        ;\A\<Misc data from the console>
 
 
 	;\\ Generic Settings
@@ -97,8 +97,9 @@ function SDIStepsPerOrder::init, restore_struc=restore_struc, $   ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIStepsPerOrder::Toggle_Record, event  ;\A\<No Doc>
+;\D\<Toggle on/off the option to record steps/order values to a dedicated log file. This option is located>
+;\D\<under the file menu of the plugin, and will be rememberd for this plugin.>
+pro SDIStepsPerOrder::Toggle_Record, event  ;\A\<Widget event>
 
 	if self.record_value eq 1 then begin
 		self.record_value = 0
@@ -110,8 +111,8 @@ pro SDIStepsPerOrder::Toggle_Record, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIStepsPerOrder::start_scan, event  ;\A\<No Doc>
+;\D\<Start scanning, set-up variables.>
+pro SDIStepsPerOrder::start_scan, event  ;\A\<Widget event>
 
 	if self.scanning ne 1 then begin
 
@@ -170,8 +171,8 @@ pro SDIStepsPerOrder::start_scan, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function SDIStepsPerOrder::auto_start, args  ;\A\<No Doc>
+;\D\<Auto-start called when running in auto-mode.>
+function SDIStepsPerOrder::auto_start, args  ;\A\<String array of arguments from the schedule file>
 
 	if n_elements(args) ne 5 then return, 'Error: wrong # of arguments'
 
@@ -230,9 +231,12 @@ function SDIStepsPerOrder::auto_start, args  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro SDIStepsPerOrder::frame_event, image, $     ;\A\<No Doc>
-                                   channel      ;\A\<No Doc>
+;\D\<Process the latest camera frame: bascially calculate the correlation between the current>
+;\D\<camera image and a reference image, store this value in a vector. If finished scanning,>
+;\D\<fit the vector of correlation values to find the peak, and calculate the steps/order value>
+;\D\<based on the position of that peak and the number of channels in a scan.>
+pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
+                                   channel      ;\A\<Current scan channel>
 
 	scan = self.curr_chord
 
@@ -367,8 +371,8 @@ pro SDIStepsPerOrder::frame_event, image, $     ;\A\<No Doc>
 NEXT_FRAME_EVENT:
 end
 
-;\D\<No Doc>
-pro SDIStepsPerOrder::stop_scan, event  ;\A\<No Doc>
+;\D\<Stop the current scan, no steps/order value will be saved.>
+pro SDIStepsPerOrder::stop_scan, event  ;\A\<Widget event>
 
 	if self.scanning eq 1 then begin
 		self.scanning = 0
@@ -386,7 +390,7 @@ pro SDIStepsPerOrder::stop_scan, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<Get settings to save.>
 function SDIStepsPerOrder::get_settings
 
 	struc = {id:self.id, num_chords:self.num_chords, start_volt_offset:self.start_volt_offset, stop_volt_offset:self.stop_volt_offset, $
@@ -397,7 +401,7 @@ function SDIStepsPerOrder::get_settings
 
 end
 
-;\D\<No Doc>
+;\D\<Cleanup - free pointers, stop any active scan.>
 pro SDIStepsPerOrder::cleanup, log  ;\A\<No Doc>
 
 	ptr_free, self.corr, self.image, self.ref_image, self.chord_hist
@@ -409,7 +413,9 @@ pro SDIStepsPerOrder::cleanup, log  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<The StepsPerOrder plugin is used to calculate the size of the `voltage' increment that>
+;\D\<needs to be applied to each etalon leg at each channel in a scan such that a full scan>
+;\D\<corresponds to a unit change in interference order.>
 pro SDIStepsPerOrder__define
 
 	void = {SDIStepsPerOrder, id:0L, $

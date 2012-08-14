@@ -1,14 +1,14 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
-function XDILog::init, log_window=log_window, $   ;\A\<No Doc>
-                       show_log=show_log, $       ;\A\<No Doc>
-                       prog_name=prog_name, $     ;\A\<No Doc>
-                       log_path=log_path, $       ;\A\<No Doc>
-                       log_append=log_append, $   ;\A\<No Doc>
-                       enabled=enabled, $         ;\A\<No Doc>
-                       header=header              ;\A\<No Doc>
+;\D\<Initialize the log.>
+function XDILog::init, log_window=log_window, $   ;\A\<Widget window for the log, optional>
+                       show_log=show_log, $       ;\A\<Show the log>
+                       prog_name=prog_name, $     ;\A\<The name of the plugin, used for naming log files>
+                       log_path=log_path, $       ;\A\<Path to store the log files>
+                       log_append=log_append, $   ;\A\<Append to existing logs>
+                       enabled=enabled, $         ;\A\<Is logging enabled?>
+                       header=header              ;\A\<A header for the log file, used when creating a new log>
 
 	self.show_log  = show_log
 	self.prog_name = prog_name
@@ -65,8 +65,8 @@ function XDILog::init, log_window=log_window, $   ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDILog::update, entry  ;\A\<No Doc>
+;\D\<Add an entry to the log, prepending a date/time string.>
+pro XDILog::update, entry  ;\A\<String entry to add to the log>
 
 if self.enabled eq 1 then begin
 
@@ -101,14 +101,14 @@ endif
 
 end
 
-;\D\<No Doc>
+;\D\<Refresh the log window with the current log contents.>
 pro XDILog::refresh
 
 	if self.show_log eq 1 and widget_info(self.log_window, /valid_id) eq 1 and self.enabled eq 1 then widget_control, set_value = self.log, self.log_window
 
 end
 
-;\D\<No Doc>
+;\D\<The Log class manages writing log output, both to the console log window and to a text file.>
 pro XDILog__define
 
 	void = {XDILog, log: strarr(100), log_window: 0L, prog_name:'', log_path:'', show_log:0, curdate:'', append:0, enabled:0}

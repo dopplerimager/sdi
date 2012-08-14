@@ -1,7 +1,9 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
+;\D\<This class defined basic properties all plugins inherit, like geometry, references to the>
+;\D\<console and widget manager, flags like need\_timer and need\_frame, etc. For a plugin to>
+;\D\<work, it must inherit from XDIBase.>
 pro XDIBase__define
 
 	load_pal, culz, idl = [3,1]

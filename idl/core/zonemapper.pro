@@ -1,16 +1,16 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<Function/method/pro documentation here>
-function zonemapper, nx, $          ;\A\<Arg0>
-                     ny, $          ;\A\<Arg1>
-                     cent, $        ;\A\<Arg2>
-                     rads, $        ;\A\<Arg3>
-                     secs, $        ;\A\<Arg4>
-                     nums, $        ;\A\<Arg5>
-                     show=show, $      ;\A\<Arg6>
-                     outang=outang, $
-                     outrad=outrad
+;\D\<Creates a zone map, a 2D array of numbers indicating the zone number of each pixel.>
+function zonemapper, nx, $          ;\A\<X dimension>
+                     ny, $          ;\A\<Y dimension>
+                     cent, $        ;\A\<2-element vector containing x and y center pixels>
+                     rads, $        ;\A\<Vector containing the radius of each ring>
+                     secs, $        ;\A\<Vector containing the number of sectors in each ring>
+                     nums, $        ;\A\<This should be set to 0, it is not needed>
+                     show=show, $      ;\A\<Show the resulting zonemap>
+                     outang=outang, $  ;\A\<OUT: return the `azimuth' of each zone>
+                     outrad=outrad	   ;\A\<OUT: return the radius of each zone>
 
 nums = secs
 nums(0) = 0
