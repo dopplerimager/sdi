@@ -2544,9 +2544,7 @@ end
 ;\D\<No Doc>
 pro XDIConsole__define
 
-	;\\ Text between the hashed lines is executed by the settings editor,
-	;\\ so only fields that are saved in the settings file should be included
-	;\\ between these lines (they should not be altered or indented)
+
 
 ;################################################################
 
