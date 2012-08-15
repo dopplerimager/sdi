@@ -1,0 +1,90 @@
+#This is a comment line, and should be ignored
+
+# %% is read as a steps per order control line
+# && is read as a phasemap control line
+# they are only executed if either of them needs refreshing,
+# as determined by the console
+
+# Commands and args are:
+# spectrum: [lambda, zone settings file, file name format]
+# stepsperorder: [lambda, start volt offset, stop volt offset, number of scans, step size]
+# phasemapper: [source1, source2, lambda1, lambda2, cam_gain, smooth_size]
+# shutterclose: [dummy]
+# shutdownspex: [dummy]
+# cameraset: [exposure time, gain]
+# runscript: [name of idl pro file to run, no extension needed]
+# mirror: [home_sky | home_cal | drive_sky | drive_cal]
+# cal_switch: [calibration source number]
+
+
+%% stepsperorder: [632.8, 660, 730, 30, 4, 50, 0.18]
+
+&& phasemapper: [0,1, 632.8, 632.8, 50, 0.18, 3]
+
+# Phase map taken at start and end of each night:
+ifsea: [-3, -2.5] [cont]
+	cameraset: [0.18, 50]
+	phasemapper: [0, 1, 632.8, 632.8, 50, 0.18, 3]
+	spectrum: [632.8, default_zones.txt, `Y$_doy$_Poker_Laser6328_Red_Cal_Date_0n$_0d$.pf`]
+ifsea: [-3, -2.5] [loop]
+
+# Sodium twilight:
+ifsea: [-7, -3] [cont]
+	cameraset: [0.18, 50]	
+	mirror: [drive_cal]
+	cal_switch: [1]
+	spectrum: [632.8, default_zones.txt, `Y$_doy$_Poker_Laser6328_Red_Cal_Date_0n$_0d$.pf`]		
+
+	filter: [5]	
+	mirror: [drive_sky]
+	cal_switch: [1]
+	cameraset: [0.18, 230]
+	spectrum: [589.0, default_zones.txt, `Y$_doy$_Poker_589nm_Sodium_Sky_Date_0n$_0d$.nc`]
+	spectrum: [589.0, default_zones.txt, `Y$_doy$_Poker_589nm_Sodium_Sky_Date_0n$_0d$.nc`]
+	spectrum: [589.0, default_zones.txt, `Y$_doy$_Poker_589nm_Sodium_Sky_Date_0n$_0d$.nc`]
+	
+ifsea: [-7, -3] [loop]
+
+# Main Red-Green loop:
+ifsea: [-100, -7] [cont]
+
+	cameraset: [0.18, 50]	
+
+	mirror: [drive_cal]
+	cal_switch: [1]
+	spectrum: [632.8, default_zones.txt, `Y$_doy$_Poker_Laser6328_Red_Cal_Date_0n$_0d$.pf`]		
+
+	mirror: [drive_sky]
+	filter: [1]	
+	cameraset: [0.18, 500]
+	spectrum: [630.0, default_zones.txt, `Y$_doy$_Poker_630nm_Red_Sky_Date_0n$_0d$.nc`]
+	filter: [2]	
+	
+	spectrum: [557.7, default_zones.txt, `Y$_doy$_Poker_558nm_Green_Sky_Date_0n$_0d$.nc`]		
+	filter: [1]	
+	
+	spectrum: [630.0, default_zones.txt, `Y$_doy$_Poker_630nm_Red_Sky_Date_0n$_0d$.nc`]
+	filter: [2]	
+	
+	spectrum: [557.7, default_zones.txt, `Y$_doy$_Poker_558nm_Green_Sky_Date_0n$_0d$.nc`]
+
+ifsea: [-100, -7] [loop]
+
+	cameraset: [0.05, 1]	
+	mirror: [drive_cal]
+
+
+# Full daylight stuff:
+ifsea: [-3, 120] [cont]
+	shutterclose: [1]
+	shutdownspex: [1]
+	runscript: [poker_ftp_data]
+	mirror: [drive_cal]
+
+ifsea: [-3, 120] [loop]
+
+
+
+
+
+
