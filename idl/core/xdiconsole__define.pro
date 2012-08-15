@@ -1,11 +1,12 @@
 ;\\ Code formatted by DocGen
 
 
-;\D\<No Doc>
-function XDIConsole::init, schedule=schedule, $       ;\A\<No Doc>
-                           mode=mode, $               ;\A\<No Doc>
-                           settings=settings, $       ;\A\<No Doc>
-                           start_line=start_line      ;\A\<No Doc>
+;\D\<The console initialization routine. See the SDI software manual for a description of>
+;\D\<what this function does.>
+function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file name>
+                           mode=mode, $               ;\A\<Mode to run in - "auto" or "manual" (default)>
+                           settings=settings, $       ;\A\<The console settings file (required)>
+                           start_line=start_line      ;\A\<Optional start line in the schedule file>
 
 	if keyword_set(mode) then begin
 		if mode eq 'auto' and not keyword_set(schedule) then begin
@@ -248,8 +249,11 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::Event_Handler, event  ;\A\<No Doc>
+;\D\<Widget events get re-routed from the sdi\_main.pro to here. If the event is a tiemr event,>
+;\D\<the timer\_event method in those plugins which are registered to receive timer events>
+;\D\<(which includes the console itself) is called. For other events (for example a user clicks>
+;\D\<a button in a plugin) they are sent to their appropriate plugin.>
+pro XDIConsole::Event_Handler, event  ;\A\<Widget event>
 
 	;\\ TIMER EVENT
 
@@ -304,9 +308,16 @@ pro XDIConsole::Event_Handler, event  ;\A\<No Doc>
 EVENT_SKIP:
 end
 
-;\D\<No Doc>
-pro XDIConsole::Kill_Handler, id, $                        ;\A\<No Doc>
-                              kill_widget=kill_widget      ;\A\<No Doc>
+;\D\<Widget destruction events are re-routed from the sdi\_main.pro handler to here. This>
+;\D\<function checks to see if we are destroying the whole hierarchy (if the user closed the>
+;\D\<console) or just a single plugin. Before destroying a plugin, this function checks to see>
+;\D\<if that plugin requires any of its settings to be saved, and if so, gets the widget manager>
+;\D\<object to save those settings. If the whole hierarchy is being destroyed, this function>
+;\D\<attempts to shut down the camera. If cooling is on, a flag is set which tells the console>
+;\D\<to wait for the temperature to go above a safe temperature (0 degrees C i think) before>
+;\D\<actually terminating. This check is done inside the timer\_event method.>
+pro XDIConsole::Kill_Handler, id, $                        ;\A\<Widget id>
+                              kill_widget=kill_widget      ;\A\<Flag to indicate widget is to be destroyed>
 
 ;\\ info.kill = 1 means the whole heirarchy is being destroyed (end of session)
 
@@ -359,8 +370,11 @@ pro XDIConsole::Kill_Handler, id, $                        ;\A\<No Doc>
 SKIP_KILL:
 end
 
-;\D\<No Doc>
+;\D\<Timer events are processed here, this involves checking the camera for new images, updating>
+;\D\<solar elevation angle etc, incrementing the scan channel if a new image arrived, passing>
+;\D\<new images onto to registered plugins, and checking to see if a new schedule command is required.>
 pro XDIConsole::timer_event
+
 	common console_images, image, img_buf
 	common mc_timesaver, numav, mc_start, frame_rate
 
@@ -651,10 +665,13 @@ pro XDIConsole::timer_event
 TIMER_EVENT_END:
 end
 
-;\D\<No Doc>
-pro XDIConsole::end_auto_object, id, $          ;\A\<No Doc>
-                                 ref, $         ;\A\<No Doc>
-                                 kill=kill      ;\A\<No Doc>
+;\D\<Plugins which are running in auto-mode can call this method to indicate that they have>
+;\D\<finished their current task, and another plugin can be made active. Plugins that don't>
+;\D\<stick around (like the phasemapper) can also indicate that they should be destroyed.>
+;\D\<stepsperorder plugins.>
+pro XDIConsole::end_auto_object, id, $          ;\A\<Widget id>
+                                 ref, $         ;\A\<Ovject reference>
+                                 kill=kill      ;\A\<Destroy the plugin>
 
 	if ref eq self.misc.active_object then begin
 		self.misc.active_object = obj_new()
@@ -667,7 +684,8 @@ pro XDIConsole::end_auto_object, id, $          ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<The implementation of schedule file commands are placed in this function. If new schedule>
+;\D\<commands are added, their actions should be placed in this method.>
 pro XDIConsole::execute_schedule
 
 	schedule_file = self.runtime.schedule
@@ -857,7 +875,8 @@ pro XDIConsole::execute_schedule
 END_EXECUTE_SCHEDULE:
 end
 
-;\D\<No Doc>
+;\D\<This is called by Spectrum plugins if they detect that something has gone wrong with the laser.>
+;\D\<It shuts down all Spectrum plugins. The calling plugin then restarts the SDI software.>
 pro XDIConsole::shutdown_spex
 
 	self->log, 'LOST LASER SIGNAL - SHUTDOWN_SPEX CALLED', 'Console', /display
@@ -873,7 +892,9 @@ pro XDIConsole::shutdown_spex
 
 end
 
-;\D\<No Doc>
+;\D\<When a user clicks on a plugin in the menu or a schedule command requires a plugin to be>
+;\D\<created this method is called. It is responsible for creating the plugin/object, registering>
+;\D\<it with the widget manager>
 pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
                               args=args, $         ;\A\<No Doc>
                               new_obj=new_obj      ;\A\<No Doc>

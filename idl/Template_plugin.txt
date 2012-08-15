@@ -1,0 +1,114 @@
+;\\ Code formatted by DocGen
+
+
+;\D\<Initialize plugin here.>
+function SDITemplate::init, restore_struc=restore_struc, $   ;\A\<Restored settings>
+                            data=data                        ;\A\<Misc data from the console>
+
+	self.need_timer = 0
+	self.need_frame = 1 ;\\ indicate that we want to receive new camera image events
+	self.manager 	= data.manager
+	self.console 	= data.console
+	self.palette	= data.palette
+	self.obj_num 	= string(data.count, format = '(i0)') ;// used as a unique ID string for this plugin's widgets
+
+	if data.recover eq 1 then begin
+		;\\ Restore any saved settings here, for example geometry is always saved...
+			xsize 	= data.xdim
+			ysize 	= data.ydim
+			xoffset	= restore_struc.geometry.xoffset
+			yoffset	= restore_struc.geometry.yoffset
+
+	endif else begin
+		;\\ Provide some defaults if this is the first time the plugin has been started...
+			xsize = 500
+			ysize = 500
+			xoffset = 100
+			yoffset = 100
+	endelse
+
+
+	;\\ Create the gui
+	base = widget_base(xsize = xsize, $
+					   ysize = ysize, $
+					   xoffset = xoffset, $
+					   yoffset = yoffset, $
+					   mbar = menu, $
+					   title = 'Template', $
+					   group_leader = leader) ;\\ set the group leader, so that when the console is closed,
+					   						  ;\\ this plugin is closed also
+
+	file_menu = widget_button(menu, value = 'File') ;\\ give it a file menu
+
+	vid_show = widget_draw(base, $
+						   xsize = xsize, $
+						   ysize = ysize, $
+						   uname = 'Template_' + self.obj_num + '_Vidarea') ;\\ example of using the object number
+																			;\\ as a unique id for this widget
+
+	file_option = widget_button(file_menu, $
+								value = 'Dummy', $
+								uval = {tag:'dummy_event', $ 	;\\ the uval structure is used to route events to the correct method.
+										optional1:'string', $	;\\ widget events for this widget_button will now be sent to the
+										optional2:1234, $   	;\\ dummy_event method of this object. Additional optional fields
+										optional3:[1,2,3,4]} )	;\\ can be included in the uval struct, to pass along data.
+
+	self.id = base	;\\ set the id field (which must be present in the structure definition) to the base widget id
+
+	widget_control, base, /realize ;\\ create the widgets
+
+	return, 1
+
+end
+
+;\D\<We specified an event handler called dummy\_event in the init method, so we implement it>
+;\D\<here. Note that it must receive a widget event structure.>
+pro SDITemplate::dummy_event, event  ;\A\<Widget event structure>
+
+	;\\ Grab the uval structure for this event
+	widget_control, get_uval = uval, event.id
+
+	;\\ Do something with the optional data we included in the structure
+	print, uval.optional1
+	print, uval.optional2
+	print, uval.optional3
+
+end
+
+;\D\<Since we requested frame events in the init method, we need to implement this function.>
+pro SDITemplate::frame_event, image, $     ;\A\<Latest camera image>
+                              channel      ;\A\<Current scan channel>
+
+	;\\ Do awesome things with the new image here
+end
+
+;\D\<This method is \textbf{required} by all plugins, and should at the very least return>
+;\D\<a structure containing the id, need\_frame, need\_timer, and geometry fields of this>
+;\D\<plugin. It can also include any other settings that the plugin wants to save for restoring>
+;\D\<next time the plugin is started up.>
+function SDITemplate::get_settings
+
+	;\\ These fields are all required, we have not included any extra data to save
+	struc = {id:self.id, $
+			 need_timer:self.need_timer, $
+			 need_frame:self.need_frame, $
+			 geometry:self.geometry }
+
+	return, struc
+
+end
+
+;\D\<Cleanup - this is where we clean up after the plugin, close files, stop scans, free pointers, etc.>
+pro SDITemplate::cleanup, log  ;\A\<If log = 0 there is no console log, if 1, can use the log>
+
+	;\\ Do awesome cleanup here
+
+end
+
+;\D\<Define the data structure for this object/plugin.>
+pro SDITemplate__define
+
+	void = {SDITemplate, id: 0L, $ ;\\ must include an id field, which must be long
+						 inherits XDIBase} ;\\ must inherit from XDIBase
+
+end
