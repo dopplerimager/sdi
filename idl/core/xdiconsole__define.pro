@@ -976,9 +976,11 @@ pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
 			print, 'Cleared stored images...'
 end
 
-;\D\<No Doc>
-pro XDIConsole::update_camera, commands, $   ;\A\<No Doc>
-                               results       ;\A\<No Doc>
+;\D\<Update the camera with the current set of values stored in the \verb"camera" structure of>
+;\D\<the console settings. If you want to add new camera commands, do so here, and make sure to>
+;\D\<include the new command anywhere that this function is called.>
+pro XDIConsole::update_camera, commands, $   ;\A\<A string array of commands>
+                               results       ;\A\<OUT: a string array of results from the commands>
 
 	camera = self.camera
 
@@ -1163,8 +1165,14 @@ pro XDIConsole::update_camera, commands, $   ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::image_capture, event  ;\A\<No Doc>
+;\D\<Plugins can use this method to take captures of their draw widgets and have them saved to>
+;\D\<the \verb"screen_capture_path" field of the \verb"misc" structure in the console settings.>
+;\D\<Images can be saved as jpeg or png. The widget using this function needs to define a uval>
+;\D\<structure with the following with the following fields: tag:"image\_capture", type:"jpg" >
+;\D\<or "png", id:[array of tv ids], name:[array of string names, same size as id array].>
+;\D\<Events from widgets with a uval.tag of "image\_capture" will always be routed to here,>
+;\D\<instead of to the plugin as would usually occur.>
+pro XDIConsole::image_capture, event  ;\A\<Widget event>
 
 	widget_control, get_uval = struc, event.id
 
@@ -1192,11 +1200,11 @@ pro XDIConsole::image_capture, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::load_settings, event, $                   ;\A\<No Doc>
-                               filename=filename, $       ;\A\<No Doc>
-                               error=error, $             ;\A\<No Doc>
-                               first_call=first_call      ;\A\<No Doc>
+;\D\<Load console settings from a settings file.>
+pro XDIConsole::load_settings, event, $                   ;\A\<Widget event>
+                               filename=filename, $       ;\A\<Filename to load from>
+                               error=error, $             ;\A\<OUT: error code>
+                               first_call=first_call      ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
 
 	error = 0
 
@@ -1312,8 +1320,8 @@ pro XDIConsole::load_settings, event, $                   ;\A\<No Doc>
 END_LOAD:
 end
 
-;\D\<No Doc>
-pro XDIConsole::edit_settings, event  ;\A\<No Doc>
+;\D\<Launch the console settings editor \verb"edit_console_settings".>
+pro XDIConsole::edit_settings, event  ;\A\<Widget event>
 
 	edit_console_settings, filename = self.runtime.settings, $
 						   leader = self.misc.console_id, $
@@ -1321,8 +1329,8 @@ pro XDIConsole::edit_settings, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::editor_closed, event  ;\A\<No Doc>
+;\D\<Called when the editor, launched from the console, is closed. This applies the new settings.>
+pro XDIConsole::editor_closed, event  ;\A\<Widget event>
 
 	res = dialog_message('Reload current settings file?', /question)
 
@@ -1339,8 +1347,8 @@ pro XDIConsole::editor_closed, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::save_current_settings, filename=filename  ;\A\<No Doc>
+;\D\<Save current settings file.>
+pro XDIConsole::save_current_settings, filename=filename  ;\A\<Filename to save to>
 
 	var_holder = {etalon:self.etalon, camera:self.camera, header:self.header, logging:self.logging, misc:self.misc}
 
@@ -1364,10 +1372,11 @@ pro XDIConsole::save_current_settings, filename=filename  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::log, entry, $                         ;\A\<No Doc>
-                     sender, $                        ;\A\<No Doc>
-                     display_entry=display_entry      ;\A\<No Doc>
+;\D\<Called by widgets when they want to log events. These get logged to a log file,>
+;\D\<and optionally output to the display.>
+pro XDIConsole::log, entry, $                         ;\A\<String containing the log message>
+                     sender, $                        ;\A\<String identifying the sender of the message>
+                     display_entry=display_entry      ;\A\<Set this if the message is to be displayed to the console log window>
 
 ;		logging = {log,    log_directory:'', $
 ;				    time_name_format:'', $
@@ -1417,8 +1426,8 @@ pro XDIConsole::log, entry, $                         ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::mode_switch, event  ;\A\<No Doc>
+;\D\<This is called when the user toggles between auto and manual mode from the console menu.>
+pro XDIConsole::mode_switch, event  ;\A\<Widget event>
 
 	id = widget_info(self.misc.console_id, find_by_uname = 'Console_mode_switch')
 
@@ -1464,8 +1473,10 @@ pro XDIConsole::mode_switch, event  ;\A\<No Doc>
 END_MODE_SWITCH:
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_temp, event  ;\A\<No Doc>
+;\D\<Called to retrieve the current camera temperature. In normal camera running mode (run till abort)>
+;\D\<this will not retrieve the temperature unless the calling widget sets a field called \verb"force">
+;\D\<equal to 1, which forces an abort acquisition.>
+pro XDIConsole::cam_temp, event  ;\A\<Widget event>
 
 	widget_control, get_uval = uval, event.id
 
@@ -1483,8 +1494,8 @@ pro XDIConsole::cam_temp, event  ;\A\<No Doc>
 	self->log, 'Temperature State is: '  + self.camera.temp_state, 'Console', /display
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_status, event  ;\A\<No Doc>
+;\D\<Retrieve the current camera status.>
+pro XDIConsole::cam_status, event  ;\A\<Widget event>
 
 	status = 0
 	res = get_error(call_external(self.misc.dll_name, 'uGetStatus', status))
@@ -1496,8 +1507,9 @@ pro XDIConsole::cam_status, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_cooler, event  ;\A\<No Doc>
+;\D\<Called when the user clicks on the Cooler menu option. Opens up a widget for controlling camera>
+;\D\<temperature set point.>
+pro XDIConsole::cam_cooler, event  ;\A\<Widget event>
 
 	res = ''
 
@@ -1552,8 +1564,8 @@ pro XDIConsole::cam_cooler, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_cooler_event, event  ;\A\<No Doc>
+;\D\<Event handler for the camera cooler widget.>
+pro XDIConsole::cam_cooler_event, event  ;\A\<Widget event>
 
 	cool = self.camera.cooler_on
 
@@ -1618,11 +1630,11 @@ pro XDIConsole::cam_cooler_event, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::update_legs, leg1=leg1, $   ;\A\<No Doc>
-                             leg2=leg2, $   ;\A\<No Doc>
-                             leg3=leg3, $   ;\A\<No Doc>
-                             legs=legs      ;\A\<No Doc>
+;\D\<Update the etalon legs (plate separation).>
+pro XDIConsole::update_legs, leg1=leg1, $   ;\A\<Optional leg 1 value>
+                             leg2=leg2, $   ;\A\<Optional leg 2 value>
+                             leg3=leg3, $   ;\A\<Optional leg 3 value>
+                             legs=legs      ;\A\<Update all legs using their current values>
 
 	;print, 'Reached leg update 1:', systime()
 
@@ -1670,16 +1682,16 @@ pro XDIConsole::update_legs, leg1=leg1, $   ;\A\<No Doc>
 END_SCAN_ETALON:
 end
 
-;\D\<No Doc>
-pro XDIConsole::file_re_initialize, event  ;\A\<No Doc>
+;\D\<Call the instrument-specific initialise routine.>
+pro XDIConsole::file_re_initialize, event  ;\A\<Widget event>
 
 	;\\ Call the instrument specific initialisation routine
 		call_procedure, self.header.instrument_name + '_initialise', self.misc, self
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::file_show, event  ;\A\<No Doc>
+;\D\<Print out a list (to the console log) of active plugins.>
+pro XDIConsole::file_show, event  ;\A\<Widget event>
 
 	num = (self.manager -> count_objects()) - 1
 	struc = self.manager -> generate_list()
@@ -1691,8 +1703,8 @@ pro XDIConsole::file_show, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::file_show_sched, event  ;\A\<No Doc>
+;\D\<Open up notepad to show the current schedule file if one is set.>
+pro XDIConsole::file_show_sched, event  ;\A\<Widget event>
 
 	if self.runtime.schedule ne '' then begin
 		spawn, /noshell, /nowait, 'notepad ' + self.runtime.schedule
@@ -1700,14 +1712,14 @@ pro XDIConsole::file_show_sched, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::file_change_sched, event  ;\A\<No Doc>
+;\D\<Open up a dialog to select a new schedule file. Sets the current schedule\_line to 0.>
+pro XDIConsole::file_change_sched, event  ;\A\<Widget event>
 	 self.runtime.schedule = dialog_pickfile(path = self.misc.default_settings_path)
 	 self.misc.schedule_line = 0
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_initialize, event  ;\A\<No Doc>
+;\D\<Initialize the camera.>
+pro XDIConsole::cam_initialize, event  ;\A\<Widget event>
 
 	;\\ Initialise the camera
 		status = 0
@@ -1737,8 +1749,9 @@ pro XDIConsole::cam_initialize, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_shutdown, event  ;\A\<No Doc>
+;\D\<Shutdown the camera. If cooler is running, will flag that we need to wait for the cam temp to>
+;\D\<reach a safe level before doing a final shutdown.>
+pro XDIConsole::cam_shutdown, event  ;\A\<Widget event>
 
 	if size(event, /type) eq 7 then begin
 		if event eq 'console closed' then log = 0
@@ -1786,9 +1799,9 @@ pro XDIConsole::cam_shutdown, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_shutterclose, event, $               ;\A\<No Doc>
-                                  shutdown=shutdown      ;\A\<No Doc>
+;\D\<Close the camera shutter.>
+pro XDIConsole::cam_shutterclose, event, $               ;\A\<Widget event>
+                                  shutdown=shutdown      ;\A\<Flag to indicate we are shutting down the camera>
 
 	if self.runtime.shutter_state eq 1 then begin
 		res = call_external(self.misc.dll_name, 'uAbortAcquisition')
@@ -1806,8 +1819,8 @@ pro XDIConsole::cam_shutterclose, event, $               ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_shutteropen, event  ;\A\<No Doc>
+;\D\<Open the camera shutter>
+pro XDIConsole::cam_shutteropen, event  ;\A\<Widget event>
 
 	if self.runtime.shutter_state eq 0 then begin
 		res = call_external(self.misc.dll_name, 'uAbortAcquisition')
@@ -1824,10 +1837,10 @@ pro XDIConsole::cam_shutteropen, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::get_camera_temp, temp, $         ;\A\<No Doc>
-                                 temp_state, $   ;\A\<No Doc>
-                                 set_point       ;\A\<No Doc>
+;\D\<Fills up some variables with the current values of \verb"cam_temp, temp_state, cooler_temp".>
+pro XDIConsole::get_camera_temp, temp, $         ;\A\<OUT: camera temp currently stored in settings>
+                                 temp_state, $   ;\A\<OUT: camera temp state currently stored in settings>
+                                 set_point       ;\A\<OUT: camera cooler temp set point currently stored in settings>
 
 	temp = self.camera.cam_temp
 	temp_state = self.camera.temp_state
@@ -1835,34 +1848,34 @@ pro XDIConsole::get_camera_temp, temp, $         ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIConsole::get_image, image  ;\A\<No Doc>
+;\D\<Return the processed camera image currently stored in the console buffer.>
+function XDIConsole::get_image, image  ;\A\<No idea why this argument is here>
 
 	return, *self.buffer.image
 
 end
 
-;\D\<No Doc>
-function XDIConsole::get_raw_image, image  ;\A\<No Doc>
+;\D\<Return the raw camera image currently stored in the console buffer.>
+function XDIConsole::get_raw_image, image  ;\A\<No idea why this argument is here>
 
 	return, *self.buffer.raw_image
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::scan_etalon, caller, $                                ;\A\<No Doc>
-                             start_scan=start_scan, $                 ;\A\<No Doc>
-                             stop_scan=stop_scan, $                   ;\A\<No Doc>
-                             pause_scan=pause_scan, $                 ;\A\<No Doc>
-                             cont_scan=cont_scan, $                   ;\A\<No Doc>
-                             start_volt_offset=start_volt_offset, $   ;\A\<No Doc>
-                             stop_volt_offset=stop_volt_offset, $     ;\A\<No Doc>
-                             volt_step_size=volt_step_size, $         ;\A\<No Doc>
-                             status=status, $                         ;\A\<No Doc>
-                             reference=reference, $                   ;\A\<No Doc>
-                             get_ref=get_ref, $                       ;\A\<No Doc>
-                             wavelength=wavelength, $                 ;\A\<No Doc>
-                             force_start=force_start                  ;\A\<No Doc>
+;\D\<Interface for starting, stopping and pausing etalon scans.>
+pro XDIConsole::scan_etalon, caller, $                                ;\A\<String identifying who is calling this function>
+                             start_scan=start_scan, $                 ;\A\<Flag to start a new scan>
+                             stop_scan=stop_scan, $                   ;\A\<Flag to stop a scan>
+                             pause_scan=pause_scan, $                 ;\A\<Flag to pause a scan>
+                             cont_scan=cont_scan, $                   ;\A\<Flag to continue a paused scan>
+                             start_volt_offset=start_volt_offset, $   ;\A\<For manual scans, the start offset>
+                             stop_volt_offset=stop_volt_offset, $     ;\A\<For manual scans, the stop offset>
+                             volt_step_size=volt_step_size, $         ;\A\<For manual scans, the volt step size>
+                             status=status, $                         ;\A\<OUT: result of the call>
+                             reference=reference, $                   ;\A\<OUT: a reference image at zero offset>
+                             get_ref=get_ref, $                       ;\A\<Flag to indicate that we want a reference image (need to also supply reference keyword)>
+                             wavelength=wavelength, $                 ;\A\<Wavelength to scan at>
+                             force_start=force_start                  ;\A\<Force a scan to start even if already scanning>
 
 	status = ''
 
@@ -1986,7 +1999,7 @@ pro XDIConsole::scan_etalon, caller, $                                ;\A\<No Do
 END_SCAN_ETALON:
 end
 
-;\D\<No Doc>
+;\D\<Force the camera grab a new image (sometimes used when acquiring reference images).>
 function XDIConsole::force_image_update
 
 	if self.camera.acquisition_mode eq 1 then begin
@@ -2049,8 +2062,8 @@ function XDIConsole::force_image_update
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::see_calibration, event  ;\A\<No Doc>
+;\D\<Show the phase map.>
+pro XDIConsole::see_calibration, event  ;\A\<Widget event>
 
 	now_time = dt_tm_tojs(systime())
 	phase_lag_hours = (now_time - self.etalon.phasemap_time)/3600.
@@ -2088,9 +2101,9 @@ pro XDIConsole::see_calibration, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_exptime, event, $               ;\A\<No Doc>
-                             new_time=new_time      ;\A\<No Doc>
+;\D\<Set the camera exposure time.>
+pro XDIConsole::cam_exptime, event, $               ;\A\<Widget event>
+                             new_time=new_time      ;\A\<Use this to supply the new time, instead of asking for it>
 
 	if self.etalon.scanning eq 0 then begin
 
@@ -2114,9 +2127,9 @@ pro XDIConsole::cam_exptime, event, $               ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::cam_gain, event, $               ;\A\<No Doc>
-                          new_gain=new_gain      ;\A\<No Doc>
+;\D\<Set the camera EM gain.>
+pro XDIConsole::cam_gain, event, $               ;\A\<Widget event>
+                          new_gain=new_gain      ;\A\<Use this to supply the new gain, instead of asking for it>
 
 	if self.etalon.scanning eq 0 then begin
 
@@ -2140,8 +2153,10 @@ pro XDIConsole::cam_gain, event, $               ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<No Doc>
+;\D\<FTP a data snapshot provided by a spectrum plugin back to an SFTP server using PSFTP. The>
+;\D\<server and login info is store in \verb"logging.ftp_snapshot", for example:>
+;\D\<"137.111.22.333 -l username -pw password here".>
+pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<The data snapshot>
 
 	;\\ Example logging.ftp_snapshot:
 	;\\ '137.229.27.190 -l instrument -pw aer0n0my'
@@ -2164,8 +2179,8 @@ pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-function XDIConsole::get_spec_save_info, nrings  ;\A\<No Doc>
+;\D\<Spectrum plugins call this when creating new netcdf files.>
+function XDIConsole::get_spec_save_info, nrings  ;\A\<Number of rings in the zonemap>
 
 	pmap_dims = size(*self.etalon.phasemap_base, /dimensions)
 
@@ -2197,70 +2212,70 @@ function XDIConsole::get_spec_save_info, nrings  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<Return the \verb"header" structure.>
 function XDIConsole::get_header_info
 
 	return, self.header
 
 end
 
-;\D\<No Doc>
+;\D\<Return the \verb"etalon" structure.>
 function XDIConsole::get_etalon_info
 
 	return, self.etalon
 
 end
 
-;\D\<No Doc>
+;\D\<Return the \verb"logging" structure.>
 function XDIConsole::get_logging_info
 
 	return, self.logging
 
 end
 
-;\D\<No Doc>
+;\D\<Return the palette.>
 function XDIConsole::get_palette
 
 	return, self.misc.palette
 
 end
 
-;\D\<No Doc>
+;\D\<Return the port map structure.>
 function XDIConsole::get_port_map
 
 	return, self.misc.port_map
 
 end
 
-;\D\<No Doc>
+;\D\<Return the current phasemap path (where a copy of each phasemap is saved to).>
 function XDIConsole::get_phase_map_path
 
 	return, self.misc.phase_map_path
 
 end
 
-;\D\<No Doc>
+;\D\<Return the path where zone map settings files are stored.>
 function XDIConsole::get_zone_set_path
 
 	return, self.misc.zone_set_path
 
 end
 
-;\D\<No Doc>
+;\D\<Return the path where spectrum data stored.>
 function XDIConsole::get_spectra_path
 
 	return, self.misc.spectra_path
 
 end
 
-;\D\<No Doc>
+;\D\<Return the default settings path (for plugin settings files).>
 function XDIConsole::get_default_path
 
 	return, self.misc.default_settings_path
 
 end
 
-;\D\<No Doc>
+;\D\<Get the format string used to create netcdf file names in the spectral plugins.>
 function XDIConsole::get_time_name_format
 
 	js = dt_tm_tojs(systime())
@@ -2273,18 +2288,18 @@ function XDIConsole::get_time_name_format
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::set_nm_per_step, nm_per_step  ;\A\<No Doc>
+;\D\<Set a new value for the steps per order.>
+pro XDIConsole::set_nm_per_step, nm_per_step  ;\A\<New nm per step value>
 
 	self.etalon.nm_per_step = nm_per_step
 	self.etalon.nm_per_step_time = dt_tm_tojs(systime())
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::set_phasemap, phasemap_base, $     ;\A\<No Doc>
-                              phasemap_grad, $     ;\A\<No Doc>
-                              phasemap_lambda      ;\A\<No Doc>
+;\D\<Set new phasemap information (multiple info is required for interpolating).>
+pro XDIConsole::set_phasemap, phasemap_base, $     ;\A\<Phasemap recorded at the lower wavelength>
+                              phasemap_grad, $     ;\A\<`Gradient' used when interpolating>
+                              phasemap_lambda      ;\A\<Wavelength at which the base phasemap was recorded (the smaller of the two lambdas)>
 
 	*self.etalon.phasemap_base = phasemap_base
 	*self.etalon.phasemap_grad = phasemap_grad
@@ -2293,10 +2308,10 @@ pro XDIConsole::set_phasemap, phasemap_base, $     ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::get_phasemap, phasemap_base, $     ;\A\<No Doc>
-                              phasemap_grad, $     ;\A\<No Doc>
-                              phasemap_lambda      ;\A\<No Doc>
+;\D\<Get the phase map info.>
+pro XDIConsole::get_phasemap, phasemap_base, $     ;\A\<OUT: phasemap base>
+                              phasemap_grad, $     ;\A\<OUT: phasemap gradient>
+                              phasemap_lambda      ;\A\<OUT: wavelength of phasemap base>
 
 	phasemap_base = *self.etalon.phasemap_base
 	phasemap_grad = *self.etalon.phasemap_grad
@@ -2304,7 +2319,9 @@ pro XDIConsole::get_phasemap, phasemap_base, $     ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
+;\D\<I don't think this has ever been used, but it is meant to force all active spectral>
+;\D\<plugins to refresh their phasemaps, if for example a phase map refresh was called>
+;\D\<during observations.>
 pro XDIConsole::refresh_spec_pmaps
 
 	struc = self.manager -> generate_list()
@@ -2318,52 +2335,52 @@ pro XDIConsole::refresh_spec_pmaps
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::set_center, xcen, $   ;\A\<No Doc>
-                            ycen      ;\A\<No Doc>
+;\D\<Set the camera image center pixels.>
+pro XDIConsole::set_center, xcen, $   ;\A\<X center>
+                            ycen      ;\A\<Y center>
 
 	self.camera.xcen = xcen
 	self.camera.ycen = ycen
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::set_source_map, smap  ;\A\<No Doc>
+;\D\<Set the structure which defines the mapping between source position and wavelength.>
+pro XDIConsole::set_source_map, smap  ;\A\<New source map>
 
 	self.misc.source_map = smap
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::get_source_map, smap  ;\A\<No Doc>
+;\D\<Get the structure which defines the mapping between source position and wavelength.>
+pro XDIConsole::get_source_map, smap  ;\A\<OUT: current source map>
 
 	smap = self.misc.source_map
 
 end
 
-;\D\<No Doc>
+;\D\<Get the name of the SDI\_External dll.>
 function XDIConsole::get_dll_name
 
 	return, self.misc.dll_name
 
 end
 
-;\D\<No Doc>
+;\D\<Get the current value of snr per scan.>
 function XDIConsole::get_snr_per_scan
 
 	return, self.runtime.snr_per_scan
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::set_snr_per_scan, snr  ;\A\<No Doc>
+;\D\<Set a new value for snr/scan,>
+pro XDIConsole::set_snr_per_scan, snr  ;\A\<New snr value>
 
 	self.runtime.snr_per_scan = snr
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::mot_home_sky, event  ;\A\<No Doc>
+;\D\<Home the mirror motor to the sky viewing position. Calls instrument-specific file.>
+pro XDIConsole::mot_home_sky, event  ;\A\<Widget event>
 
 	call_procedure, self.header.instrument_name + '_mirror', home_motor = 'sky', self.misc, self
 	fpos = 1L
@@ -2378,8 +2395,8 @@ pro XDIConsole::mot_home_sky, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::mot_home_cal, event  ;\A\<No Doc>
+;\D\<Home the mirror motor to the calibration viewing position. Calls instrument-specific file.>
+pro XDIConsole::mot_home_cal, event  ;\A\<Widget event>
 
 	call_procedure, self.header.instrument_name + '_mirror', home_motor = 'cal', self.misc, self
 	fpos = 1L
@@ -2398,16 +2415,8 @@ pro XDIConsole::mot_home_cal, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::mot_home_source, image  ;\A\<No Doc>
-
-	self -> start_plugin, 'lockcalsource', new_obj=new_obj
-	new_obj -> start, 0
-
-end
-
-;\D\<No Doc>
-pro XDIConsole::mot_drive_sky, event  ;\A\<No Doc>
+;\D\<Drive the mirror motor to the sky viewing position. Calls instrument-specific file.>
+pro XDIConsole::mot_drive_sky, event  ;\A\<Widget event>
 
 	call_procedure, self.header.instrument_name + '_mirror', drive_to_pos = self.misc.motor_sky_pos, $
 															 self.misc, $
@@ -2421,8 +2430,8 @@ pro XDIConsole::mot_drive_sky, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::mot_drive_cal, event  ;\A\<No Doc>
+;\D\<Home the mirror motor to the calibration viewing position. Calls instrument-specific file.>
+pro XDIConsole::mot_drive_cal, event  ;\A\<Widget event>
 
 	call_procedure, self.header.instrument_name + '_mirror', drive_to_pos = self.misc.motor_cal_pos, $
 															 self.misc, $
@@ -2436,8 +2445,8 @@ pro XDIConsole::mot_drive_cal, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::mot_sel_filter, event  ;\A\<No Doc>
+;\D\<Select a new filter. Calls instrument-specific file.>
+pro XDIConsole::mot_sel_filter, event  ;\A\<Widget event>
 
 	;\\ This allows the user to manually select the current filter
 		filter = self.misc.current_filter
@@ -2450,9 +2459,9 @@ pro XDIConsole::mot_sel_filter, event  ;\A\<No Doc>
 		self -> save_current_settings
 end
 
-;\D\<No Doc>
-pro XDIConsole::mot_sel_cal, event, $                   ;\A\<No Doc>
-                             set_source=set_source      ;\A\<No Doc>
+;\D\<Select a new calibration source, or home it. Calls instrument-specific file.>
+pro XDIConsole::mot_sel_cal, event, $                   ;\A\<Widget event>
+                             set_source=set_source      ;\A\<Supply the new source number instead of asking for it>
 
 	homing = 0
 	source = -1
@@ -2499,8 +2508,8 @@ pro XDIConsole::mot_sel_cal, event, $                   ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::edit_ports, event  ;\A\<No Doc>
+;\D\<Edit the structure that defines what the com ports for each device are.>
+pro XDIConsole::edit_ports, event  ;\A\<Widget event>
 
 	;\\ Get current port map, and XVAREDIT it
 		struc = self.misc.port_map
@@ -2530,21 +2539,21 @@ pro XDIConsole::edit_ports, event  ;\A\<No Doc>
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::close_mport, event  ;\A\<No Doc>
+;\D\<Close the mirror port.>
+pro XDIConsole::close_mport, event  ;\A\<Widget event>
 
 	res = drive_motor(self.misc.port_map.mirror.number, self.misc.dll_name, control = 'closeport')
 
 end
 
-;\D\<No Doc>
-pro XDIConsole::open_mport, event  ;\A\<No Doc>
+;\D\<Open the mirror port.>
+pro XDIConsole::open_mport, event  ;\A\<Widget event>
 
 	res = drive_motor(self.misc.port_map.mirror.number, self.misc.dll_name, control = 'openport')
 
 end
 
-;\D\<No Doc>
+;\D\<Cleanup after the console. Call instrument-specific cleanup routine.>
 pro XDIConsole::cleanup
 
 	print, 'Console cleanup:'
@@ -2562,9 +2571,8 @@ pro XDIConsole::cleanup
 	call_procedure, self.header.instrument_name + '_cleanup', self.misc, self
 end
 
-;\D\<No Doc>
+;\D\<XDIConsole is the main routine for SDI control. See the software manual for details.>
 pro XDIConsole__define
-
 
 
 ;################################################################

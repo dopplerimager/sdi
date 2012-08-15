@@ -2,8 +2,7 @@
 
 # %% is read as a steps per order control line
 # && is read as a phasemap control line
-# they are only executed if either of them needs refreshing,
-# as determined by the console
+# they are only executed if either of them needs refreshing, as determined by the console
 
 # Commands and args are:
 # spectrum: [lambda, zone settings file, file name format]
@@ -23,13 +22,17 @@
 
 # Phase map taken at start and end of each night:
 ifsea: [-3, -2.5] [cont]
+
 	cameraset: [0.18, 50]
 	phasemapper: [0, 1, 632.8, 632.8, 50, 0.18, 3]
 	spectrum: [632.8, default_zones.txt, `Y$_doy$_Poker_Laser6328_Red_Cal_Date_0n$_0d$.pf`]
+
 ifsea: [-3, -2.5] [loop]
+
 
 # Sodium twilight:
 ifsea: [-7, -3] [cont]
+
 	cameraset: [0.18, 50]	
 	mirror: [drive_cal]
 	cal_switch: [1]
@@ -44,6 +47,7 @@ ifsea: [-7, -3] [cont]
 	spectrum: [589.0, default_zones.txt, `Y$_doy$_Poker_589nm_Sodium_Sky_Date_0n$_0d$.nc`]
 	
 ifsea: [-7, -3] [loop]
+
 
 # Main Red-Green loop:
 ifsea: [-100, -7] [cont]
@@ -70,17 +74,16 @@ ifsea: [-100, -7] [cont]
 
 ifsea: [-100, -7] [loop]
 
-	cameraset: [0.05, 1]	
-	mirror: [drive_cal]
+
+cameraset: [0.05, 1]	
+mirror: [drive_cal]
 
 
 # Full daylight stuff:
 ifsea: [-3, 120] [cont]
 	shutterclose: [1]
 	shutdownspex: [1]
-	runscript: [poker_ftp_data]
 	mirror: [drive_cal]
-
 ifsea: [-3, 120] [loop]
 
 
