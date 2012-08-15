@@ -207,9 +207,12 @@ end
 ;\D\<Get settings to save.>
 function SDIVidshow::get_settings
 
-	struc = {id:self.id, scale:self.scale, scale_fac: self.scale_fac, exp_time:self.exp_time, geometry:self.geometry, need_timer:self.need_timer, $
-			need_frame:self.need_frame, crosshairs:self.crosshairs, crosshairs_point:self.crosshairs_point, $
-			grid:self.grid}
+	struc = {scale:self.scale, $
+			 scale_fac:self.scale_fac, $
+			 exp_time:self.exp_time, $
+			 crosshairs:self.crosshairs, $
+			 crosshairs_point:self.crosshairs_point, $
+			 grid:self.grid}
 
 	return, struc
 
