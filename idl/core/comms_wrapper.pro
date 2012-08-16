@@ -10,6 +10,8 @@ pro comms_wrapper, port, $        ;\A\<No Doc>
 				   close=close, $
 				   read=read, $
 				   write=write, $	;\\ Also equaivalent to dio_write8, if using DIO.
+				   flush_input=flush_input, $	;\\ Implemented for moxa only
+				   flush_output=flush_output, $	;\\ Implemented for moxa only
 
 				   moxa_setbaud=moxa_setbaud, $	;\\ Moxa-specific: baud index, 0-19. 12 = 9600 baud
 
@@ -82,6 +84,19 @@ pro comms_wrapper, port, $        ;\A\<No Doc>
 			errcode = call_external(dll_name, 'uMoxaClosePort', port)
 			return
 		endif
+
+		if keyword_set(flush_input) then begin
+			func = 0L
+			errcode = call_external(dll_name, 'uMoxaFlush', port, func)
+			return
+		endif
+
+		if keyword_set(flush_output) then begin
+			func = 1L
+			errcode = call_external(dll_name, 'uMoxaFlush', port, func)
+			return
+		endif
+
 
 	endif
 
