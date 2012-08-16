@@ -44,6 +44,10 @@ function drive_motor, port, $                                    ;\A\<Com port o
 
 	;\\ CONTROL keyword - string "enable"/"disable" enables/disables the motor
 
+	;\\ Flush the moxa driven com buffer
+	comms_wrapper, port, dll_name, type='moxa', /flush_input
+	comms_wrapper, port, dll_name, type='moxa', /flush_output
+
 	if not keyword_set(accel) then accel = 200
 	if not keyword_set(home_max_spin_time) then home_max_spin_time = 3. ; seconds
 
@@ -181,5 +185,9 @@ function drive_motor, port, $                                    ;\A\<Com port o
 
 END_DRIVE_MOTOR:
 comms_wrapper, port, dll_name, type=com, /read, data = clear_buffer
+
+;\\ Flush the moxa driven com buffer
+	comms_wrapper, port, dll_name, type='moxa', /flush_input
+	comms_wrapper, port, dll_name, type='moxa', /flush_output
 return, 1
 end
