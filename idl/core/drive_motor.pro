@@ -166,16 +166,22 @@ function drive_motor, port, $                                    ;\A\<Com port o
 
 				;\\ Try to turn backwards/forwards by one revolution
 					comms_wrapper, port, dll_name, type=com, /write, data = data_str, errcode=errcode
+					if (errcode lt 0) then print, 'DriveMotor:Direction write error: ', errcode
 
 				;\\ Initiate the motion
 					comms_wrapper, port, dll_name, type=com, /write, data = 'NP' + tx, errcode=errcode
 					comms_wrapper, port, dll_name, type=com, /write, data = 'M' + tx, errcode=errcode
 					drive_motor_wait_for_position, port, dll_name, com, max_wait_time = home_max_spin_time, errcode=errcode
+
 					if errcode eq 'timeout' then begin
 						print, 'Homing... Timed Out'
+						comms_wrapper, port, dll_name, type=com, /write, data = 'DI' + tx, errcode=errcode
+						wait, 2
+						comms_wrapper, port, dll_name, type=com, /write, data = 'EN' + tx, errcode=errcode
+						wait, 1
 						stopped = 1
 					endif else begin
-						print, 'Homing... Position reached'
+						print, 'Homing... intermediate position reached'
 					endelse
 
 				wait, 0.01
