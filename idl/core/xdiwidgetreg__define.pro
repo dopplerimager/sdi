@@ -305,7 +305,7 @@ pro XDIWidgetReg::save_settings, path, $    ;\A\<The settings save path>
 
 	;\\ Save the struc under the modules name 'Vidshow', 'Spectrum', etc.
 
-	save, filename = path + owner + '.sdi', save_struc
+	save, filename = path + '\plugins\' + owner + '.sdi', save_struc
 
 end
 
