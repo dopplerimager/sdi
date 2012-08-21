@@ -212,6 +212,7 @@ function SDIVidshow::get_settings
 			 need_frame:self.need_frame, $
 			 scale:self.scale, $
 			 scale_fac:self.scale_fac, $
+			 geometry:self.geometry, $
 			 exp_time:self.exp_time, $
 			 crosshairs:self.crosshairs, $
 			 crosshairs_point:self.crosshairs_point, $

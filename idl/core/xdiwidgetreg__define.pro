@@ -304,7 +304,7 @@ pro XDIWidgetReg::save_settings, path, $    ;\A\<The settings save path>
 	save_struc.geometry = geom
 
 	;\\ Save the struc under the modules name 'Vidshow', 'Spectrum', etc.
-
+	file_mkdir, path + '\plugins'
 	save, filename = path + '\plugins\' + owner + '.sdi', save_struc
 
 end

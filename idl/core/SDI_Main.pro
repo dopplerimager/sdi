@@ -7,9 +7,9 @@ pro Handle_Event, event  ;\A\<Widget event structure>
 	COMMON Console_Share, info
 
 	;\\ Setup the error handler
-		error = 0
-		catch, error
-		if error ne 0 then Handle_Error, error
+	;	error = 0
+	;	catch, error
+	;	if error ne 0 then Handle_Error, error
 
 
 	info.console -> Event_Handler, event
@@ -22,9 +22,9 @@ pro Kill_Entry, id  ;\A\<Widget id>
 	COMMON Console_Share, info
 
 	;\\ Setup the error handler
-		error = 0
-		catch, error
-		if error ne 0 then Handle_Error, error
+	;	error = 0
+	;	catch, error
+	;	if error ne 0 then Handle_Error, error
 
 	info.console -> Kill_Handler, id
 
@@ -50,9 +50,9 @@ pro SDI_Main, settings=settings, $   ;\A\<Settings file (required)>
 	COMMON Console_Share, info
 
 	;\\ Setup the error handler
-		error = 0
-;		catch, error
-		if error ne 0 then Handle_Error, error
+	;	error = 0
+	;	catch, error
+	;	if error ne 0 then Handle_Error, error
 
 
 ;	settings = 'c:\users\sdi3000\setup\conde_setup.sdi'
