@@ -2173,7 +2173,7 @@ pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<The data snapshot>
 		printf, hnd, 'put ' + save_name
 		printf, hnd, 'exit'
 		free_lun, hnd
-		spawn, 'c:\users\sdi3000\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
+		spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
 			   'c:\users\sdi3000\ftp_snapshot.bat', /nowait, /hide
 	endif
 
