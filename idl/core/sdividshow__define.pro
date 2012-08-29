@@ -15,6 +15,7 @@ function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<Restored settin
 	self.ydim		= data.ydim
 
 	if data.recover eq 1 then begin
+	print, 'Recovering'
 		;\\ Saved settings
 			xsize 	= data.xdim
 			ysize 	= data.ydim

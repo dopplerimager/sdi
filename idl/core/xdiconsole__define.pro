@@ -938,9 +938,9 @@ pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
 							   ydim:ceil(ypix/ybin)  }
 
 		;\\ Check to see if saved settings exist, if so restore old settings
-			if file_test(self.misc.default_settings_path + strlowcase(val) + '.sdi') then begin
+			if file_test(self.misc.default_settings_path + '\plugins\' + strlowcase(val) + '.sdi') then begin
 				obj_data.recover = 1
-			 	restore, self.misc.default_settings_path + strlowcase(val) + '.sdi', /relaxed
+			 	restore, self.misc.default_settings_path + '\plugins\' + strlowcase(val) + '.sdi', /relaxed
 				restore_struc = save_struc
 			endif else begin
 				;\\ If not, create a new instance of that module
