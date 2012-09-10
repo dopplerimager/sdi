@@ -2,7 +2,7 @@ SDI
 ------------
 
 This repo contains the common IDL code for running the SDI, plus things like DLL's, 
-devcon and pstools, the watchdog scripts, driver stuff for the Faulhaver motors, 
+devcon and pstools, the watchdog scripts, driver stuff for the Faulhaber motors, 
 Andor camera, MOXA usb hub, etc. 
 
 The standard directory to place this tree is in c:\users\sdi3000\. Some stuff (like
