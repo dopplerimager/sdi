@@ -411,10 +411,10 @@ common spec_save, spec, zone, phase, acc_im
 
 			;\\ Lasers only need the one scan however
 				if self.wavelength eq 543.5 or self.wavelength eq 632.8 then begin
-					if self.nscans gt 0 and ave_signal_noise lt 1500 then begin
+					if self.nscans gt 0 and ave_signal_noise lt 1500 and self.auto eq 1 then begin
 				       self.scanning = 0
 				       self.console->shutdown_spex
-				       cmd = 'start "Restarting Observations" "c:\users\sdi3000\watchdog\restart_sdi3000_obs.bat" '
+				       cmd = 'start "Restarting Observations" "c:\users\sdi3000\sdi\watchdog\restart_sdi3000_obs.bat" '
 				       spawn, cmd
 				    endif
 					if self.nscans ge 1 and ave_signal_noise ge 50000 then exp_finished = 1
