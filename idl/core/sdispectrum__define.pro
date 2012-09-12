@@ -45,14 +45,11 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 			;\\ Saved settings
 				xoff = restore_struc.geometry.xoffset
 				yoff = restore_struc.geometry.yoffset
-				xs 	= 552
-				ys 	= 840
 		endif else begin
 			;\\ Default settings
 				xoff = 0
 				yoff = 0
-				xs 	= 552
-				ys 	= 840
+				self.border = 20
 		endelse
 
 
@@ -65,12 +62,13 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 		font = 'TimesBold*22'
 		font2 = 'TimesBold*18'
 
-		draw = widget_draw(base, xs=552, ys=552, uname = 'Spectrum_'+self.obj_num+'_draw', /align_center)
+		drawbase = widget_base(base, col=2)
+		ldrawbase = widget_base(drawbase, col=1)
+		draw = widget_draw(ldrawbase, xs=400, ys=400, uname = 'Spectrum_'+self.obj_num+'_draw', /align_center)
 
-		base_1 = widget_base(base, col=2)
-
-			exp_draw = widget_draw(base_1, xs=552/2, ys=200, uname='Spectrum_'+self.obj_num+'_exp_draw', /align_center)
-			bck_draw = widget_draw(base_1, xs=552/2, ys=200, uname='Spectrum_'+self.obj_num+'_bck_draw', /align_center)
+		rdrawbase = widget_base(drawbase, col=1)
+		exp_draw = widget_draw(rdrawbase, xs=400, ys=200, uname='Spectrum_'+self.obj_num+'_exp_draw', /align_center)
+		bck_draw = widget_draw(rdrawbase, xs=400, ys=200, uname='Spectrum_'+self.obj_num+'_bck_draw', /align_center)
 
 		base_2 = widget_base(base, col = 1)
 			chann_box = widget_text(base_2, value = 'Channel: ' + string(0, f='(i0)'), uname = 'Spectrum_'+self.obj_num+'_channel', font=font2)
@@ -258,9 +256,16 @@ pro SDISpectrum::initializer
 		self.console -> log, 'Nums - ' + string(nums, f='("[",'+string(n_elements(nums),f='(i0)')+'(i0,  " "),"]")'), 'Spectrum'
 
 	;\\ Display the zonemap
+		drawID = widget_info(self.id, find_by_uname = 'Spectrum_'+self.obj_num+'_draw')
+		geom = widget_info(drawID, /geometry)
+
+		xsize = geom.xsize - self.border*2
+		ysize = geom.ysize - self.border*2
+		zonemap = congrid(zonemap, xsize, ysize)
+
 		wset, tv_id
 		loadct, 31, /silent
-		tvscl, zonemap, (552-self.xdim)/2, (552-self.ydim)/2
+		tvscl, zonemap, self.border, self.border
 		load_pal, self.palette
 
 	;\\ Get the x,y positions of the zone centers for plotting
@@ -270,8 +275,8 @@ pro SDISpectrum::initializer
 			ind = array_indices(zonemap, pts)
 			zone_centers(zn,0) = (max(ind(0,*))+min(ind(0,*)))/2
 			zone_centers(zn,1) = (max(ind(1,*))+min(ind(1,*)))/2
-			xyouts, zone_centers(zn,0) + (552-self.xdim)/2, $
-					zone_centers(zn,1) + (552-self.ydim)/2, $
+			xyouts, zone_centers(zn,0) + self.border, $
+					zone_centers(zn,1) + self.border, $
 					string(zn,f='(i0)'), /device, color=self.palette.black, align=.5
 		endfor
 		*self.zone_centers = zone_centers
@@ -279,16 +284,16 @@ pro SDISpectrum::initializer
 
 	;\\ Get an array containing the indexes of the boundaries between zone cells
 
-		zbounds = intarr(self.xdim, self.ydim)
+		zbounds = intarr(xsize, ysize)
 
-		for x = 0, self.xdim - 2 do begin
-		for y = 0, self.ydim - 1 do begin
+		for x = 0, n_elements(zonemap[*,0]) - 2 do begin
+		for y = 0, n_elements(zonemap[*,1]) - 1 do begin
 			if (zonemap(x,y) - zonemap(x+1,y)) ne 0 then zbounds(x,y) = 1
 		endfor
 		endfor
 
-		for x = 0, self.xdim - 1 do begin
-		for y = 0, self.ydim - 2 do begin
+		for x = 0, n_elements(zonemap[*,0]) - 1 do begin
+		for y = 0, n_elements(zonemap[*,1]) - 2 do begin
 			if (zonemap(x,y) - zonemap(x,y+1)) ne 0 then zbounds(x,y) = 1
 		endfor
 		endfor
@@ -448,16 +453,23 @@ common spec_save, spec, zone, phase, acc_im
 			zon_bn = *self.zonemap_boundaries
 
 			acc_im = bytscl(acc_im)
-			acc_im(where(zon_bn eq 1)) = 255
 
 			loadct, 0, /silent
+
+			drawID = widget_info(self.id, find_by_uname = 'Spectrum_'+self.obj_num+'_draw')
+			geom = widget_info(drawID, /geometry)
 			wset, tv_id
-			x_corner = (552-self.xdim)/2
-			y_corner = (552-self.ydim)/2
+
+			xsize = geom.xsize - self.border
+			ysize = geom.ysize - self.border
+
 			imord = sort(acc_im)
 			minb = acc_im(imord(0.1*n_elements(imord)))
 			maxb = acc_im(imord(0.9*n_elements(imord)))
-			tv, self.palette.imgmin + bytscl(acc_im, min=minb, max=maxb, top=self.palette.imgmax - self.palette.imgmin-1), x_corner, y_corner
+			displayImage = self.palette.imgmin + bytscl(acc_im, min=minb, max=maxb, top=self.palette.imgmax - self.palette.imgmin-1)
+			displayImage = congrid(displayImage, xsize, ysize)
+			displayImage(where(zon_bn eq 1)) = 255
+			tv, displayImage, self.border, self.border
 			load_pal, self.palette
 
 			case self.wavelength of
@@ -480,7 +492,7 @@ common spec_save, spec, zone, phase, acc_im
 			for c = 0, self.nzones-1 do begin
 				xc = zcs(c,0)
 				yc = zcs(c,1)
-				!p.position = [xc-20+x_corner,yc-20+y_corner,xc+20+x_corner,yc+20+y_corner]
+				!p.position = [xc-20,yc-20,xc+20,yc+20] + self.border
 				plot,  shift(spec(c,*)-min(spec(c,*)), nsteps/2 - pk), color = self.palette.white, xstyle=9, ystyle=4, thick=3, /device, /nodata, xtickname=strarr(10)+' '
 				oplot, shift(spec(c,*)-min(spec(c,*)), nsteps/2 - pk), color = color, thick=6, psym = 3, symsize = 20
 			endfor
@@ -766,13 +778,11 @@ pro SDISpectrum__define
 						 zone_centers:ptr_new(/alloc), $
 						 nzones:0, $
 						 dll:'', $
+						 border:0, $
 						 nscans:0, $
 						 file_id:0, $
 						 zone_settings:'', $
 						 wavelength:0.0, $
-						 A:0., $
-						 B:0., $
-						 C:0., $
 						 scan_start_time:0D, $
 						 spec_path:'', $
 						 nrings:0, $

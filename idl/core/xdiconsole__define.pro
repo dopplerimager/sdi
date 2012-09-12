@@ -1903,8 +1903,9 @@ pro XDIConsole::scan_etalon, caller, $                                ;\A\<Strin
 						reference = self -> force_image_update()
 					endif
 
-
-				if keyword_set(start_volt_offset) and keyword_set(stop_volt_offset) and keyword_set(volt_step_size) then begin
+				if size(start_volt_offset, /type) ne 0 and $
+				   size(stop_volt_offset, /type) ne 0 and $
+				   size(volt_step_size, /type) ne 0 then begin
 					self.etalon.volt_step_size = volt_step_size > 1.0
 					self.etalon.start_volt_offset = start_volt_offset
 					self.etalon.stop_volt_offset = stop_volt_offset
@@ -1937,7 +1938,7 @@ pro XDIConsole::scan_etalon, caller, $                                ;\A\<Strin
 			;\\ No scan to stop
 				if self.runtime.mode eq 'manual' then begin
 					mess = 'There is no scan to terminate!'
-					res = dialog_message(mess, /info)
+					;res = dialog_message(mess, /info)
 				endif else begin
 					print, 'No scan to terminate!'
 				endelse
@@ -1961,7 +1962,7 @@ pro XDIConsole::scan_etalon, caller, $                                ;\A\<Strin
 			;\\ No scan to pause
 				if self.runtime.mode eq 'manual' then begin
 					mess = 'There is no scan to pause!'
-					res = dialog_message(mess, /info)
+					;res = dialog_message(mess, /info)
 				endif else begin
 					print, 'No scan to pause!'
 				endelse
@@ -1981,7 +1982,7 @@ pro XDIConsole::scan_etalon, caller, $                                ;\A\<Strin
 			;\\ No scan to continue
 				if self.runtime.mode eq 'manual' then begin
 					mess = 'There is no paused scan to continue!'
-					res = dialog_message(mess, /info)
+					;res = dialog_message(mess, /info)
 				endif else begin
 					print, 'No paused scan to continue!'
 				endelse
