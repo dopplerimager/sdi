@@ -60,8 +60,8 @@ function SDIStepsPerOrder::init, restore_struc=restore_struc, $   ;\A\<Restored 
 
 
 	drawbase = widget_base(base, col=2)
-	draw = widget_draw(drawbase, xs=300, ys=200, uname = 'StepsPerOrder_'+self.obj_num+'_draw')
-	draw2 = widget_draw(drawbase, xs=300, ys=200, uname = 'StepsPerOrder_'+self.obj_num+'_draw2')
+	draw = widget_draw(drawbase, xs=400, ys=300, uname = 'StepsPerOrder_'+self.obj_num+'_draw')
+	draw2 = widget_draw(drawbase, xs=400, ys=300, uname = 'StepsPerOrder_'+self.obj_num+'_draw2')
 
 	file_menu2 = widget_button(file_menu, value = 'Capture Image (.PNG)', uval = {tag:'image_capture', id:[draw], name:['StepsPerOrder'], type:'png'}, uname = 'Steps_'+self.obj_num+'_imgcappng')
 	file_menu3 = widget_button(file_menu, value = 'Capture Image (.JPG)', uval = {tag:'image_capture', id:[draw], name:['StepsPerOrder'], type:'jpg'}, uname = 'Steps_'+self.obj_num+'_imgcapjpg')
@@ -283,8 +283,8 @@ pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
 
 			if channel ge 1 then begin
 			plot, xarr(0:channel-1), corr(0:channel-1, scan), yrange = [min(corr(0:channel-1, scan)), max(corr(0:channel-1, scan))], $
-				  xrange = [xarr(0), xarr(channel-1)], xstyle = 1, color = self.palette.black, background = self.palette.white, /nodata, xtitle = 'Voltage', ytitle = 'Correlation', $
-			  	  charthick = 2, charsize = 1.3
+				  xrange = [xarr(0), xarr(channel-1)], xstyle = 1, color = self.palette.black, background = self.palette.white, /nodata, xtitle = 'Voltage', ytitle = 'Correlation'
+
 
 			oplot, xarr(0:channel-1), corr(0:channel-1, scan), color = self.palette.black, thick = 2, psym=1
 			endif
@@ -309,7 +309,7 @@ pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
 	    	;chord_hist(scan) = (dd(best(0))*self.volt_step_size + self.start_volt_offset) / self.nchann
 	    	chord_hist(scan) = dd(best(0))/self.nchann
 	    	*self.chord_hist = chord_hist
-            oplot, [dd(best(0)), dd(best(0))], [min(corr(*,scan)), max(corr(*,scan))], linestyle=5, color=self.palette.slate, thick=2
+            oplot, [dd(best(0)), dd(best(0))], [min(corr(*,scan)), max(corr(*,scan))], linestyle=5, color=self.palette.slate
 
 			if scan lt (self.num_chords-1) then begin
 
@@ -330,11 +330,11 @@ pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
 						self.scanning = 1
 				endif
 
-					this_chord = (dd(best(0))*self.volt_step_size + self.start_volt_offset) / self.nchann
-					xyouts, /normal, .4, .4, 'Start Volt: ' + string(self.start_volt_offset, f = '(i0)'), color = self.palette.black, charthick = 1.3, charsize = 1.2
-					xyouts, /normal, .4, .35, 'Stop  Volt: ' + string(self.stop_volt_offset, f = '(i0)'), color = self.palette.black, charthick = 1.3, charsize = 1.2
-					xyouts, /normal, .4, .3, 'Step  Size: ' + string(self.volt_step_size, f = '(f0.3)'), color = self.palette.black, charthick = 1.3, charsize = 1.2
-					xyouts, /normal, .4, .25, 'Steps/Channel: ' + string(this_chord, f = '(f0.3)'), color = self.palette.black, charthick = 1.3, charsize = 1.2
+				this_chord = (dd(best(0))*self.volt_step_size + self.start_volt_offset) / self.nchann
+				xyouts, /normal, .4, .4, 'Start Volt: ' + string(self.start_volt_offset, f = '(i0)'), color = self.palette.black
+				xyouts, /normal, .4, .35, 'Stop  Volt: ' + string(self.stop_volt_offset, f = '(i0)'), color = self.palette.black
+				xyouts, /normal, .4, .3, 'Step  Size: ' + string(self.volt_step_size, f = '(f0.3)'), color = self.palette.black
+				xyouts, /normal, .4, .25, 'Steps/Channel: ' + string(this_chord, f = '(f0.3)'), color = self.palette.black
 
 				tv_id = widget_info(self.id, find_by_uname = 'StepsPerOrder_'+self.obj_num+'_draw2')
 				wait, 0.5
@@ -342,9 +342,9 @@ pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
 				wset, draw_id
 
 				hist = *self.chord_hist
-				plot, 1000*hist(0:scan)/self.wavelength, color=0, back = 255, thick=2, /ystyle, ytit='1000 x SPO'
-				oplot, 1000*hist(0:scan)/self.wavelength, color=self.palette.red, psym=1, thick=2
-				xyouts, /normal, .5, .2, 'Last: ' + string(hist(scan)/self.wavelength,f='(f0.5)'), col=self.palette.red, chart=1.5, chars=1.5
+				plot, 1000*hist(0:scan)/self.wavelength, color=0, back = 255, /ystyle, ytit='1000 x SPO'
+				oplot, 1000*hist(0:scan)/self.wavelength, color=self.palette.red, psym=1
+				xyouts, /normal, .5, .2, 'Last: ' + string(hist(scan)/self.wavelength,f='(f0.5)'), col=self.palette.red
 
 			endif else begin
 

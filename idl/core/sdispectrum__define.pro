@@ -284,7 +284,7 @@ pro SDISpectrum::initializer
 
 	;\\ Get an array containing the indexes of the boundaries between zone cells
 
-		zbounds = intarr(self.xdim, self.ydim)
+		zbounds = intarr(xsize, ysize)
 
 		for x = 0, n_elements(zonemap[*,0]) - 2 do begin
 		for y = 0, n_elements(zonemap[*,1]) - 1 do begin
@@ -453,7 +453,6 @@ common spec_save, spec, zone, phase, acc_im
 			zon_bn = *self.zonemap_boundaries
 
 			acc_im = bytscl(acc_im)
-			acc_im(where(zon_bn eq 1)) = 255
 
 			loadct, 0, /silent
 
@@ -469,6 +468,7 @@ common spec_save, spec, zone, phase, acc_im
 			maxb = acc_im(imord(0.9*n_elements(imord)))
 			displayImage = self.palette.imgmin + bytscl(acc_im, min=minb, max=maxb, top=self.palette.imgmax - self.palette.imgmin-1)
 			displayImage = congrid(displayImage, xsize, ysize)
+			displayImage(where(zon_bn eq 1)) = 255
 			tv, displayImage, self.border, self.border
 			load_pal, self.palette
 
