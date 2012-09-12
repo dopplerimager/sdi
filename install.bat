@@ -7,7 +7,6 @@ ECHO.
 MKDIR c:\users\sdi3000
 
 IF NOT EXIST c:\users\sdi3000 goto NeedAdmin
-IF NOT EXIST c:\users\sdi3000 goto :eof
 
 cd c:\users\sdi3000
 
@@ -30,10 +29,10 @@ ECHO.
 :SkipArg2
 
 IF "%~3"=="" GOTO SkipArg3
-IF EXIST %~3 ECHO %~3 Already exists, remove it first, skipping over... && GOTO SkipArg2
+IF EXIST %~3 ECHO %~3 Already exists, remove it first, skipping over... && GOTO SkipArg3
 cmd /C git clone https://github.com/dopplerimager/%~3
 ECHO.
-IF EXIST %~2 ECHO Successfully to cloned %~3
+IF EXIST %~3 ECHO Successfully to cloned %~3
 IF NOT EXIST %~3 ECHO Failed to clone %~3
 ECHO.
 :SkipArg3
@@ -52,7 +51,6 @@ ECHO  Remember to update:
 ECHO      Windows path variable to point to c:\users\sdi3000\sdi\bin\
 ECHO      IDL path, IDL startup file, working directory
 ECHO      Main settings file, misc/paths and logging/path
-ECHO      Auto and Manual startup files
 ECHO  Remember to:
 ECHO      Run pskill at least once to get rid of license agreement
 ECHO      First time psftp is run, you will need to confirm stuff 

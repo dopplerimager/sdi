@@ -375,7 +375,7 @@ pro edit_console_settings, filename=filename, $   ;\A\<Pass in a filename to loa
 	fload = widget_button(file, value = 'Load', uval = 'load')
 	fports = widget_button(file, value = 'Ports', uval = 'ports')
 
-	wtree = widget_tree(base, xsize = 500, ysize = 800)
+	wtree = widget_tree(base, xsize = 500, ysize = 500)
 	wroots = lonarr(nroots)
 
 	max_leaves = 0

@@ -2,7 +2,7 @@ SDI
 ------------
 
 This repo contains the common IDL code for running the SDI, plus things like DLL's, 
-devcon and pstools, the watchdog scripts, driver stuff for the Faulhaver motors, 
+devcon and pstools, the watchdog scripts, driver stuff for the Faulhaber motors, 
 Andor camera, MOXA usb hub, etc. 
 
 The standard directory to place this tree is in c:\users\sdi3000\. Some stuff (like
@@ -17,13 +17,11 @@ following directories are expected by the console and read from the settings fil
 * SPECTRA_PATH - where to store the data
 * DLL_NAME  - path and filename of the SDI_EXTERNAL.dll
 
-Note also that the watchdog scripts will need to be updated on the target machine to 
-make sure their paths are correct. In addition, the first time that some of the pstools
-executables are run they will ask you to agree with the SYSINTERNALS SOFTWARE LICENSE TERMS
-and execution will halt until you do this manually. Each executable in pstools will ask
-for separate confirmation which is annoying. Currently, I think that only pskill is used 
-by the SDI software, so it is worth running this executable at least, to get the license
-dialog out of the way for future use. 
+Note that the first time that some of the pstools executables are run they will ask you 
+to agree with the SYSINTERNALS SOFTWARE LICENSE TERMS and execution will halt until you 
+do this manually. Each executable in pstools will ask for separate confirmation which is 
+annoying. Currently, I think that only pskill is used by the SDI software, so it is worth 
+running this executable at least, to get the license dialog out of the way for future use. 
 
 Another thing to be aware of is that the first time psftp.exe is run (used to send back 
 realtime data snapshots) it will ask to confirm the identity of the remote server. It will 
