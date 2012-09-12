@@ -391,7 +391,7 @@ pro XDIConsole::timer_event
 
 
 	;\\ Delete the crash file if it is there
-		crash_file = 'c:\users\sdi3000\watchdog\console_crash_file.tmp'
+		crash_file = 'c:\users\sdi3000\sdi\watchdog\console_crash_file.tmp'
 		if file_test(crash_file) then file_delete, crash_file, /quiet
 
 	;\\ Update solar elevation angle, shutter state, temp, filter num
