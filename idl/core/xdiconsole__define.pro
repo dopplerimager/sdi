@@ -84,7 +84,6 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		cam_bttn8  = widget_button(cam_menu,  value = 'Shutdown',    	uvalue = {tag:'cam_shutdown'})
 		cam_bttn9  = widget_button(cam_menu,  value = 'Initialize',    	uvalue = {tag:'cam_initialize'})
 
-		eta_bttn1  = widget_button(eta_menu,  value = 'Adjust Legs',   	uvalue = {tag:'adjust_legs'})
 		eta_bttn2  = widget_button(eta_menu,  value = 'View Calibration',   	uvalue = {tag:'see_calibration'})
 
 		mot_bttn1  = widget_button(mot_menu,  value = 'Home Sky Pos',   uvalue = {tag:'mot_home_sky'})
