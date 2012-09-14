@@ -90,6 +90,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		mot_bttn2  = widget_button(mot_menu,  value = 'Home Cal Pos',   uvalue = {tag:'mot_home_cal'})
 		mot_bttn3  = widget_button(mot_menu,  value = 'Drive Sky Pos',   uvalue = {tag:'mot_drive_sky'})
 		mot_bttn4  = widget_button(mot_menu,  value = 'Drive Cal Pos',   uvalue = {tag:'mot_drive_cal'})
+		mot_bttn4  = widget_button(mot_menu,  value = 'Drive Mirror To Pos',   uvalue = {tag:'mot_drive_mirror_to'})
 		mot_bttn5  = widget_button(mot_menu,  value = 'Select Filter',   uvalue = {tag:'mot_sel_filter'})
 		mot_bttn6  = widget_button(mot_menu,  value = 'Select Cal Source',   uvalue = {tag:'mot_sel_cal', type:'drive'})
 		mot_bttn6  = widget_button(mot_menu,  value = 'Home Cal Source',   uvalue = {tag:'mot_sel_cal', type:'home'})
@@ -2439,6 +2440,33 @@ pro XDIConsole::mot_drive_cal, event  ;\A\<Widget event>
 	motor_guage_id = widget_info(self.misc.console_id, find_by_uname = 'console_motor_guage')
 	widget_control, set_value = 'MotorPos: ' + string(self.misc.motor_cal_pos,f='(i0)'), motor_guage_id
 	self->log, 'Cal Position Reached: ' + string(self.misc.motor_cal_pos, f='(i0)'), 'Console', /display
+
+end
+
+;\D\<Drive the mirror motor to an arbitrary location.>
+pro XDIConsole::mot_drive_mirror_to, event  ;\A\<Widget event>
+
+	title =  'CAREFUL! Set Mirror Absolute Position (' + string(self.misc.motor_cal_pos, f='(i0)') + $
+			 ' (cal) - ' + string(self.misc.motor_cal_pos, f='(i0)') + ' (sky))'
+	drive_to_pos = self.misc.motor_cal_pos
+	drive_to_pos = inputBox(drive_to_pos, title = title, group=self.misc.console_id)
+
+	if (drive_to_pos le self.misc.motor_cal_pos	or drive_to_pos ge self.misc.motor_sky_pos) then begin
+		res = dialog_message('Position is not between CAL-SKY limits! Skipping...')
+		return
+	endif
+
+	call_procedure, self.header.instrument_name + '_mirror', drive_to_pos = drive_to_pos, $
+															 self.misc, $
+															 self
+	fpos = 1L
+	call_procedure, self.header.instrument_name + '_mirror', read_pos = fpos, self.misc, self
+
+	self.misc.motor_cur_pos = fpos
+	self -> save_current_settings
+	motor_guage_id = widget_info(self.misc.console_id, find_by_uname = 'console_motor_guage')
+	widget_control, set_value = 'MotorPos: ' + string(fpos, f='(i0)'), motor_guage_id
+	self->log, 'Cal Position Reached: ' + string(fpos, f='(i0)'), 'Console', /display
 
 end
 

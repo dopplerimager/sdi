@@ -33,10 +33,10 @@ function inputBox, var, group_leader=group_leader, title=title, font=font
 
 	if keyword_set(group_leader) then begin
 		if widget_info(group_leader, /valid_id) then begin
-			base = widget_base(group_leader = group_leader, col=1, /floating, title=title)
+			base = widget_base(group_leader = group_leader, col=1, /floating, title='Input')
 		endif
 	endif else begin
-		base = widget_base(col=1, title=title)
+		base = widget_base(col=1, title='Input')
 	endelse
 
 	if (size(var, /type) ge 1 and size(var, /type) le 3) or $
@@ -53,6 +53,7 @@ function inputBox, var, group_leader=group_leader, title=title, font=font
 	endif
 
 	base0 = widget_base(base, col=1)
+	label = widget_label(base0, value = title, font=font)
 	label = widget_label(base0, value = "Type Value and Hit Enter (" + size(var, /tname) + "):", font=font)
 	input = widget_text(base0, value = stringvar, font=font, /edit, uval = {type:"input", invar:var, base:base})
 	base1 = widget_base(base0, col=2, /align_center)
