@@ -41,6 +41,8 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 		if keyword_set(file_name_format) then self.file_name_format = file_name_format
 		self.zone_settings = self.console -> get_zone_set_path() + zone_settings
 
+		self.border = 20
+
 		if data.recover eq 1 then begin
 			;\\ Saved settings
 				xoff = restore_struc.geometry.xoffset
@@ -49,7 +51,6 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 			;\\ Default settings
 				xoff = 0
 				yoff = 0
-				self.border = 20
 		endelse
 
 
@@ -71,7 +72,8 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 		bck_draw = widget_draw(rdrawbase, xs=400, ys=200, uname='Spectrum_'+self.obj_num+'_bck_draw', /align_center)
 
 		base_2 = widget_base(base, col = 1)
-			chann_box = widget_text(base_2, value = 'Channel: ' + string(0, f='(i0)'), uname = 'Spectrum_'+self.obj_num+'_channel', font=font2)
+			chann_box = widget_label(base_2, value = 'Channel: ' + string(0, f='(i0)'), $
+							uname = 'Spectrum_'+self.obj_num+'_channel', font=font2, xs = 300)
 
 		base_3 = widget_base(base, col = 4)
 		start_but = widget_button(base_3, value = 'Start Scan', uval = {tag:'start_scan'}, font = font)
@@ -287,14 +289,14 @@ pro SDISpectrum::initializer
 
 		zbounds = intarr(xsize, ysize)
 
-		for x = 0, n_elements(zonemap[*,0]) - 2 do begin
-		for y = 0, n_elements(zonemap[*,1]) - 1 do begin
+		for x = 0, xsize - 2 do begin
+		for y = 0, ysize - 1 do begin
 			if (zonemap(x,y) - zonemap(x+1,y)) ne 0 then zbounds(x,y) = 1
 		endfor
 		endfor
 
-		for x = 0, n_elements(zonemap[*,0]) - 1 do begin
-		for y = 0, n_elements(zonemap[*,1]) - 2 do begin
+		for x = 0, xsize - 1 do begin
+		for y = 0, ysize - 2 do begin
 			if (zonemap(x,y) - zonemap(x,y+1)) ne 0 then zbounds(x,y) = 1
 		endfor
 		endfor
@@ -455,14 +457,17 @@ common spec_save, spec, zone, phase, acc_im
 
 			acc_im = bytscl(acc_im)
 
-			loadct, 0, /silent
+
 
 			drawID = widget_info(self.id, find_by_uname = 'Spectrum_'+self.obj_num+'_draw')
 			geom = widget_info(drawID, /geometry)
-			wset, tv_id
 
-			xsize = geom.xsize - self.border
-			ysize = geom.ysize - self.border
+			wset, tv_id
+			loadct, 0, /silent
+			erase, 0
+
+			xsize = geom.xsize - 2*self.border
+			ysize = geom.ysize - 2*self.border
 
 			imord = sort(acc_im)
 			minb = acc_im(imord(0.1*n_elements(imord)))
@@ -500,22 +505,29 @@ common spec_save, spec, zone, phase, acc_im
 			!p.noerase = 0
 			!p.multi = 0
 
+
 			js2ymds, self.scan_start_time, y, m, d, s
 			hours = s /3600.
 			mins = (hours mod 1) * 60.
 			secs = (mins mod 1) * 60.
 			time_str = string(hours, f='(i0)') + ':' + string(mins, f='(i0)') + ':' + string(secs, f='(i0)')
-			xyouts, /normal, .04, .93, 'Start: ' + time_str, color=self.palette.white
-			xyouts, /normal, .96, .93, 'Exposure: ' + strcompress(string(time_elapsed/60., format='(f4.1)'), /remove_all) + ' min', align=1
-			xyouts, /normal, .04, .09, 'Scans: ' + strcompress(string(self.nscans,f='(i0)'), /remove), color=self.palette.white
-			xyouts, /normal, .04, .05, 'Median SNR: ' + strcompress(string(ave_signal_noise,f='(i10)'), /remove), color=self.palette.white
-			xyouts, /normal, .96, .05, 'Brite: ' + strcompress(string(signal, format='(f10.1)'), /remove), color=self.palette.white, align=1.
-			xyouts, /normal, .96, .09, 'Bgnd: ' + strcompress(string(bgnd, format='(f10.1)'), /remove), color=self.palette.white, align=1.
+
+			!p.font = 0
+			device, set_font = 'Ariel*Bold*16'
+
+			xyouts, /normal, .01, .96, 'Start: ' + time_str, color=self.palette.white
+			xyouts, /normal, .99, .96, 'Exposure: ' + strcompress(string(time_elapsed/60., format='(f4.1)'), /remove_all) + ' min', align=1
+			xyouts, /normal, .01, .05, 'Scans: ' + strcompress(string(self.nscans,f='(i0)'), /remove), color=self.palette.white
+			xyouts, /normal, .01, .01, 'Median SNR: ' + strcompress(string(ave_signal_noise,f='(i10)'), /remove), color=self.palette.white
+			xyouts, /normal, .99, .01, 'Brite: ' + strcompress(string(signal, format='(f10.1)'), /remove), color=self.palette.white, align=1.
+			xyouts, /normal, .99, .05, 'Bgnd: ' + strcompress(string(bgnd, format='(f10.1)'), /remove), color=self.palette.white, align=1.
 			xyouts, /normal, .50, .96, '!5S!3', charsize = 1.5, charthick = 2, color=self.palette.white, align=0.5
 			xyouts, /normal, .50, .01, '!5N!3', charsize = 1.5, charthick = 2, color=self.palette.white, align=0.5
 			xyouts, /normal, .02, .50, '!5W!3', charsize = 1.5, charthick = 2, color=self.palette.white, align=0.5
 			xyouts, /normal, .98, .50, '!5E!3', charsize = 1.5, charthick = 2, color=self.palette.white, align=0.5
-			empty
+
+			!p.font = -1
+
 
 			if exp_finished eq 1 then begin
 
