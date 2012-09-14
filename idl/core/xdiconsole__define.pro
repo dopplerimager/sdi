@@ -59,7 +59,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		xs = 550
 		ys = 435
 		title = 'SDI CONSOLE'
-		self.misc.console_id = widget_base(xsize = xs, ysize = ys, xoffset = 0, yoffset = 0, mbar = menu, title=title, tracking_events = 0)
+		self.misc.console_id = widget_base(mbar = menu, title=title, tracking_events = 0, col=1)
 
 		file_menu  = widget_button(menu, value = 'File', /menu)
 		cam_menu   = widget_button(menu, value = 'Camera', /menu)
@@ -100,33 +100,30 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		set_bttn4  = widget_button(set_menu,  value = 'Close Mirror Port',  uvalue = {tag:'close_mport'})
 		set_bttn4  = widget_button(set_menu,  value = 'Open Mirror Port',  uvalue = {tag:'open_mport'})
 
-		temp_guage = widget_text(self.misc.console_id, xo = 5, yo = 300, value = 'Temperature: ', font='Arial*Bold*15', $
-								uname = 'console_temp_guage', xs = 50)
-		sea_guage  = widget_text(self.misc.console_id, xo = 380, yo = 300, value = 'Sun Elev.: ', font='Arial*Bold*15', $
-								uname = 'console_sea_guage', xs = 20)
-		exp_time_guage  = widget_text(self.misc.console_id, xo = 5, yo = 325, value = 'Exp Time: ', font='Arial*Bold*15', $
-								uname = 'console_exp_time_guage', xs = 20)
-		gain_guage  = widget_text(self.misc.console_id, xo = 165, yo = 325, value = 'Gain: ', font='Arial*Bold*15', $
-								uname = 'console_gain_guage', xs = 15)
-		shutter_guage  = widget_text(self.misc.console_id, xo = 290, yo = 325, value = 'Shutter: ', font='Airel*Bold*15', $
-								uname = 'console_shutter_guage', xs = 15)
-		motor_pos_guage  = widget_text(self.misc.console_id, xo = 415, yo = 325, value = 'MirrorPos: ', font='Airel*Bold*15', $
-								uname = 'console_motor_guage', xs = 15)
-		switch_pos_guage  = widget_text(self.misc.console_id, xo = 415, yo = 350, value = 'SwitchPos: ', font='Airel*Bold*15', $
-								uname = 'console_switch_guage', xs = 15)
-		filter_pos_guage  = widget_text(self.misc.console_id, xo = 5, yo = 350, value = 'Filter Num: ', font='Airel*Bold*15', $
-								uname = 'console_filter_guage', xs = 20)
-		frame_rate_guage  = widget_text(self.misc.console_id, xo = 165, yo = 350, value = 'Frame Rate: ', font='Airel*Bold*15', $
-								uname = 'console_frame_guage', xs = 15)
+		;\\ Make a view for the log
+		self.misc.log_id = widget_text(self.misc.console_id, xsize=65, ysize = 18, /scroll, font = 'Tahoma*Bold*15', /align_center)
 
-		leg1bar  = Widget_Draw(self.misc.console_id, xo = 0.20*xs, yo = 0.89*ys, xsize= 0.78*xs, ysize = 0.03*ys, frame=2, $
-							   uname = 'console_leg1_bar')
-		leg2bar  = Widget_Draw(self.misc.console_id, xo = 0.20*xs, yo = 0.9175*ys, xsize= 0.78*xs, ysize = 0.03*ys, frame=2, $
-							   uname = 'console_leg2_bar')
-		leg3bar  = Widget_Draw(self.misc.console_id, xo = 0.20*xs, yo = 0.945*ys, xsize= 0.78*xs, ysize = 0.03*ys, frame=2, $
-							   uname = 'console_leg3_bar')
-		leglab   = widget_label(self.misc.console_id,xo = 0.025*xs, yo = 0.915*ys, frame=0, value = "Leg Voltages: ", font='Arial*Bold*15')
+		gauge_base = widget_base(self.misc.console_id, col = 2, /align_center, /frame)
+		font = 'Arial*Bold*15'
 
+		xs = 270
+		temp_guage = widget_label(gauge_base, value = 'Temperature: ', font=font, uname = 'console_temp_guage', xs = xs)
+		sea_guage  = widget_label(gauge_base, value = 'Sun Elev.: ', font=font, uname = 'console_sea_guage', xs = xs)
+		exp_time_guage  = widget_label(gauge_base, value = 'Exp Time: ', font=font, uname = 'console_exp_time_guage', xs = xs)
+		gain_guage  = widget_label(gauge_base, value = 'Gain: ', font=font, uname = 'console_gain_guage', xs = xs)
+		shutter_guage  = widget_label(gauge_base, value = 'Shutter: ', font=font, uname = 'console_shutter_guage', xs = xs)
+		motor_pos_guage  = widget_label(gauge_base, value = 'MirrorPos: ', font=font, uname = 'console_motor_guage', xs = xs)
+		switch_pos_guage  = widget_label(gauge_base, value = 'SwitchPos: ', font=font, uname = 'console_switch_guage', xs = xs)
+		filter_pos_guage  = widget_label(gauge_base, value = 'Filter Num: ', font=font, uname = 'console_filter_guage', xs = xs)
+		frame_rate_guage  = widget_label(gauge_base, value = 'Frame Rate: ', font=font, uname = 'console_frame_guage', xs = xs)
+
+		leg_base = widget_base(self.misc.console_id, col = 1, /align_center)
+
+		xs = 600
+		leg1bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg1_bar')
+		leg2bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg2_bar')
+		leg3bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg3_bar')
+		leglab   = widget_label(leg_base, frame=0, value = "Leg Voltages: ", font=font)
 
 	;\\ Include the list of SDI modules in the menu
 		if nmods gt 0 then begin
@@ -142,10 +139,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 
 
 	;\\ Create the timer widget
-		self.misc.timer_id  = widget_base(self.misc.console_id, map = 0, xsize = 20, ysize = 20, uval = 'Timer')
-
-	;\\ Make a view for the log
-		self.misc.log_id = widget_text(self.misc.console_id, xsize=65, ysize = 18, /scroll, font = 'Tahoma*Bold*15')
+		self.misc.timer_id  = widget_base(self.misc.console_id, map = 0, uval = 'Timer')
 
 	;\\ Realize the console
 		widget_control, self.misc.console_id, /realize
