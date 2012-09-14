@@ -2451,6 +2451,9 @@ pro XDIConsole::mot_sel_filter, event  ;\A\<Widget event>
 	;\\ This allows the user to manually select the current filter
 		filter = self.misc.current_filter
 		xvaredit, filter, name = 'Select Filter Number', group = self.misc.console_id
+
+		if (filter eq self.misc.current_filter) then return
+
 		call_procedure, self.header.instrument_name + '_filter', filter, $
 																 log_path = self.logging.log_directory, $
 																 self.misc, $
