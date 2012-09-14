@@ -391,10 +391,12 @@ common spec_save, spec, zone, phase, acc_im
 
 			;\\ Update the signal_noise_history array
 				ave_signal_noise = median(signal_noise)
+				if finite(ave_signal_noise) eq 0 then ave_signal_noise = abs(100*randomn(blahblah))
 				min_signal_noise = min(signal_noise)
+
 				last_history = where(self.signal_noise_history eq 0)
-				if n_elements(last_history) eq 1 then last_history = 0 else last_history = last_history(0)
-				self.signal_noise_history(last_history) = ave_signal_noise
+				if n_elements(last_history) eq 1 then last_history = -1 else last_history = last_history[0]
+				self.signal_noise_history[last_history] = ave_signal_noise
 				self.scan_background_history[self.nscans - 1] = stddev(self.channel_background_history[0:self.nchann-1])
 
 			;\\ If doing green, update the snr/scan value in the console
@@ -437,10 +439,25 @@ common spec_save, spec, zone, phase, acc_im
 
 				colors = intarr(last_history+1)
 				colors(*) = self.palette.white
-				if last_history gt 0 then begin
-					plot, self.signal_noise_history(0:last_history), col = self.palette.white, back = self.palette.black, $
-						  title = 'Signal/Noise History', xtitle = 'Scan #', ytitle = 'Signal/Noise', xtickint=1
+
+				if last_history ge 0 then begin
+
+					snrHWidth = .45
+					snrMax = max(self.signal_noise_history)
+					plot, [-.9, (last_history > 10) + .9], [0,0], /nodata, col = self.palette.white, $
+						  yrange = [0, snrMax], /xstyle, $
+						  title = 'Signal/Noise History', xtitle = 'Scan #', ytitle = 'Signal/Noise', $
+						  xtickint=1, pos=[.1, .18, .98, .91]
+
+					for snrIdx = 0, last_history do begin
+						polyfill, snrIdx + [-snrHWidth, -snrHWidth, snrHWidth, snrHWidth], $
+								  [0, self.signal_noise_history[snrIdx], self.signal_noise_history[snrIdx], 0], /data
+					endfor
 				endif
+
+
+
+
 
 			;\\ Plot background history
 				bck_win_val = widget_info(self.id, find_by_uname='Spectrum_'+self.obj_num+'_bck_draw')
