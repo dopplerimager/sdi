@@ -916,7 +916,8 @@ pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
 		if auto_start eq 0 and strlowcase(val) eq 'spectrum' then begin
 			while w eq 0.0 do begin
 				if w eq 0.0 then begin
-					xvaredit, w, name = 'Enter a wavelength in nanometres:', group=self.misc.console_id
+					;xvaredit, w, name = 'Enter a wavelength in nanometres:', group=self.misc.console_id
+					w = inputBox(w, title = "Set Wavelength in Nanometres", group = self.misc.console_id)
 				endif
 			endwhile
 		endif
@@ -2109,7 +2110,8 @@ pro XDIConsole::cam_exptime, event, $               ;\A\<Widget event>
 
 		if not keyword_set(new_time) then begin
 			exp_time = self.camera.exposure_time
-			xvaredit, exp_time, name='Enter an exposure time in seconds', group=self.misc.console_id
+			;xvaredit, exp_time, name='Enter an exposure time in seconds', group=self.misc.console_id
+			exp_time = inputbox(exp_time, title = "Set Exposure Time (Seconds)", group = self.misc.console_id)
 			self.camera.exposure_time = exp_time
 		endif else begin
 			self.camera.exposure_time = new_time
@@ -2135,7 +2137,8 @@ pro XDIConsole::cam_gain, event, $               ;\A\<Widget event>
 
 		if not keyword_set(new_gain) then begin
 			gain = self.camera.gain
-			xvaredit, gain, name='Enter gain value (0-255)', group=self.misc.console_id
+			;xvaredit, gain, name='Enter gain value (0-255)', group=self.misc.console_id
+			gain = inputbox(gain, title = "Set Gain", group = self.misc.console_id)
 			self.camera.gain = gain
 		endif else begin
 			self.camera.gain = new_gain
@@ -2450,7 +2453,8 @@ pro XDIConsole::mot_sel_filter, event  ;\A\<Widget event>
 
 	;\\ This allows the user to manually select the current filter
 		filter = self.misc.current_filter
-		xvaredit, filter, name = 'Select Filter Number', group = self.misc.console_id
+		;xvaredit, filter, name = 'Select Filter Number', group = self.misc.console_id
+		filter = inputbox(filter, title = "Select Filter", group = self.misc.console_id)
 
 		if (filter eq self.misc.current_filter) then return
 
@@ -2481,7 +2485,8 @@ pro XDIConsole::mot_sel_cal, event, $                   ;\A\<Widget event>
 			if uval.type eq 'drive' then begin
 				;\\ This allows the user to manually select the current source
 					source = self.misc.current_source
-					xvaredit, source, name = 'Select Source Number', group = self.misc.console_id
+					;xvaredit, source, name = 'Select Source Number', group = self.misc.console_id
+					source = inputbox(source, title = "Select Cal Source", group = self.misc.console_id)
 			endif
 			if uval.type eq 'home' then begin
 				homing = 1

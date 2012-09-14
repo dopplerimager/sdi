@@ -91,7 +91,8 @@ pro SDIEtalonScanner::start_scan, event  ;\A\<Widget event>
 		w = self.wavelength
 		if w eq 0.0 then begin
 			repeat begin
-				xvaredit, w, name = 'Enter a wavelength in nm', group = self.id
+				;xvaredit, w, name = 'Enter a wavelength in nm', group = self.id
+				w = inputbox(w, title = "Set Wavelength in nm", group = self.id)
 			endrep until w ne 0.0
 		endif
 		self.wavelength = w
@@ -177,7 +178,8 @@ end
 pro SDIEtalonScanner::set_wavelength, event  ;\A\<Widget event>
 
 	w = self.wavelength
-	xvaredit, w, name = 'Enter a wavelength in nm', group = self.id
+	;xvaredit, w, name = 'Enter a wavelength in nm', group = self.id
+	w = inputbox(w, title = "Set Wavelength in nm", group = self.id)
 	self.wavelength = w
 	lambda_id = widget_info(self.id, find_by_uname = 'EtalonScanner_'+self.obj_num+'_wavelength')
 	widget_control, set_value = 'Wavelength: ' + string(w, f='(f0.1)'), lambda_id

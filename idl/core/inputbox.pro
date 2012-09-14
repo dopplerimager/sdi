@@ -25,18 +25,18 @@ pro inputBox_event, event
 
 end
 
-function inputBox, var, parent=parent, title=title, font=font
+function inputBox, var, group_leader=group_leader, title=title, font=font
 
 	common InputBoxShared, outvar
 
 	if not keyword_set(font) then font = "TimesBold*18"
 
-	if keyword_set(parent) then begin
-		if widget_info(parent, /valid_id) then begin
-			base = widget_base(group_leader = parent, col=1, title=title)
+	if keyword_set(group_leader) then begin
+		if widget_info(group_leader, /valid_id) then begin
+			base = widget_base(group_leader = group_leader, col=1, /floating, title=title)
 		endif
 	endif else begin
-		base = widget_base(group_leader = parent, col=1, title=title)
+		base = widget_base(col=1, title=title)
 	endelse
 
 	if (size(var, /type) ge 1 and size(var, /type) le 3) or $

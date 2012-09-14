@@ -15,7 +15,6 @@ function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<Restored settin
 	self.ydim		= data.ydim
 
 	if data.recover eq 1 then begin
-	print, 'Recovering'
 		;\\ Saved settings
 			xsize 	= data.xdim
 			ysize 	= data.ydim
@@ -96,7 +95,8 @@ end
 pro SDIVidshow::set_scale, event  ;\A\<Widget event>
 
 	s = self.scale_fac
-	xvaredit, s, name = 'Set Image Gain Factor', group = self.id
+	;xvaredit, s, name = 'Set Image Gain Factor', group = self.id
+	s = inputbox(s, title = "Set Image Gain Factor", group = self.id)
 	self.scale_fac = s
 
 end
@@ -200,7 +200,8 @@ end
 pro SDIVidshow::set_color_table, event  ;\A\<Widget event>
 
 	c = self.color_table
-	xvaredit, c, name = 'Set Color Table Index:', group = self.id
+	;xvaredit, c, name = 'Set Color Table Index:', group = self.id
+	c = inputbox(c, title = "Set Color Table Index", group = self.id)
 	self.color_table = c
 
 end

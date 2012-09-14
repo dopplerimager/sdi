@@ -107,7 +107,8 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 
 		if self.file_name_format eq '' then begin
 			file_name_format = ''
-			xvaredit, file_name_format, name = 'Enter a filename/format string:', group=self.id
+			;xvaredit, file_name_format, name = 'Enter a filename/format string:', group=self.id
+			file_name_format = inputbox(file_name_format, title = "Set Filename/Format String", group = self.id)
 		endif
 
 		get_jd0_sec, jd0, sec
