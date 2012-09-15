@@ -2447,7 +2447,7 @@ end
 pro XDIConsole::mot_drive_mirror_to, event  ;\A\<Widget event>
 
 	title =  'CAREFUL! Set Mirror Absolute Position (' + string(self.misc.motor_cal_pos, f='(i0)') + $
-			 ' (cal) - ' + string(self.misc.motor_cal_pos, f='(i0)') + ' (sky))'
+			 ' (cal) - ' + string(self.misc.motor_sky_pos, f='(i0)') + ' (sky))'
 	drive_to_pos = self.misc.motor_cal_pos
 	drive_to_pos = inputBox(drive_to_pos, title = title, group=self.misc.console_id)
 
@@ -2466,7 +2466,7 @@ pro XDIConsole::mot_drive_mirror_to, event  ;\A\<Widget event>
 	self -> save_current_settings
 	motor_guage_id = widget_info(self.misc.console_id, find_by_uname = 'console_motor_guage')
 	widget_control, set_value = 'MotorPos: ' + string(fpos, f='(i0)'), motor_guage_id
-	self->log, 'Cal Position Reached: ' + string(fpos, f='(i0)'), 'Console', /display
+	self->log, 'Position Reached: ' + string(fpos, f='(i0)'), 'Console', /display
 
 end
 
