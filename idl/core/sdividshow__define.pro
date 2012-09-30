@@ -212,6 +212,7 @@ pro SDIVidshow::frame_event, image, $     ;\A\<Latest camera image>
 
 	if cross_sections eq 1 then begin
 
+		tvlct, r, g, b, /get
 		loadct, 39, /silent
 		polyfill, [0, 0, xsect_width, xsect_width], [0, view_geom.ysize, view_geom.ysize, 0], $
 					color=0, /device
@@ -223,6 +224,7 @@ pro SDIVidshow::frame_event, image, $     ;\A\<Latest camera image>
 		plot, indgen(n_elements(vid_image[*,0])), hcross, pos = [0, 0, view_geom.xsize, xsect_width], /device, /noerase, $
 				xstyle=5, ystyle=5
 		oplot, indgen(n_elements(vid_image[*,0])), vcross, color = 150
+		tvlct, r, g, b
 
 	endif
 

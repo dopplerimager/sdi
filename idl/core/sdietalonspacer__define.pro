@@ -42,37 +42,62 @@ function SDIEtalonSpacer::init, data=data, $                     ;\A\<Misc data>
 
 	font = 'Ariel*15*Bold'
 
-	base = widget_base(group_leader = data.leader, xsize = xsize, ysize = ysize, xoff = xoff, yoff = yoff, $
-						   title = 'SDI Etalon Spacer')
+	base = widget_base(group_leader = data.leader, xoff = xoff, yoff = yoff, $
+						   title = 'SDI Etalon Spacer', col=1)
 
-	lab1 = widget_label(base, value = 'Leg 1:', yoffset = 35, xoffset = 10, font=font)
-	lab2 = widget_label(base, value = 'Leg 2:', yoffset = 85, xoffset = 10, font=font)
-	lab3 = widget_label(base, value = 'Leg 3:', yoffset = 135, xoffset = 10, font=font)
-
-	leg1 = widget_slider(base, xsize = 300, xoffset = 50, yoffset = 20, minim = 0, maxim = 4095, $
+	lab1 = widget_label(base, value = 'Leg 1:', font=font)
+	leg1 = widget_slider(base, xsize = 300, minim = 0, maxim = 4095, $
 							 value = self.leg1, uvalue = {tag:'adjust_legs_event', leg:1}, $
 							 uname = 'EtalonSpacer_'+self.obj_num+'leg1')
-	leg2 = widget_slider(base, xsize = 300, xoffset = 50, yoffset = 70, minim = 0, maxim = 4095, $
+
+	lab2 = widget_label(base, value = 'Leg 2:', font=font)
+	leg2 = widget_slider(base, xsize = 300, minim = 0, maxim = 4095, $
 							 value = self.leg2, uvalue = {tag:'adjust_legs_event', leg:2}, $
 							 uname = 'EtalonSpacer_'+self.obj_num+'leg2')
-	leg3 = widget_slider(base, xsize = 300, xoffset = 50, yoffset = 120, minim = 0, maxim = 4095, $
+
+	lab3 = widget_label(base, value = 'Leg 3:', font=font)
+	leg3 = widget_slider(base, xsize = 300, minim = 0, maxim = 4095, $
 							 value = self.leg3, uvalue = {tag:'adjust_legs_event', leg:3}, $
 							 uname = 'EtalonSpacer_'+self.obj_num+'leg3')
 
-	step_lab = widget_label(base, xo = 10, yo = 180, value = 'Step:', font=font)
-	step = widget_text(base, /editable, xo = 40, yo = 180, font = font, value = string(self.step,f='(i0)'), /all, $
+	axisbase = widget_base(base, col=4, /align_center)
+
+	xplus  = widget_button(axisbase, value = 'X Axis +', font=font,  uval={tag:'tilt', dir:'x+'})
+	xminus = widget_button(axisbase, value = 'X Axis -', font=font, uval={tag:'tilt', dir:'x-'})
+	yplus  = widget_button(axisbase, value = 'Y Axis +', font=font,  uval={tag:'tilt', dir:'y+'})
+	yminus = widget_button(axisbase, value = 'Y Axis -', font=font, uval={tag:'tilt', dir:'y-'})
+
+	step_lab = widget_label(base, value = 'Step:', font=font)
+	step = widget_text(base, /editable, font = font, value = string(self.step,f='(i0)'), /all, $
 					   uval={tag:'step_change'}, uname='EtalonSpacer_'+self.obj_num+'step')
 
-	xplus  = widget_button(base, xo = 10, yo = 220, value = 'X Axis +', font=font,  uval={tag:'tilt', dir:'x+'})
-	xminus = widget_button(base, xo = 100, yo = 220, value = 'X Axis -', font=font, uval={tag:'tilt', dir:'x-'})
-	yplus  = widget_button(base, xo = 10, yo = 260, value = 'Y Axis +', font=font,  uval={tag:'tilt', dir:'y+'})
-	yminus = widget_button(base, xo = 100, yo = 260, value = 'Y Axis -', font=font, uval={tag:'tilt', dir:'y-'})
+	tilt_label = widget_label(base, value = 'X Tilt: 0, Y Tilt: 0 ', font = font, $
+								uname='EtalonSpacer_'+self.obj_num+'tilts', xsize = 400, /align_center)
 
 	widget_control, base, /realize
 
 	self.id = base
+	tilts = self->get_tilts()
+
 
 	return, 1
+
+end
+
+
+;\D\<Calcujlate X and Y tilts>
+function SDIEtalonSpacer::get_tilts
+
+	etalon = self.console -> get_etalon_info()
+	leg1 = etalon.leg1_voltage
+	leg2 = etalon.leg2_voltage
+	leg3 = etalon.leg3_voltage
+
+	widget_control, set_value = 'X Tilt: ' + string(leg1-leg2, f='(i0)') + $
+								' Y Tilt: ' + string(leg2-leg3, f='(i0)'), $
+					widget_info(self.id, find='EtalonSpacer_'+self.obj_num+'tilts')
+
+	return, {x:leg1-leg2, y:leg2-leg3}
 
 end
 
@@ -140,6 +165,8 @@ pro SDIEtalonSpacer::tilt, event  ;\A\<Widget event>
 	widget_control, leg2_id, set_val = self.leg2
 	widget_control, leg3_id, set_val = self.leg3
 
+	res = self->get_tilts()
+
 end
 
 ;\D\<An event from the widget sloders representing leg voltages.>
@@ -152,6 +179,7 @@ pro SDIEtalonSpacer::adjust_legs_event, event  ;\A\<Widget event>
 	if uval.leg eq 3 then self.leg3 = fix(event.value)
 
 	self.console -> update_legs, leg1 = self.leg1, leg2 = self.leg2, leg3 = self.leg3, /legs
+	res = self->get_tilts()
 
 end
 
