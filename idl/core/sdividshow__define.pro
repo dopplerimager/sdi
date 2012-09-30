@@ -31,12 +31,12 @@ function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<Restored settin
 			ysize = data.ydim
 			xoffset = 100
 			yoffset = 100
-			self.scale_fac = 0.005
+			self.scale_fac = 1
 	endelse
 
 
-	base = widget_base(xsize = xsize, ysize = ysize, xoffset = xoffset, yoffset = yoffset, mbar = menu, $
-					   title = 'Vidshow', group_leader = leader)
+	base = widget_base(xoffset = xoffset, yoffset = yoffset, mbar = menu, $
+					   title = 'Vidshow', group_leader = leader, col=1)
 
 	file_menu = widget_button(menu, value = 'File')
 
@@ -61,6 +61,10 @@ function SDIVidshow::init, restore_struc=restore_struc, $   ;\A\<Restored settin
 	file_menu10 = widget_button(file_menu, value = 'Set Color Table',  uval = {tag:'set_color_table'})
 	file_menu11 = widget_button(file_menu, value = 'Turn Quadrant Masking ON',  uval = {tag:'mask_quadrants'}, $
 						uname = 'Vidshow_' + self.obj_num + '_masker')
+
+	file_menu12 = widget_button(file_menu, value = 'Show Cross-Sections',  uval = {tag:'show_xsects', state:0}, $
+						uname = 'Vidshow_' + self.obj_num + '_xsects', /checked_menu)
+
 
 	self.id = base
 
@@ -88,6 +92,24 @@ pro SDIVidshow::mask_quadrants, event  ;\A\<Widget event>
 	btn_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_masker')
 	if self.mask_quadrants eq 1 then str = 'Turn Quadrant Masking OFF' else str = 'Turn Quadrant Masking ON'
 	widget_control, set_value = str, btn_id
+
+end
+
+;\D\<Optionally show horizontal and vertical cross sections through the image at the cross-hair coords.>
+pro SDIVidshow::show_xsects, event  ;\A\<Widget event>
+
+	widget_control, get_uvalue = uval, event.id
+	if (uval.state eq 0) then begin
+		uval.state = 1
+		widget_control, set_uvalue = uval, event.id
+		widget_control, set_button = 1, event.id
+		print, 'Turned xsect on'
+	endif else begin
+		uval.state = 0
+		widget_control, set_uvalue = uval, event.id
+		widget_control, set_button = 0, event.id
+		print, 'Turned xsect off'
+	endelse
 
 end
 
@@ -136,28 +158,35 @@ pro SDIVidshow::frame_event, image, $     ;\A\<Latest camera image>
 
 	vid_image = image - min(image)
 
+	;\\ Show cross-sections?
+	widget_control, get_uval = xsect, widget_info(self.id, find='Vidshow_' + self.obj_num + '_xsects')
+	if xsect.state eq 0 then begin
+		cross_sections = 0
+		xsect_width = 0
+	endif else begin
+		cross_sections = 1
+		xsect_width = 50
+		hcross = vid_image[*, self.crosshairs_point[1]]
+		vcross = vid_image[self.crosshairs_point[0], *]
+	endelse
+
 	if self.mask_quadrants eq 1 then begin
 		wid = 20
 		vid_image[0:self.xdim/2 - wid, 0:self.ydim/2 - wid] = 0
 		vid_image[self.xdim/2 + wid:self.xdim-1, 0:self.ydim/2 - wid] = 0
 		vid_image[self.xdim/2 + wid:self.xdim-1, self.ydim/2 + wid:self.ydim-1] = 0
 		vid_image[0:self.xdim/2 - wid, self.ydim/2 + wid:self.ydim-1] = 0
-
-		;slice_img = vid_image*0.
-		;slice_img[256-wid:256+wid, *] = vid_image[256-wid:256+wid, *]
-		;slice_img[*, 256-wid:256+wid] = vid_image[*, 256-wid:256+wid]
-		;vid_image = slice_img
 	endif
 
 	view_id = widget_info(self.id, find_by_uname = 'Vidshow_' + self.obj_num + '_Vidarea')
 	widget_control, get_value = tv_id, view_id
 
 	geom = widget_info(self.id, /geom)
-	widget_control, xsize = geom.xsize, ysize = geom.ysize, view_id
+	view_geom = widget_info(view_id, /geom)
+	widget_control, xsize = geom.xsize - 2*geom.xpad, ysize = geom.ysize - 2*geom.ypad, view_id
 
-
-	if geom.xsize ne self.xdim or geom.ysize ne self.ydim then vid_image = congrid(image, geom.xsize, geom.ysize)
-
+	if view_geom.xsize ne self.xdim or view_geom.ysize ne self.ydim then $
+		vid_image = congrid(image, geom.xsize - 2*geom.xpad, geom.ysize - 2*geom.ypad)
 
 	loadct, self.color_table, /silent
 	wset, tv_id
@@ -181,8 +210,25 @@ pro SDIVidshow::frame_event, image, $     ;\A\<Latest camera image>
 		for y = 0, ys, 10 do plots, [0,xs], [y,y], color=self.palette.ash, /device
     endif
 
+	if cross_sections eq 1 then begin
+
+		loadct, 39, /silent
+		polyfill, [0, 0, xsect_width, xsect_width], [0, view_geom.ysize, view_geom.ysize, 0], $
+					color=0, /device
+		polyfill, [0, 0, view_geom.xsize, view_geom.xsize], [0, xsect_width, xsect_width, 0], $
+					color=0, /device
+		plot, vcross, indgen(n_elements(vid_image[0,*])), pos = [0, 0, xsect_width, view_geom.ysize], /device, /noerase, $
+				xstyle=5, ystyle=5
+		oplot, hcross, indgen(n_elements(vid_image[0,*])), color = 150
+		plot, indgen(n_elements(vid_image[*,0])), hcross, pos = [0, 0, view_geom.xsize, xsect_width], /device, /noerase, $
+				xstyle=5, ystyle=5
+		oplot, indgen(n_elements(vid_image[*,0])), vcross, color = 150
+
+	endif
+
 	self.framecount = self.framecount + 1
-	xyouts, /normal, 0.5, 0.05, string(1./(systime(1, /sec) - self.tstrt), format = '(f4.1)') + ' Hz', align=0.5
+	xyouts, /normal, 0.5, 0.05, string(1./(systime(1, /sec) - self.tstrt), $
+						format = '(f4.1)') + ' Hz', align=0.5
 	self.tstrt = systime(1, /sec)
 
 end
