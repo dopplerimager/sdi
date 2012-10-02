@@ -839,13 +839,15 @@ pro XDIConsole::execute_schedule
 			if command eq 'filter' then begin
 				filter_number = fix(args(0))
 				current_filter = self.misc.current_filter
-				log_path = self.logging.log_directory
-				call_procedure, self.header.instrument_name + '_filter', filter_number, $
+				if current_filter ne filter_number then begin
+					log_path = self.logging.log_directory
+					call_procedure, self.header.instrument_name + '_filter', filter_number, $
 																		 log_path = log_path, $
 																		 self.misc, $
 																		 self
-				self.misc.current_filter = filter_number
-				self -> save_current_settings
+					self.misc.current_filter = filter_number
+					self -> save_current_settings
+				endif
 				self -> log, 'Selected Filter ' + string(filter_number, f='(i0)'), 'Console', /display
 			endif
 
