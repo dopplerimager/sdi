@@ -251,6 +251,8 @@ end
 pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
                                    channel      ;\A\<Current scan channel>
 
+
+
 	scan = self.curr_chord
 
 	if self.scanning eq 1 then begin
@@ -276,8 +278,21 @@ pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
 			*self.image = images
 
 			corr = *self.corr
-			corr(channel, scan) = total(images(*,*,channel) * (*self.ref_image))/1e8
+			thiscorr = median(float(images(*,*,channel)) * float((*self.ref_image)), 3)
+			corr(channel, scan) = total(thiscorr)/1e7
 			*self.corr = corr
+
+			;window, 0, xs = 512, ys = 512
+			;img0 = bytscl(*self.ref_image, max=1000*(scan+1))
+			;img1 = bytscl(images(*,*,channel), max=10000*(scan+1))
+			;img2 = img0
+			;img2[256:*, *] = img1[256:*,*]
+			;tv, img2
+
+			;window, 1, xs=512, ys=512
+			;tv, bytscl(thiscorr, max=(scan+1)*1E5)
+			;wset, draw_id
+
 
 			xarr = (dindgen(nsteps))*self.volt_step_size + self.start_volt_offset
 
