@@ -74,9 +74,7 @@ pro data_transfer, data_dir = data_dir, $
 
 		openw, ftp_handle, ftp_script, /get_lun
 		printf, ftp_handle, 'cd instrument_incomming'
-		printf, ftp_handle, 'rm ' + file_basename(incomming) ;\\ delete the incomming file
 		printf, ftp_handle, 'lcd ' + data_dir
-
 
 		openw, inc_handle, incomming, /get_lun
 
