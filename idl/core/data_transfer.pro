@@ -68,15 +68,16 @@ pro data_transfer, data_dir = data_dir, $
 
 	;\\ Create a file containing names and checksums of the remaining files (which need to be sent)
 	;\\ Also put these files into the ftp_script file
-
+		incomming = data_dir + '\' + site + '_incomming.txt'
+		file_delete, incomming, /allow_nonexistent
 		ftp_script = data_dir + '\SDI_ftp_script.ftp'
+
 		openw, ftp_handle, ftp_script, /get_lun
 		printf, ftp_handle, 'cd instrument_incomming'
 		printf, ftp_handle, 'rm ' + file_basename(incomming) ;\\ delete the incomming file
 		printf, ftp_handle, 'lcd ' + data_dir
 
-		incomming = data_dir + '\' + site + '_incomming.txt'
-		file_delete, incomming, /allow_nonexistent
+
 		openw, inc_handle, incomming, /get_lun
 
 		for i = 0, nfiles - 1 do begin
