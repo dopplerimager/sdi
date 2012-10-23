@@ -52,13 +52,19 @@ pro data_transfer, data_dir = data_dir, $
 		endelse
 
 	;\\ Move all the processed files to the sent directory
+		remaining = ['']
 		for i = 0, nfiles - 1 do begin
 			filename = strupcase(file_basename(files[i]))
 			match = where(files_processed eq filename, nmatching)
 			if nmatching eq 1 then begin
 				file_move, files[i], sent_dir + '\' + file_basename(files[i])
-			endif
+			endif else begin
+				remaining = [remaining, files[i]]
+			endelse
 		endfor
+
+		if n_elements(remaining) eq 1 then return
+		remaining = remaining[1:*]
 
 	;\\ Create a file containing names and checksums of the remaining files (which need to be sent)
 	;\\ Also put these files into the ftp_script file
