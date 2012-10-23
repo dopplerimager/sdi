@@ -1,7 +1,9 @@
 
 pro data_transfer, data_dir = data_dir, $
 				   sent_dir = sent_dir, $
+				   ftp_command = ftp_command, $
 				   site = site
+
 
 	if not keyword_set(data_dir) then begin
 		print, 'Need keyword data_dir'
@@ -10,6 +12,11 @@ pro data_transfer, data_dir = data_dir, $
 
 	if not keyword_set(sent_dir) then begin
 		print, 'Need keyword sent_dir'
+		return
+	endif
+
+	if not keyword_set(ftp_command) then begin
+		print, 'Need keyword ftp_command'
 		return
 	endif
 
@@ -30,7 +37,7 @@ pro data_transfer, data_dir = data_dir, $
 		printf, spunt, 'quit'
 		close, spunt
 		free_lun, spunt
-		spawn, 'psftp 137.229.27.190 -l instrument -pw aer0n0my -b ' + ftp_script, result
+		spawn, ftp_command + ' -b ' + ftp_script, result
 
 		processed_fname = data_dir + '\_processed.txt'
 		nlines = file_lines(processed_fname)
@@ -85,6 +92,6 @@ pro data_transfer, data_dir = data_dir, $
 		file_delete, processed_fname, /allow_nonexistent
 
 	;\\ Run the ftp command
-		spawn, 'psftp 137.229.27.190 -l instrument -pw aer0n0my -b ' + ftp_script
+		spawn, ftp_command + ' -b ' + ftp_script, result, /nowait
 
 end
