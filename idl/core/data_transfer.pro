@@ -25,8 +25,13 @@ pro data_transfer, data_dir = data_dir, $
 		return
 	endif
 
+	openw, log_handle, 'c:\users\sdi3000\log\data_transfer_log.txt', /get
+
 	;\\ Get the list of files awaiting transfer or move
 		files = file_search(data_dir + '\*.nc', count = nfiles)
+
+		printf, log_handle, 'Files in ' + data_dir
+		for i = 0, nfiles - 1 do printf, log_handle, files[i]
 
 	;\\ Get the processed list from the server and read in file names
 		ftp_script = 'c:\SDI_ftp_script.ftp'
@@ -57,6 +62,7 @@ pro data_transfer, data_dir = data_dir, $
 			filename = strupcase(file_basename(files[i]))
 			match = where(files_processed eq filename, nmatching)
 			if nmatching eq 1 then begin
+				printf, log_handle, 'Moving processed file ' + filename + ' to ' + sent_dir
 				file_move, files[i], sent_dir + '\' + file_basename(files[i])
 			endif else begin
 				remaining = [remaining, files[i]]
@@ -65,6 +71,12 @@ pro data_transfer, data_dir = data_dir, $
 
 		if n_elements(remaining) eq 1 then return
 		remaining = remaining[1:*]
+
+		printf, log_handle, 'Remaining files:'
+		for i = 0, n_elements(remaining) - 1 do printf, log_handle, remaining[i]
+
+		files = remaining
+		nfiles = n_elements(remaining)
 
 	;\\ Create a file containing names and checksums of the remaining files (which need to be sent)
 	;\\ Also put these files into the ftp_script file
@@ -80,7 +92,9 @@ pro data_transfer, data_dir = data_dir, $
 
 		for i = 0, nfiles - 1 do begin
 			filename = file_basename(files[i])
+			print, 'Checksum for: ' + files[i]
 			sum = get_md5_checksum(files[i])
+			printf, log_handle, 'Checksum ' + filename + ' = ' + sum
 			printf, inc_handle, filename + ',' + sum
 			printf, ftp_handle, 'put ' + filename
 		endfor
@@ -94,6 +108,9 @@ pro data_transfer, data_dir = data_dir, $
 		printf, ftp_handle, 'quit'
 		close, ftp_handle
 		free_lun, ftp_handle
+
+		close, log_handle
+		free_lun, log_handle
 
 	;\\ Delete the _processed file
 		file_delete, processed_fname, /allow_nonexistent

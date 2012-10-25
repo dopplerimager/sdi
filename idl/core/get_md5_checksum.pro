@@ -8,5 +8,8 @@ function get_md5_checksum, file, exe=exe
 	line = result[n_elements(result)-1]
 	parts = strsplit(line, ' ',/extract)
 
+	print, file
+	print, parts
+
 	return, parts[1]
 end
