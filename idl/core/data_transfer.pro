@@ -79,14 +79,9 @@ pro data_transfer, data_dir = data_dir, $
 		nfiles = n_elements(remaining)
 
 	;\\ Create a file containing names and checksums of the remaining files (which need to be sent)
-	;\\ Also put these files into the ftp_script file
 		incomming = data_dir + '\' + site + '_incomming.txt'
 		file_delete, incomming, /allow_nonexistent
 		ftp_script = data_dir + '\SDI_ftp_script.ftp'
-
-		openw, ftp_handle, ftp_script, /get_lun
-		printf, ftp_handle, 'cd instrument_incomming'
-		printf, ftp_handle, 'lcd ' + data_dir
 
 		openw, inc_handle, incomming, /get_lun
 
@@ -96,26 +91,54 @@ pro data_transfer, data_dir = data_dir, $
 			sum = get_md5_checksum(files[i])
 			printf, log_handle, 'Checksum ' + filename + ' = ' + sum
 			printf, inc_handle, filename + ',' + sum
-			printf, ftp_handle, 'put ' + filename
 		endfor
 
 		printf, inc_handle, 'ENDOFFILE' ;\\ check for this on server end
 		close, inc_handle
 		free_lun, inc_handle
 
-		;\\ The last file to transfer is the list of incomming files + checksums
-		printf, ftp_handle, 'put ' + file_basename(incomming)
-		printf, ftp_handle, 'quit'
-		close, ftp_handle
-		free_lun, ftp_handle
-
 		close, log_handle
 		free_lun, log_handle
+
+
+		;\\ Create the ftp script, slipt into batches of two files per session (timeout problems)
+		openw, ftp_handle, ftp_script, /get_lun
+		printf, ftp_handle, 'cd instrument_incomming'
+		printf, ftp_handle, 'lcd ' + data_dir
+
+		file_count = 0
+		for i = 0, nfiles - 1 do begin
+
+			filename = file_basename(files[i])
+			printf, ftp_handle, 'put ' + filename
+			file_count ++
+
+			if (i eq nfiles - 1 or file_count eq 2) then begin
+
+				file_count = 0
+
+				;\\ The last file to transfer is the list of incomming files + checksums
+				if (i eq nfiles - 1) then printf, ftp_handle, 'put ' + file_basename(incomming)
+
+				printf, ftp_handle, 'quit'
+				close, ftp_handle
+				free_lun, ftp_handle
+
+				;\\ Run the ftp command
+				spawn, ftp_command + ' -b ' + ftp_script + ' > ftplog.txt', result
+
+				if (i lt nfiles - 1) then begin
+					openw, ftp_handle, ftp_script, /get_lun
+					printf, ftp_handle, 'cd instrument_incomming'
+					printf, ftp_handle, 'lcd ' + data_dir
+				endif
+			endif
+
+		endfor
 
 	;\\ Delete the _processed file
 		file_delete, processed_fname, /allow_nonexistent
 
-	;\\ Run the ftp command
-		spawn, ftp_command + ' -b ' + ftp_script, result, /nowait
+
 
 end
