@@ -46,17 +46,17 @@ function SDIEtalonSpacer::init, data=data, $                     ;\A\<Misc data>
 						   title = 'SDI Etalon Spacer', col=1)
 
 	lab1 = widget_label(base, value = 'Leg 1:', font=font)
-	leg1 = widget_slider(base, xsize = 300, minim = 0, maxim = 4095, $
+	leg1 = widget_slider(base, xsize = 300, minim = 0, maxim = etalon.max_voltage-1, $
 							 value = self.leg1, uvalue = {tag:'adjust_legs_event', leg:1}, $
 							 uname = 'EtalonSpacer_'+self.obj_num+'leg1')
 
 	lab2 = widget_label(base, value = 'Leg 2:', font=font)
-	leg2 = widget_slider(base, xsize = 300, minim = 0, maxim = 4095, $
+	leg2 = widget_slider(base, xsize = 300, minim = 0, maxim = etalon.max_voltage-1, $
 							 value = self.leg2, uvalue = {tag:'adjust_legs_event', leg:2}, $
 							 uname = 'EtalonSpacer_'+self.obj_num+'leg2')
 
 	lab3 = widget_label(base, value = 'Leg 3:', font=font)
-	leg3 = widget_slider(base, xsize = 300, minim = 0, maxim = 4095, $
+	leg3 = widget_slider(base, xsize = 300, minim = 0, maxim = etalon.max_voltage-1, $
 							 value = self.leg3, uvalue = {tag:'adjust_legs_event', leg:3}, $
 							 uname = 'EtalonSpacer_'+self.obj_num+'leg3')
 
