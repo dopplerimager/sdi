@@ -2189,26 +2189,31 @@ pro XDIConsole::status_update
 
 	if n_elements(last_status_update) eq 0 then last_status_update = 0d
 
-	;\\ Send status update
-	if ( (systime(/sec) - last_status_update)/60. gt 10. ) then begin
+	if self.logging.ftp_snapshot ne '' then begin
 
-		;\\ Make a png of the current phasemap
-		self -> get_phasemap, base, grad, lambda
-		phmap = float(base) * (lambda/630.0) * grad
-		write_png, 'c:\users\sdi3000\status_phasemap.png', phmap
+		;\\ Send status update
+		if ( (systime(/sec) - last_status_update)/60. gt 10. ) then begin
 
-		openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
-		printf, hnd, 'cd status/' + self.header.site_code
-		printf, hnd, 'put c:\users\sdi3000\status_phasemap.png phasemap.png'
-		printf, hnd, 'put ' + self.runtime.schedule + ' schedule.txt'
-		printf, hnd, 'exit'
-		free_lun, hnd
-		spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
-			   'c:\users\sdi3000\ftp_status_update.bat', /nowait, /hide
+			;\\ Make a png of the current phasemap
+			self -> get_phasemap, base, grad, lambda
+			phmap = float(base) * (lambda/630.0) * grad
+			write_png, 'c:\users\sdi3000\status_phasemap.png', phmap
 
+			openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
+			printf, hnd, 'cd status/' + self.header.site_code
+			printf, hnd, 'put c:\users\sdi3000\status_phasemap.png phasemap.png'
+			printf, hnd, 'put ' + self.runtime.schedule + ' schedule.txt'
+			printf, hnd, 'exit'
+			free_lun, hnd
+			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
+				   'c:\users\sdi3000\ftp_status_update.bat', /nowait, /hide
+
+			last_status_update = systime(/sec)
+
+		endif
+	endif else begin
 		last_status_update = systime(/sec)
-
-	endif
+	endelse
 
 end
 
