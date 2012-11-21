@@ -400,6 +400,9 @@ pro XDIConsole::timer_event
 		widget_control, set_value = 'Shutter: ' + shutter_string, shutter_id
 		widget_control, set_value = 'Filter Num: ' + string(self.misc.current_filter, f='(i0)'), filter_guage_id
 
+	;\\ Send back status info every 10 minutes
+		self->status_update
+
 
 	;\\ Check to see if a new day has started, if so, create a settings file backup
 		current_daynumber = fix(dt_tm_mk(systime(/jul), f='doy$'))
@@ -2175,6 +2178,36 @@ pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<The data snapshot>
 		free_lun, hnd
 		spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
 			   'c:\users\sdi3000\ftp_snapshot.bat', /nowait, /hide
+
+	endif
+end
+
+;\D\<Called from timer_event, sends back status information to the SDI server.>
+pro XDIConsole::status_update
+
+	common XDIConsoleStatusUpdate, last_status_update
+
+	if n_elements(last_status_update) eq 0 then last_status_update = 0d
+
+	;\\ Send status update
+	if ( (systime(/sec) - last_status_update)/60. gt 10. ) then begin
+
+		;\\ Make a png of the current phasemap
+		self -> get_phasemap, base, grad, lambda
+		phmap = float(base) * (lambda/630.0) * grad
+		write_png, 'c:\users\sdi3000\status_phasemap.png', phmap
+
+		openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
+		printf, hnd, 'cd status/' + self.header.site_code
+		printf, hnd, 'put c:\users\sdi3000\status_phasemap.png phasemap.png'
+		printf, hnd, 'put ' + self.runtime.schedule + ' schedule.txt'
+		printf, hnd, 'exit'
+		free_lun, hnd
+		spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
+			   'c:\users\sdi3000\ftp_status_update.bat', /nowait, /hide
+
+		last_status_update = systime(/sec)
+
 	endif
 
 end
