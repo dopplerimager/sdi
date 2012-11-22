@@ -2185,14 +2185,15 @@ end
 ;\D\<Called from timer_event, sends back status information to the SDI server.>
 pro XDIConsole::status_update
 
-	common XDIConsoleStatusUpdate, last_status_update
+	common XDIConsoleStatusUpdate, last_status_update0, last_status_update1
 
-	if n_elements(last_status_update) eq 0 then last_status_update = 0d
+	if n_elements(last_status_update0) eq 0 then last_status_update0 = 0d
+	if n_elements(last_status_update1) eq 0 then last_status_update1 = 0d
 
 	if self.logging.ftp_snapshot ne '' then begin
 
 		;\\ Send status update
-		if ( (systime(/sec) - last_status_update)/60. gt 10. ) then begin
+		if ( (systime(/sec) - last_status_update0)/60. gt 10. ) then begin
 
 			;\\ Make a png of the current phasemap
 			self -> get_phasemap, base, grad, lambda
@@ -2208,13 +2209,48 @@ pro XDIConsole::status_update
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
 				   'c:\users\sdi3000\ftp_status_update.bat', /nowait, /hide
 
-			last_status_update = systime(/sec)
+			last_status_update0 = systime(/sec)
 
 		endif
+
+		;\\ Send more regular stuff
+		if ( (systime(/sec) - last_status_update1)/60. gt 2. ) then begin
+
+			openw, hnd, 'c:\users\sdi3000\status_info.txt', /get
+			printf, hnd, 'SystemUT=' + systime(/ut)
+			printf, hnd, 'SunElevation=' + string(get_sun_elevation(self.header.latitude, self.header.longitude), f='(f0.2)')
+			printf, hnd, 'FreeDiskSpaceC=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
+			free_lun, hnd
+
+			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
+			printf, hnd, 'cd status/' + self.header.site_code
+			printf, hnd, 'put c:\users\sdi3000\status_info.txt status.txt'
+			printf, hnd, 'exit'
+			free_lun, hnd
+			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
+				   'c:\users\sdi3000\ftp_status_update_regular.bat', /nowait, /hide
+
+			last_status_update1 = systime(/sec)
+		endif
+
 	endif else begin
-		last_status_update = systime(/sec)
+		last_status_update0 = systime(/sec)
+		last_status_update1 = systime(/sec)
 	endelse
 
+end
+
+;\D\<Get the free space (in Mb by default, use keyword for Gb) in the given path>
+function XDIConsole::FreeDiskSpace, path, gb=gb
+  spawn, 'dir ' + path + ' | find "free"', res, err, /hide
+  out = strsplit(res, ' ', /extract)
+  out = strsplit(out[2], ',', /extract)
+  space = ''
+  for j = 0, n_elements(out) - 1 do space += out[j]
+  space = double(space)
+  space_mb = space / 1048576.
+  space_gb = space / 1073741824.
+  if keyword_set(gb) then return, space_gb else return, space_mb
 end
 
 ;\D\<Spectrum plugins call this when creating new netcdf files.>
