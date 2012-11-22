@@ -2218,8 +2218,8 @@ pro XDIConsole::status_update
 
 			openw, hnd, 'c:\users\sdi3000\status_info.txt', /get
 			printf, hnd, 'SystemUT=' + systime(/ut)
-			printf, hnd, 'SunElevation=' + string(get_sun_elevation(self.header.latitude, self.header.longitude), f='(f0.2)')
-			printf, hnd, 'FreeDiskSpaceC=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
+			printf, hnd, 'SunElevationDeg=' + string(get_sun_elevation(self.header.latitude, self.header.longitude), f='(f0.2)')
+			printf, hnd, 'FreeDiskSpaceCGb=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
 			free_lun, hnd
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
