@@ -2220,6 +2220,15 @@ pro XDIConsole::status_update
 			printf, hnd, 'SystemUT=' + systime(/ut)
 			printf, hnd, 'SunElevationDeg=' + string(get_sun_elevation(self.header.latitude, self.header.longitude), f='(f0.2)')
 			printf, hnd, 'FreeDiskSpaceCGb=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
+			printf, hnd, 'PhasemapAcquiredJs=' + string(self.etalon.phasemap_time, f='(f0.5)')
+			printf, hnd, 'ScheduleLine=' + string(self.misc.schedule_line, f='(i0)')
+			printf, hnd, 'MotorSkyPos=' + string(self.misc.motor_sky_pos, f='(i0)')
+			printf, hnd, 'MotorCalPos=' + string(self.misc.motor_cal_pos, f='(i0)')
+			printf, hnd, 'MotorCurPos=' + string(self.misc.motor_cur_pos, f='(i0)')
+			printf, hnd, 'CurrentFilter=' + string(self.misc.current_filter, f='(i0)')
+			printf, hnd, 'CurrentCalSource=' + string(self.misc.current_source, f='(i0)')
+			printf, hnd, 'CameraExposureTime=' + string(self.camera.exposure_time, f='(f0.2)')
+			printf, hnd, 'CameraGain=' + string(self.camera.gain, f='(i0)')
 			free_lun, hnd
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
