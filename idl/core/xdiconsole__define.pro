@@ -865,6 +865,11 @@ pro XDIConsole::execute_schedule
 				self->log, log_string, 'Console', /display
 			endif
 
+		;\\ Set the current status string
+			if command eq 'set_status' then begin
+				self.runtime.current_status = args[0]
+			endif
+
 
 	endif
 
@@ -2840,6 +2845,7 @@ pro XDIConsole__define
 	        	snr_per_scan:0.0, $
 	        plugin_path_list:strarr(nmods), $
 	        plugin_name_list:strarr(nmods), $
+	          current_status:'', $
 	                editable:0}
 
 			;\\ shutter_state 0 = closed, 1 = open
