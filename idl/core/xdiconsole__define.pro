@@ -2173,6 +2173,7 @@ pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<The data snapshot>
 					'_' + string(snapshot.wavelength, f='(i04)') + '_snapshot.idlsave'
 		save, filename = save_name, snapshot, /compress
 		openw, hnd, 'c:\users\sdi3000\ftp_snapshot.bat', /get
+		printf, hnd, 'cd /'
 		printf, hnd, 'put ' + save_name
 		printf, hnd, 'exit'
 		free_lun, hnd
