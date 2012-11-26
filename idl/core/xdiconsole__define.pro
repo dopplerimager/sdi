@@ -36,6 +36,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		self.runtime.settings = settings
 		self.runtime.mode     = strlowcase(mode)
 		self.runtime.current_status = 'No status'
+		self.runtime.last_schedule_command = 'None'
 
 
 	;\\ Find and store plugins
@@ -871,6 +872,7 @@ pro XDIConsole::execute_schedule
 				self.runtime.current_status = args[0]
 			endif
 
+			self.runtime.last_schedule_command = command + ' ' + strjoin(args, ', ', /single)
 
 	endif
 
@@ -2229,6 +2231,7 @@ pro XDIConsole::status_update
 			printf, hnd, 'FreeDiskSpaceCGb=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
 			printf, hnd, 'PhasemapAcquiredJs=' + string(self.etalon.phasemap_time, f='(f0.5)')
 			printf, hnd, 'ScheduleLine=' + string(self.misc.schedule_line, f='(i0)')
+			printf, hnd, 'LastScheduleCommand=' + self.runtime.last_schedule_command
 			printf, hnd, 'MotorSkyPos=' + string(self.misc.motor_sky_pos, f='(i0)')
 			printf, hnd, 'MotorCalPos=' + string(self.misc.motor_cal_pos, f='(i0)')
 			printf, hnd, 'MotorCurPos=' + string(self.misc.motor_cur_pos, f='(i0)')
@@ -2848,6 +2851,7 @@ pro XDIConsole__define
 	        plugin_path_list:strarr(nmods), $
 	        plugin_name_list:strarr(nmods), $
 	          current_status:'', $
+	   last_schedule_command:'', $
 	                editable:0}
 
 			;\\ shutter_state 0 = closed, 1 = open
