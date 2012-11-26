@@ -35,6 +35,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		self.runtime.schedule = schedule
 		self.runtime.settings = settings
 		self.runtime.mode     = strlowcase(mode)
+		self.runtime.current_status = 'No status'
 
 
 	;\\ Find and store plugins
@@ -2235,6 +2236,7 @@ pro XDIConsole::status_update
 			printf, hnd, 'CurrentCalSource=' + string(self.misc.current_source, f='(i0)')
 			printf, hnd, 'CameraExposureTime=' + string(self.camera.exposure_time, f='(f0.2)')
 			printf, hnd, 'CameraGain=' + string(self.camera.gain, f='(i0)')
+			printf, hnd, 'CurrentStatus=' + self.runtime.current_status
 			free_lun, hnd
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
@@ -2859,3 +2861,4 @@ pro XDIConsole__define
 					    buffer:buffer, $
 					  inherits XDIBase}
 end
+
