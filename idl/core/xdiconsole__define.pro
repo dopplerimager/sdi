@@ -2229,7 +2229,7 @@ pro XDIConsole::status_update
 			printf, hnd, 'SystemUT=' + systime(/ut)
 			printf, hnd, 'SunElevationDeg=' + string(get_sun_elevation(self.header.latitude, self.header.longitude), f='(f0.2)')
 			printf, hnd, 'FreeDiskSpaceCGb=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
-			printf, hnd, 'PhasemapAcquiredJs=' + string(self.etalon.phasemap_time, f='(f0.5)')
+			printf, hnd, 'PhasemapAgeHours=' + string( (dt_tm_tojs(systime()) - self.etalon.phasemap_time)/3600., f='(f0.2)')
 			printf, hnd, 'ScheduleLine=' + string(self.misc.schedule_line, f='(i0)')
 			printf, hnd, 'LastScheduleCommand=' + self.runtime.last_schedule_command
 			printf, hnd, 'MotorSkyPos=' + string(self.misc.motor_sky_pos, f='(i0)')
