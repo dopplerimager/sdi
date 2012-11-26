@@ -872,7 +872,7 @@ pro XDIConsole::execute_schedule
 				self.runtime.current_status = args[0]
 			endif
 
-			self.runtime.last_schedule_command = command + ' ' + strjoin(args, ', ', /single)
+			self.runtime.last_schedule_command = command + ': ' + strjoin(args, ', ', /single)
 
 	endif
 
