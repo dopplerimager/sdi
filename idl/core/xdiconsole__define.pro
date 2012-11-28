@@ -2181,7 +2181,6 @@ pro XDIConsole::spectrum_snapshot, snapshot  ;\A\<The data snapshot>
 					'_' + string(snapshot.wavelength, f='(i04)') + '_snapshot.idlsave'
 		save, filename = save_name, snapshot, /compress
 		openw, hnd, 'c:\users\sdi3000\ftp_snapshot.bat', /get
-		printf, hnd, 'cd /'
 		printf, hnd, 'put ' + save_name
 		printf, hnd, 'exit'
 		free_lun, hnd
@@ -2243,7 +2242,7 @@ pro XDIConsole::status_update
 			free_lun, hnd
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
-			printf, hnd, 'put c:\users\sdi3000\status_info.txt status.txt /status/' + self.header.site_code + '/status.txt'
+			printf, hnd, 'put c:\users\sdi3000\status_info.txt /status/' + self.header.site_code + '/status.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
