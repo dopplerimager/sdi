@@ -2243,7 +2243,7 @@ pro XDIConsole::status_update
 			free_lun, hnd
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
-			printf, hnd, 'put c:\users\sdi3000\status_info.txt status.txt /status/' + self.header.site_code + '/status.txt'
+			printf, hnd, 'put c:\users\sdi3000\status_info.txt /status/' + self.header.site_code + '/status.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
