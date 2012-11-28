@@ -2210,9 +2210,8 @@ pro XDIConsole::status_update
 			write_png, 'c:\users\sdi3000\status_phasemap.png', phmap
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
-			printf, hnd, 'cd status/' + self.header.site_code
-			printf, hnd, 'put c:\users\sdi3000\status_phasemap.png phasemap.png'
-			printf, hnd, 'put ' + self.runtime.schedule + ' schedule.txt'
+			printf, hnd, 'put c:/users/sdi3000/status_phasemap.png /status/' + self.header.site_code + '/phasemap.png'
+			printf, hnd, 'put ' + self.runtime.schedule + ' /status/' + self.header.site_code + '/schedule.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
@@ -2240,11 +2239,11 @@ pro XDIConsole::status_update
 			printf, hnd, 'CameraExposureTime=' + string(self.camera.exposure_time, f='(f0.2)')
 			printf, hnd, 'CameraGain=' + string(self.camera.gain, f='(i0)')
 			printf, hnd, 'CurrentStatus=' + self.runtime.current_status
+			printf, hnd, 'OperatingMode=' + self.runtime.mode
 			free_lun, hnd
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
-			printf, hnd, 'cd status/' + self.header.site_code
-			printf, hnd, 'put c:\users\sdi3000\status_info.txt status.txt'
+			printf, hnd, 'put c:\users\sdi3000\status_info.txt status.txt /status/' + self.header.site_code + '/status.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
