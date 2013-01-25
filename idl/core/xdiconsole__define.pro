@@ -99,6 +99,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 
 		set_bttn1  = widget_button(set_menu,  value = 'Load settings',  uvalue = {tag:'load_settings'})
 		set_bttn2  = widget_button(set_menu,  value = 'Edit settings',  uvalue = {tag:'edit_settings'})
+		set_bttn1  = widget_button(set_menu,  value = 'Write settings',  uvalue = {tag:'write_settings'})
 		set_bttn3  = widget_button(set_menu,  value = 'Edit Port Mapping',  uvalue = {tag:'edit_ports'})
 		set_bttn4  = widget_button(set_menu,  value = 'Close Mirror Port',  uvalue = {tag:'close_mport'})
 		set_bttn4  = widget_button(set_menu,  value = 'Open Mirror Port',  uvalue = {tag:'open_mport'})
@@ -1208,8 +1209,132 @@ pro XDIConsole::image_capture, event  ;\A\<Widget event>
 
 end
 
+;\D\<A new implementation of the settings file loader, testing.>
+pro XDIConsole::load_settings, event, $				;\A\<Widget event>
+								filename=filename, $    ;\A\<Filename to load from>
+								error=error, $          ;\A\<OUT: error code>
+                               	first_call=first_call   ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
+
+	error = 0
+
+	temp = {etalon:self.etalon, $
+			camera:self.camera, $
+			header:self.header, $
+			logging:self.logging, $
+			misc:self.misc}
+
+	call_procedure, file_basename(filename), temp
+
+	self.etalon 	= temp.etalon
+	self.camera 	= temp.camera
+	self.header 	= temp.header
+	self.logging 	= temp.logging
+	self.misc 		= temp.misc
+
+
+
+	xpix = self.camera.xpix
+	ypix = self.camera.ypix
+
+	x_dimension = ceil(xpix/float(self.camera.xbin))
+	y_dimension = ceil(ypix/float(self.camera.ybin))
+
+	ptr_free, self.buffer.image, $
+			  self.buffer.raw_image, $
+			  self.etalon.phasemap_base, $
+			  self.etalon.phasemap_grad
+
+
+	self.etalon.phasemap_base = ptr_new(intarr(x_dimension, y_dimension))
+	self.etalon.phasemap_grad = ptr_new(intarr(x_dimension, y_dimension))
+	self.buffer.image = ptr_new(ulonarr(x_dimension, y_dimension))
+	self.buffer.raw_image = ptr_new(ulonarr(x_dimension, y_dimension))
+
+	if size(persistent, /type) eq 8 then begin
+
+		;\\ Add in the phasemap and nm/step times
+		self.etalon.phasemap_time = persistent.phasemap_time
+		self.etalon.nm_per_step_time = persistent.nm_per_step_time
+		self.etalon.phasemap_lambda = persistent.phasemap_lambda
+
+		;\\ Make sure dimensions match
+		dims = size(persistent.phasemap_base, /dimensions)
+		if dims[0] eq x_dimension and $
+		   dims[1] eq y_dimension then *self.etalon.phasemap_base = persistent.phasemap_base
+
+		dims = size(persistent.phasemap_grad, /dimensions)
+		if dims[0] eq x_dimension and $
+		   dims[1] eq y_dimension then *self.etalon.phasemap_grad = persistent.phasemap_grad
+
+	endif
+
+
+
+
+	;\\ Update the camera
+		commands = ['uSetShutter', 'uSetReadMode', 'uSetImage', 'uSetAcquisitionMode', $
+					'uSetFrameTransferMode', 'uSetPreAmpGain', 'uSetEMGainMode', 'uSetVSAmplitude', $
+					'uSetBaselineClamp', 'uSetADChannel', 'uSetOutputAmplifier', 'uSetTriggerMode', 'uSetHSSpeed', $
+					'uSetVSSpeed', 'uSetExposureTime', 'uSetTemperature', 'uGetTemperatureRange', 'uSetGain', 'uSetFanMode']
+
+		if self.camera.cooler_on eq 1 then commands = [commands, 'uCoolerON'] else commands = [commands, 'uCoolerOFF']
+		if not keyword_set(first_call) then self -> update_camera, commands, results
+
+	;\\ Show gain and exp times and shutter state
+		if self.runtime.shutter_state eq 0 then shutter_string = 'CLOSED' else shutter_string = 'OPEN'
+		exp_time_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_exp_time_guage')
+		gain_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_gain_guage')
+		shutter_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_shutter_guage')
+		motor_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_motor_guage')
+		widget_control, set_value = 'Exp Time: ' + string(self.camera.exposure_time, f='(f0.3)') + ' s', exp_time_guage_id
+		widget_control, set_value = 'Gain: ' + string(self.camera.gain, f='(i0)'), gain_guage_id
+		widget_control, set_value = 'Shutter: ' + shutter_string, shutter_guage_id
+		widget_control, set_value = 'MotorPos: ' + string(self.misc.motor_cur_pos,f='(i0)'), motor_guage_id
+end
+
+
+;\D\<Write settings to a file.>
+pro XDIConsole::write_settings, event				;\A\<Widget event>
+
+	fname = self.runtime.settings
+	info = routine_info(fname, /source)
+	help, info, /str
+
+	openw, hnd, file_dirname(info.path) + info.name + '_temp.pro', /get
+	printf, hnd, 'pro ' + info.name + '_temp, data'
+	printf, hnd, self->write_settings_struc('etalon', self.etalon)
+	printf, hnd, self->write_settings_struc('camera', self.camera)
+	printf, hnd, 'end'
+	close, hnd
+	free_lun, hnd
+
+end
+
+;\D\<Return a string version of a struc for the settings file.>
+function XDIConsole::write_settings_struc, name, struc
+	str = ''
+	names = tag_names(struc)
+	print, struc.editable
+	for i = 0, n_tags(struc) - 1 do begin
+		match = where(struc.editable eq i, can_edit)
+		print, can_edit
+		if can_edit eq 1 then str += self->write_settings_field(names[i], struc.(i)) + string([13B,10B])
+	endfor
+	return, str
+end
+
+;\D\<Return a string version of a field for the settings file.>
+function XDIConsole::write_settings_field, name, field
+	if size(field, /type) eq 8 then begin
+		return, self->write_settings_struc(name, field)
+	endif else begin
+		return, name
+	endelse
+end
+
+
 ;\D\<Load console settings from a settings file.>
-pro XDIConsole::load_settings, event, $                   ;\A\<Widget event>
+pro XDIConsole::load_settings2, event, $                   ;\A\<Widget event>
                                filename=filename, $       ;\A\<Filename to load from>
                                error=error, $             ;\A\<OUT: error code>
                                first_call=first_call      ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
