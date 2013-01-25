@@ -2304,6 +2304,19 @@ function XDIConsole::get_spec_save_info, nrings  ;\A\<Number of rings in the zon
 
 end
 
+;\D\<Return a copy of the the \verb"self" data structure.>
+function XDIConsole::get_console_data
+
+	return, {etalon:self.etalon, $
+		     camera:self.camera, $
+		     header:self.header, $
+		     logging:self.logging, $
+		     misc:self.misc, $
+			 runtime:self.runtime, $
+			 buffer:self.buffer }
+
+end
+
 ;\D\<Return the \verb"header" structure.>
 function XDIConsole::get_header_info
 
