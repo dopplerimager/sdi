@@ -6,12 +6,6 @@ pro Handle_Event, event  ;\A\<Widget event structure>
 
 	COMMON Console_Share, info
 
-	;\\ Setup the error handler
-	;	error = 0
-	;	catch, error
-	;	if error ne 0 then Handle_Error, error
-
-
 	info.console -> Event_Handler, event
 
 end
@@ -21,13 +15,16 @@ pro Kill_Entry, id  ;\A\<Widget id>
 
 	COMMON Console_Share, info
 
-	;\\ Setup the error handler
-	;	error = 0
-	;	catch, error
-	;	if error ne 0 then Handle_Error, error
-
 	info.console -> Kill_Handler, id
 
+end
+
+;\D\<Wrapper to get console data structure.>
+function Get_Console_Data
+
+	COMMON Console_Share, info
+
+	return, info.console -> get_console_data()
 end
 
 ;\D\<Error handler.>
@@ -48,16 +45,6 @@ pro SDI_Main, settings=settings, $   ;\A\<Settings file (required)>
               mode=mode              ;\A\<String mode, "auto" or "manual", defaults to "manual">
 
 	COMMON Console_Share, info
-
-	;\\ Setup the error handler
-	;	error = 0
-	;	catch, error
-	;	if error ne 0 then Handle_Error, error
-
-
-;	settings = 'c:\users\sdi3000\setup\conde_setup.sdi'
-;	mode = 'manual'
-;	schedule = 'c:\users\sdi3000\setup\red_only.txt'
 
 	console = obj_new('XDIConsole', settings = settings, schedule = schedule, mode = mode)
 

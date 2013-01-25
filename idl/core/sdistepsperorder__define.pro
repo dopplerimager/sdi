@@ -169,7 +169,6 @@ pro SDIStepsPerOrder::start_scan, event  ;\A\<Widget event>
 			self.console -> scan_etalon, 'StepsPerOrder obj:' + self.obj_num, start_volt_offset = self.start_volt_offset, $
 										  stop_volt_offset = self.stop_volt_offset, volt_step_size = self.volt_step_size, $
 										  status = status, reference = reference, /start_scan, /get_ref
-
 			if status eq 'Scanner started' then begin
 				;\\ Store the reference image
 					*self.ref_image = (reference - min(median(reference,3)))/100
@@ -272,7 +271,6 @@ pro SDIStepsPerOrder::frame_event, image, $     ;\A\<Latest camera image>
 
 
 			!p.position = 0
-
 			images = *self.image
 			images(*,*,channel) = images(*,*,channel) + ((image - min(image))/100.)
 			*self.image = images
