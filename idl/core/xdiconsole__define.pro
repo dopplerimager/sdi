@@ -8,6 +8,18 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
                            settings=settings, $       ;\A\<The console settings file (required)>
                            start_line=start_line      ;\A\<Optional start line in the schedule file>
 
+	;\\ Fill out the default values here
+	xdisettings_template, etalon=def_etalon, $
+						  camera=def_camera, $
+						  header=def_header, $
+						  logging=def_logging, $
+						  misc=def_misc
+	self.etalon = def_etalon
+	self.camera = def_camera
+	self.header = def_header
+	self.logging = def_logging
+	self.misc = def_misc
+
 	if keyword_set(mode) then begin
 		if mode eq 'auto' and not keyword_set(schedule) then begin
 			res = dialog_message('No schedule file for auto mode - switching to manual mode.')
@@ -98,6 +110,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		mot_bttn6  = widget_button(mot_menu,  value = 'Home Cal Source',   uvalue = {tag:'mot_sel_cal', type:'home'})
 
 		set_bttn1  = widget_button(set_menu,  value = 'Load settings',  uvalue = {tag:'load_settings'})
+		set_bttn1  = widget_button(set_menu,  value = 'Re-Load current settings',  uvalue = {tag:'reload_settings'})
 		set_bttn2  = widget_button(set_menu,  value = 'Edit settings',  uvalue = {tag:'edit_settings'})
 		set_bttn1  = widget_button(set_menu,  value = 'Write settings',  uvalue = {tag:'write_settings'})
 		set_bttn3  = widget_button(set_menu,  value = 'Edit Port Mapping',  uvalue = {tag:'edit_ports'})
@@ -414,8 +427,9 @@ pro XDIConsole::timer_event
 			file_mkdir, backup_dir
 			self.runtime.current_daynumber = current_daynumber
 			fname_backup = backup_dir + file_basename(self.runtime.settings) + '_BACKUP_' + dt_tm_mk(systime(/jul), f='Y$_0n$_0d$')
-			self->save_current_settings, filename=fname_backup
-			print, 'Saved Backup Settings File: ' + fname_backup
+			pfname_backup = backup_dir + 'persistent_BACKUP_' + dt_tm_mk(systime(/jul), f='Y$_0n$_0d$')
+			self->save_current_settings, filename=fname_backup, pfilename=pfname_backup
+			print, 'Saved Backup Files: ' + fname_backup + ', ' + pfname_backup
 		endif
 
 
@@ -1211,9 +1225,9 @@ end
 
 ;\D\<A new implementation of the settings file loader, testing.>
 pro XDIConsole::load_settings, event, $				;\A\<Widget event>
-								filename=filename, $    ;\A\<Filename to load from>
-								error=error, $          ;\A\<OUT: error code>
-                               	first_call=first_call   ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
+							   filename=filename, $    ;\A\<Filename to load from>
+							   error=error, $          ;\A\<OUT: error code>
+                               first_call=first_call   ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
 
 	error = 0
 
@@ -1223,15 +1237,17 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 			logging:self.logging, $
 			misc:self.misc}
 
-	call_procedure, file_basename(filename), temp
+	if not keyword_set(filename) then begin
+		filename = dialog_pickfile(path = self.misc.default_settings_path)
+	endif
+
+	call_procedure, (strsplit(file_basename(filename), '.', /extract))[0], temp
 
 	self.etalon 	= temp.etalon
 	self.camera 	= temp.camera
 	self.header 	= temp.header
 	self.logging 	= temp.logging
 	self.misc 		= temp.misc
-
-
 
 	xpix = self.camera.xpix
 	ypix = self.camera.ypix
@@ -1244,13 +1260,17 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 			  self.etalon.phasemap_base, $
 			  self.etalon.phasemap_grad
 
-
 	self.etalon.phasemap_base = ptr_new(intarr(x_dimension, y_dimension))
 	self.etalon.phasemap_grad = ptr_new(intarr(x_dimension, y_dimension))
 	self.buffer.image = ptr_new(ulonarr(x_dimension, y_dimension))
 	self.buffer.raw_image = ptr_new(ulonarr(x_dimension, y_dimension))
 
+	if file_test(self.misc.default_settings_path + 'persistent.idlsave') then $
+		restore, self.misc.default_settings_path + 'persistent.idlsave', /relaxed
+
 	if size(persistent, /type) eq 8 then begin
+
+		help, persistent, /str
 
 		;\\ Add in the phasemap and nm/step times
 		self.etalon.phasemap_time = persistent.phasemap_time
@@ -1268,9 +1288,6 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 
 	endif
 
-
-
-
 	;\\ Update the camera
 		commands = ['uSetShutter', 'uSetReadMode', 'uSetImage', 'uSetAcquisitionMode', $
 					'uSetFrameTransferMode', 'uSetPreAmpGain', 'uSetEMGainMode', 'uSetVSAmplitude', $
@@ -1292,218 +1309,96 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 		widget_control, set_value = 'MotorPos: ' + string(self.misc.motor_cur_pos,f='(i0)'), motor_guage_id
 end
 
+;\D\<Reload the current settings file.>
+pro XDIConsole::reload_settings, event				;\A\<Widget event>
+	self->load_settings
+end
+
 
 ;\D\<Write settings to a file.>
-pro XDIConsole::write_settings, event				;\A\<Widget event>
+pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
+								filename=filename, $
+								pfilename=pfilename
 
 	fname = self.runtime.settings
 	info = routine_info(fname, /source)
-	help, info, /str
 
-	openw, hnd, file_dirname(info.path) + info.name + '_temp.pro', /get
-	printf, hnd, 'pro ' + info.name + '_temp, data'
-	printf, hnd, self->write_settings_struc('etalon', self.etalon)
-	printf, hnd, self->write_settings_struc('camera', self.camera)
+	tab = string(9B)
+	newline = string([13B,10B])
+
+	outname = info.path
+	if keyword_set(filename) then outname = filename
+
+	openw, hnd, outname, /get
+	printf, hnd, 'pro ' + info.name + ', data'
+	printf, hnd, newline + tab + ';\\ ETALON'
+	printf, hnd, self->write_settings_struc('etalon', self.etalon, tab)
+	printf, hnd, newline + tab + ';\\ CAMERA'
+	printf, hnd, self->write_settings_struc('camera', self.camera, tab)
+	printf, hnd, newline + tab + ';\\ HEADER'
+	printf, hnd, self->write_settings_struc('header', self.header, tab)
+	printf, hnd, newline + tab + ';\\ LOGGING'
+	printf, hnd, self->write_settings_struc('logging', self.logging, tab)
+	printf, hnd, newline + tab + ';\\ MISC'
+	printf, hnd, self->write_settings_struc('misc', self.misc, tab)
 	printf, hnd, 'end'
 	close, hnd
 	free_lun, hnd
 
+	outname = self.misc.default_settings_path + 'persistent.idlsave'
+	if keyword_set(pfilename) then outname = pfilename
+
+	persistent =  {phasemap_base:*self.etalon.phasemap_base, $
+				   phasemap_grad:*self.etalon.phasemap_grad, $
+				   phasemap_time:self.etalon.phasemap_time, $
+				   nm_per_step_time:self.etalon.nm_per_step_time, $
+				   phasemap_lambda:self.etalon.phasemap_lambda }
+
+	save, filename = outname, persistent
+
 end
 
 ;\D\<Return a string version of a struc for the settings file.>
-function XDIConsole::write_settings_struc, name, struc
+function XDIConsole::write_settings_struc, name, struc, indent
 	str = ''
 	names = tag_names(struc)
-	print, struc.editable
+	edits = where(names eq 'EDITABLE', edits_yn)
 	for i = 0, n_tags(struc) - 1 do begin
-		match = where(struc.editable eq i, can_edit)
-		print, can_edit
-		if can_edit eq 1 then str += self->write_settings_field(names[i], struc.(i)) + string([13B,10B])
+		if edits_yn eq 1 then match = where(strupcase(struc.editable) eq names[i], can_edit) $
+			else can_edit = 1
+		if can_edit eq 1 then str += self->write_settings_field(name + '.' + names[i], $
+																struc.(i), indent) + string([13B,10B])
 	endfor
 	return, str
 end
 
 ;\D\<Return a string version of a field for the settings file.>
-function XDIConsole::write_settings_field, name, field
+function XDIConsole::write_settings_field, name, field, indent
 	if size(field, /type) eq 8 then begin
-		return, self->write_settings_struc(name, field)
+		return, self->write_settings_struc(name, field, indent)
 	endif else begin
-		return, name
+		is_string = 0
+		case size(field, /type) of
+			1: fmt = '(i0)'
+			2: fmt = '(i0)'
+			3: fmt = '(i0)'
+			4: fmt = '(f0)'
+			7: is_string = 1
+		endcase
+		if is_string eq 0 then return, indent + 'data.' + name + ' = ' + string(field, f=fmt) $
+			else return, indent + 'data.' + name + " = '" + field + "'"
 	endelse
 end
 
 
-;\D\<Load console settings from a settings file.>
-pro XDIConsole::load_settings2, event, $                   ;\A\<Widget event>
-                               filename=filename, $       ;\A\<Filename to load from>
-                               error=error, $             ;\A\<OUT: error code>
-                               first_call=first_call      ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
+;\D\<Save current settings file, new implementation.>
+pro XDIConsole::save_current_settings, filename=filename, $ ;\A\<Settings filename to save to>
+									   pfilename=pfilename  ;\A\<Persistent-data filename to save to>
 
-	error = 0
-
-	var_holder = {etalon:self.etalon, camera:self.camera, header:self.header, logging:self.logging, misc:self.misc}
-
-	if not keyword_set(filename) then begin
-		filename = dialog_pickfile(path = self.misc.default_settings_path)
-	endif
-
-	restore, filename, /relaxed
-
-	var_names = tag_names(var_holder)
-
-	if n_elements(var_names) ne n_elements(save_names) then begin
-		mess = ['File not compatible with current settings information, cannot load.', $
-				'Error - Wrong number of settings categories:', $
-				'Load file has ' + string(n_elements(save_names), f='(i0)')+', expecting ' + string(n_elements(var_names),f='(i0)')]
-		res = dialog_message(mess)
-		error = 1
-		goto, END_LOAD
-	endif
-
-	for n = 0, n_elements(save_names) - 1 do begin
-
-		match = where(save_names(n) eq var_names, matchyn)
-		if matchyn eq 0 then begin
-			mess = ['File not compatible with current settings information, cannot load.', $
-			  		'Error - No matching category for save file variable ' + save_names(n)]
-			res = dialog_message(mess)
-			error = 2
-			goto, END_LOAD
-		endif
-
-		tag = match(0)
-
-		res = execute('new_tags = n_tags(' + save_names(n) + ')')
-
-		if new_tags ne n_tags(var_holder.(tag)) then begin
-			mess = ['File not compatible with current settings information, cannot load.', $
-			  		'Error - Tags in category: ' + save_names(n) + ' dont match those expected']
-			res = dialog_message(mess)
-			error = 3
-			goto, END_LOAD
-		endif else begin
-			res = execute('tags_to_load = ' + save_names(n) + '.editable')
-			for t = 0, n_elements(tags_to_load) - 1 do begin
-				res = execute('self.(tag).(tags_to_load(t)) = ' + save_names(n) + '.(tags_to_load(t))')
-			endfor
-			res = execute('self.(tag).editable = ' + save_names(n) + '.editable')
-		endelse
-
-	endfor
-
-	;\\ Initialize the image and phasemap arrays
-		xpix = self.camera.xpix
-		ypix = self.camera.ypix
-
-		x_dimension = ceil(xpix/float(self.camera.xbin))
-		y_dimension = ceil(ypix/float(self.camera.ybin))
-		self.buffer.image = ptr_new(/alloc)
-		self.buffer.raw_image = ptr_new(/alloc)
-		self.etalon.phasemap_base = ptr_new(/alloc)
-		self.etalon.phasemap_grad = ptr_new(/alloc)
-		*self.buffer.image = ulonarr(x_dimension, y_dimension)
-		*self.buffer.raw_image = ulonarr(x_dimension, y_dimension)
-		*self.etalon.phasemap_base = intarr(x_dimension, y_dimension)
-		*self.etalon.phasemap_grad = intarr(x_dimension, y_dimension)
-		self.etalon.phasemap_lambda = etalon.phasemap_lambda
-
-		if size(*etalon.phasemap_base, /type) ne 0 then begin
-			phase_tmp = *etalon.phasemap_base
-			if n_elements(phase_tmp(*,0)) eq x_dimension and n_elements(phase_tmp(0,*)) eq y_dimension then begin
-				*self.etalon.phasemap_base = phase_tmp
-			endif
-			phase_tmp = *etalon.phasemap_grad
-			if n_elements(phase_tmp(*,0)) eq x_dimension and n_elements(phase_tmp(0,*)) eq y_dimension then begin
-				*self.etalon.phasemap_grad = phase_tmp
-			endif
-		endif
-
-	;\\ Add in the phasemap and nm/step times
-		self.etalon.phasemap_time = etalon.phasemap_time
-		self.etalon.nm_per_step_time = etalon.nm_per_step_time
-
-	;\\ Add in the saved port mappings, current filter number, mirror pos, source map, source pos
-		self.misc.port_map = misc.port_map
-		self.misc.current_filter = misc.current_filter
-		self.misc.motor_cur_pos = misc.motor_cur_pos
-		self.misc.source_map = misc.source_map
-		self.misc.current_source = misc.current_source
-
-	;\\ Update the camera
-
-		commands = ['uSetShutter', 'uSetReadMode', 'uSetImage', 'uSetAcquisitionMode', $
-					'uSetFrameTransferMode', 'uSetPreAmpGain', 'uSetEMGainMode', 'uSetVSAmplitude', $
-					'uSetBaselineClamp', 'uSetADChannel', 'uSetOutputAmplifier', 'uSetTriggerMode', 'uSetHSSpeed', $
-					'uSetVSSpeed', 'uSetExposureTime', 'uSetTemperature', 'uGetTemperatureRange', 'uSetGain', 'uSetFanMode']
-
-		if self.camera.cooler_on eq 1 then commands = [commands, 'uCoolerON'] else commands = [commands, 'uCoolerOFF']
-		if not keyword_set(first_call) then self -> update_camera, commands, results
-
-	;\\ Show gain and exp times and shutter state
-		if self.runtime.shutter_state eq 0 then shutter_string = 'CLOSED' else shutter_string = 'OPEN'
-		exp_time_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_exp_time_guage')
-		gain_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_gain_guage')
-		shutter_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_shutter_guage')
-		motor_guage_id  = widget_info(self.misc.console_id, find_by_uname = 'console_motor_guage')
-		widget_control, set_value = 'Exp Time: ' + string(self.camera.exposure_time, f='(f0.3)') + ' s', exp_time_guage_id
-		widget_control, set_value = 'Gain: ' + string(self.camera.gain, f='(i0)'), gain_guage_id
-		widget_control, set_value = 'Shutter: ' + shutter_string, shutter_guage_id
-		widget_control, set_value = 'MotorPos: ' + string(self.misc.motor_cur_pos,f='(i0)'), motor_guage_id
-
-END_LOAD:
-end
-
-;\D\<Launch the console settings editor \verb"edit_console_settings".>
-pro XDIConsole::edit_settings, event  ;\A\<Widget event>
-
-	edit_console_settings, filename = self.runtime.settings, $
-						   leader = self.misc.console_id, $
-						   console = self
+	self->write_settings, filename=filename, pfilename=pfilename
 
 end
 
-;\D\<Called when the editor, launched from the console, is closed. This applies the new settings.>
-pro XDIConsole::editor_closed, event  ;\A\<Widget event>
-
-	res = dialog_message('Reload current settings file?', /question)
-
-	if res eq 'Yes' then begin
-		if self.runtime.mode eq 'auto' then begin
-			mess = ['Warning: Console is running automatically! Implementing new settings',$
-				   'could have adverse effects. Do you want to continue?']
-			res = dialog_message(mess, /question)
-		endif else begin
-			res = 'Yes'
-		endelse
-		if res eq 'Yes' then self -> load_settings, 0, filename = self.runtime.settings
-	endif
-
-end
-
-;\D\<Save current settings file.>
-pro XDIConsole::save_current_settings, filename=filename  ;\A\<Filename to save to>
-
-	var_holder = {etalon:self.etalon, camera:self.camera, header:self.header, logging:self.logging, misc:self.misc}
-
-	if not keyword_set(filename) then begin
-		fname = self.runtime.settings
-	endif else begin
-		fname = filename
-	endelse
-	save_names = tag_names(var_holder)
-
-	var_holder.misc.active_object = obj_new()
-
-	str = ''
-	for n = 0, n_elements(save_names) - 1 do begin
-		res = execute(save_names(n) + ' = ' + 'var_holder.(n)')
-		str = str + save_names(n)
-		if n ne n_elements(save_names) - 1 then str = str + ', '
-	endfor
-
-	res = execute('save, filename = fname, save_names, ' + str)
-
-end
 
 ;\D\<Called by widgets when they want to log events. These get logged to a log file,>
 ;\D\<and optionally output to the display.>
@@ -2707,7 +2602,6 @@ pro XDIConsole::mot_sel_filter, event  ;\A\<Widget event>
 
 	;\\ This allows the user to manually select the current filter
 		filter = self.misc.current_filter
-		;xvaredit, filter, name = 'Select Filter Number', group = self.misc.console_id
 		filter = inputbox(filter, title = "Select Filter", group = self.misc.console_id)
 
 		if (filter eq self.misc.current_filter) then return
@@ -2739,7 +2633,6 @@ pro XDIConsole::mot_sel_cal, event, $                   ;\A\<Widget event>
 			if uval.type eq 'drive' then begin
 				;\\ This allows the user to manually select the current source
 					source = self.misc.current_source
-					;xvaredit, source, name = 'Select Source Number', group = self.misc.console_id
 					source = inputbox(source, title = "Select Cal Source", group = self.misc.console_id)
 			endif
 			if uval.type eq 'home' then begin
@@ -2836,139 +2729,16 @@ end
 ;\D\<XDIConsole is the main routine for SDI control. See the software manual for details.>
 pro XDIConsole__define
 
-
-;################################################################
-
-	;\\ Load a palette prototype
-	load_pal, culz, idl=[3,1]
-
 	;\\ Count the plugins
 	paths = Get_Paths()
 	path_list = file_search(paths + '\SDI*__define.pro', count = nmods)
 
-	;\\ Console settings
-	etalon = {eta,	  number_of_channels:0, $
-						 current_channel:0, $
-							 leg1_offset:0.0, $
-					         leg2_offset:0.0, $
-					         leg3_offset:0.0, $
-							leg1_voltage:0, $
-						    leg2_voltage:0, $
-					        leg3_voltage:0, $
-					   leg1_base_voltage:0, $
-					   leg2_base_voltage:0, $
-					   leg3_base_voltage:0, $
-					         nm_per_step:0.0, $
-					    nm_per_step_time:0D, $
-			   nm_per_step_refresh_hours:0.0, $
-					gap_refractive_index:0.0, $
-								scanning:0, $		;\\ 2 = scan paused
-					   start_volt_offset:0, $
-						stop_volt_offset:0, $
-					      volt_step_size:0.0, $
-					       phasemap_base:ptr_new(/alloc), $
-					       phasemap_grad:ptr_new(/alloc), $
-					     phasemap_lambda:0.0, $
-					       phasemap_time:0D, $
-				  phasemap_refresh_hours:0.0, $
-				  					 gap:0.0, $
-				  		     max_voltage: 4095, $
-				    		    editable:[0,2,3,4,8,9,10,11,13,14,23,24,25]}
-
-	camera = {cam, 	 exposure_time:0.0, $
-					       read_mode:0, $
-					acquisition_mode:0, $
-					    trigger_mode:0, $
-					    shutter_mode:0, $
-				shutter_closing_time:0, $
-				shutter_opening_time:0, $
-				    vert_shift_speed:0, $
-				    	   cooler_on:0, $
-				    	 cooler_temp:0, $
-				    	    fan_mode:0, $
-				    	    cam_temp:0.0, $
-				    	  temp_state:'', $
-				    	        xbin:0, $
-				    	        ybin:0, $
-				   wait_for_min_temp:0, $
-				   wait_for_shutdown:0, $
-				        cam_min_temp:0.0, $
-				        cam_max_temp:0.0, $
-				       cam_safe_temp:0.0, $
-				       			gain:0, $
-				       			xcen:0, $
-				       			ycen:0, $
-	 	       			 preamp_gain:0, $
-	 	       		  baseline_clamp:0, $
-	 	       		    em_gain_mode:0, $
-	 	       		    vs_amplitude:0, $
-	 	       		      ad_channel:0, $
-	 	       		output_amplifier:0, $
-	 	       				hs_speed:0, $
-	 	       					xpix:0, $
-	 	       					ypix:0, $
-			 			    editable:[0,1,2,3,4,5,6,7,8,9,10,11,13,14,20,21,22,23,24,25,26,27,28,29,30,31]}
-
-	header = {hea,        records:0, $
-				   file_specifier:'', $
-				             site:'', $
-				        site_code:'', $
-				  instrument_name:'', $
-				        longitude:0.0, $
-				         latitude:0.0, $
-				             year:'', $
-				              doy:'', $
-				         operator:'', $
-				          comment:'', $
-				         software:'', $
-				            notes:replicate(string(' ', format = '(a80)'), 32), $
-				   	     editable:[2,3,4,5,6,7,8,9,10,11]}
-
-	logging = {log,    log_directory:'', $
-				    time_name_format:'', $
-				      enable_logging:0, $
-				       log_overwrite:0, $
-				          log_append:0, $
-				        ftp_snapshot:'', $
-				        		 log:strarr(100), $
-				         log_entries:0, $
-				    	    editable:[0,1,2,3,4,5]}
-
-;---MC mod to store more information about the type of hardware interfaces in use:
-;	port_map_struc = {pms, mirror:0L, cal_source:0L, etalon:0L}
-    interface_info = {ifs, number: 0L, type: 'unknown', settings: 'none'}
-	port_map_struc = {pms, mirror: interface_info, cal_source: interface_info, etalon: interface_info, filter: interface_info}
-	port_map_struc.etalon.type = 'Access I/O USB to Parallel'
-	source_map_struc = {sms, s0:0, s1:0, s2:0, s3:0}
-
-    whoami, me_dir, me_file
-    misc = {mis, default_settings_path:me_dir + '..\setup\', $
-				   screen_capture_path:me_dir + '..\screen_captures\', $
-				        phase_map_path:me_dir + '..\phase_maps\', $
-				         zone_set_path:me_dir + '..\zone_set\', $
-				          spectra_path:me_dir + '..\spectra\', $
-				              dll_name:me_dir + '..\scanning_doppler_imager.dll', $
-				   timer_tick_interval:0.0, $
-				               palette:culz, $
-				      shutdown_on_exit:0, $
-				          object_count:0, $
-				              timer_id:0L, $
-				             timer2_id:0L, $
-							console_id:0L, $
-						 		log_id:0L, $
-						 active_object:obj_new(), $
-						 schedule_line:0L, $
-						 motor_sky_pos:0L, $
-						 motor_cal_pos:0L, $
-						 motor_cur_pos:0L, $
-						current_filter:0,  $
-						current_source:0,  $
-						 	  port_map:port_map_struc, $
-						 	source_map:source_map_struc, $
-						 snapshot_time:0D, $
-				snapshot_refresh_hours:0.0, $
-						      editable:[0,1,2,3,4,5,6,8,16,17,24]}
-;################################################################
+	;\\ This just gets the proto-types - it is called again in INIT to set values
+	xdisettings_template, etalon=etalon, $
+						  camera=camera, $
+						  header=header, $
+						  logging=logging, $
+						  misc=misc
 
 	buffer = {ima, image:ptr_new(/alloc), $
 				   raw_image:ptr_new(/alloc)}
