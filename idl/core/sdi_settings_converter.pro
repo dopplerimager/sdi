@@ -27,11 +27,22 @@ pro converter_write_settings, self, $
 
 	outname = pfilename
 
-	persistent =  {phasemap_base:*self.etalon.phasemap_base, $
-				   phasemap_grad:*self.etalon.phasemap_grad, $
-				   phasemap_time:self.etalon.phasemap_time, $
-				   nm_per_step_time:self.etalon.nm_per_step_time, $
-				   phasemap_lambda:self.etalon.phasemap_lambda }
+	persistent =  {$
+
+				   etalon:{phasemap_base:*self.etalon.phasemap_base, $
+				   		   phasemap_grad:*self.etalon.phasemap_grad, $
+				   		   phasemap_time:self.etalon.phasemap_time, $
+				   		   nm_per_step_time:self.etalon.nm_per_step_time, $
+				   		   phasemap_lambda:self.etalon.phasemap_lambda, $
+				   		   leg1_voltage:self.etalon.leg1_voltage, $
+				   		   leg2_voltage:self.etalon.leg2_voltage, $
+				   		   leg3_voltage:self.etalon.leg3_voltage }, $
+
+				   misc:{motor_cur_pos:self.misc.motor_cur_pos, $
+				   		 current_filter:self.misc.current_filter, $
+				   		 current_source:self.misc.current_source} $
+
+				   }
 
 	save, filename = outname, persistent
 
@@ -42,9 +53,17 @@ function converter_write_settings_struc, name, struc, indent
 	str = ''
 	names = tag_names(struc)
 	edits = where(names eq 'EDITABLE', edits_yn)
+
 	for i = 0, n_tags(struc) - 1 do begin
-		if edits_yn eq 1 then match = where(struc.editable eq i, can_edit) $
-			else can_edit = 1
+
+		if strupcase(name) eq 'MISC' and $
+		   (names[i] eq 'PORT_MAP' or names[i] eq 'SOURCE_MAP') then begin
+			can_edit = 1
+		endif else begin
+			if edits_yn eq 1 then match = where(struc.editable eq i, can_edit) $
+				else can_edit = 1
+		endelse
+
 		if can_edit eq 1 then str += converter_write_settings_field(name + '.' + names[i], $
 																struc.(i), indent) + string([13B,10B])
 	endfor

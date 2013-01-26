@@ -110,6 +110,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		mot_bttn6  = widget_button(mot_menu,  value = 'Home Cal Source',   uvalue = {tag:'mot_sel_cal', type:'home'})
 
 		set_bttn1  = widget_button(set_menu,  value = 'Load settings',  uvalue = {tag:'load_settings'})
+		set_bttn1  = widget_button(set_menu,  value = 'Load settings (full restore)',  uvalue = {tag:'load_settings_full'})
 		set_bttn1  = widget_button(set_menu,  value = 'Re-Load current settings',  uvalue = {tag:'reload_settings'})
 		set_bttn2  = widget_button(set_menu,  value = 'Edit settings',  uvalue = {tag:'edit_settings'})
 		set_bttn1  = widget_button(set_menu,  value = 'Write settings',  uvalue = {tag:'write_settings'})
@@ -1223,6 +1224,11 @@ pro XDIConsole::image_capture, event  ;\A\<Widget event>
 
 end
 
+;\D\<Load all settings (same as on startup)>
+pro XDIConsole::load_settings_full, event				;\A\<Widget event>
+	self->load_settings, event, /first_call
+end
+
 ;\D\<A new implementation of the settings file loader, testing.>
 pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 							   filename=filename, $    ;\A\<Filename to load from>
@@ -1265,28 +1271,50 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 	self.buffer.image = ptr_new(ulonarr(x_dimension, y_dimension))
 	self.buffer.raw_image = ptr_new(ulonarr(x_dimension, y_dimension))
 
-	if file_test(self.misc.default_settings_path + 'persistent.idlsave') then $
+	if file_test(self.misc.default_settings_path + 'persistent.idlsave') then begin
+
+		;\\ In case loading the persistent file fails (corrupted), just skip it
+		catch, error_status
+		if error_status ne 0 then begin
+			catch, /cancel
+			goto, SKIP_PERSISTENT_LOAD
+		endif
+
 		restore, self.misc.default_settings_path + 'persistent.idlsave', /relaxed
 
-	if size(persistent, /type) eq 8 then begin
+		if size(persistent, /type) eq 8 then begin
 
-		help, persistent, /str
+			help, persistent, /str
 
-		;\\ Add in the phasemap and nm/step times
-		self.etalon.phasemap_time = persistent.phasemap_time
-		self.etalon.nm_per_step_time = persistent.nm_per_step_time
-		self.etalon.phasemap_lambda = persistent.phasemap_lambda
+			;\\ Only load these on init (or when 'Load Settings (full restore)' is selected)
+			if keyword_set(first_call) then begin
+				self.etalon.leg1_voltage = persistent.etalon.leg1_voltage
+				self.etalon.leg2_voltage = persistent.etalon.leg2_voltage
+				self.etalon.leg3_voltage = persistent.etalon.leg3_voltage
+				self.misc.motor_cur_pos = persistent.misc.motor_cur_pos
+				self.misc.current_filter = persistent.misc.current_filter
+				self.misc.current_source = persistent.misc.current_source
+			endif
 
-		;\\ Make sure dimensions match
-		dims = size(persistent.phasemap_base, /dimensions)
-		if dims[0] eq x_dimension and $
-		   dims[1] eq y_dimension then *self.etalon.phasemap_base = persistent.phasemap_base
+			;\\ Always load the phasemap and nm/step times
+			self.etalon.phasemap_lambda = persistent.etalon.phasemap_lambda
+			self.etalon.phasemap_time = persistent.etalon.phasemap_time
+			self.etalon.nm_per_step_time = persistent.etalon.nm_per_step_time
 
-		dims = size(persistent.phasemap_grad, /dimensions)
-		if dims[0] eq x_dimension and $
-		   dims[1] eq y_dimension then *self.etalon.phasemap_grad = persistent.phasemap_grad
+			;\\ Make sure dimensions match
+			dims = size(persistent.etalon.phasemap_base, /dimensions)
+			if dims[0] eq x_dimension and $
+			   dims[1] eq y_dimension then *self.etalon.phasemap_base = persistent.etalon.phasemap_base
 
-	endif
+			dims = size(persistent.etalon.phasemap_grad, /dimensions)
+			if dims[0] eq x_dimension and $
+			   dims[1] eq y_dimension then *self.etalon.phasemap_grad = persistent.etalon.phasemap_grad
+
+		endif ;\\ if persistent valid
+
+	endif ;\\ if persistent exists
+	SKIP_PERSISTENT_LOAD:
+
 
 	;\\ Update the camera
 		commands = ['uSetShutter', 'uSetReadMode', 'uSetImage', 'uSetAcquisitionMode', $
@@ -1348,11 +1376,22 @@ pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
 	outname = self.misc.default_settings_path + 'persistent.idlsave'
 	if keyword_set(pfilename) then outname = pfilename
 
-	persistent =  {phasemap_base:*self.etalon.phasemap_base, $
-				   phasemap_grad:*self.etalon.phasemap_grad, $
-				   phasemap_time:self.etalon.phasemap_time, $
-				   nm_per_step_time:self.etalon.nm_per_step_time, $
-				   phasemap_lambda:self.etalon.phasemap_lambda }
+	persistent =  {$
+
+				   etalon:{phasemap_base:*self.etalon.phasemap_base, $
+				   		   phasemap_grad:*self.etalon.phasemap_grad, $
+				   		   phasemap_time:self.etalon.phasemap_time, $
+				   		   nm_per_step_time:self.etalon.nm_per_step_time, $
+				   		   phasemap_lambda:self.etalon.phasemap_lambda, $
+				   		   leg1_voltage:self.etalon.leg1_voltage, $
+				   		   leg2_voltage:self.etalon.leg2_voltage, $
+				   		   leg3_voltage:self.etalon.leg3_voltage }, $
+
+				   misc:{motor_cur_pos:self.misc.motor_cur_pos, $
+				   		 current_filter:self.misc.current_filter, $
+				   		 current_source:self.misc.current_source} $
+
+				   }
 
 	save, filename = outname, persistent
 
@@ -2221,16 +2260,27 @@ pro XDIConsole::status_update
 	if self.logging.ftp_snapshot ne '' then begin
 
 		;\\ Send status update
-		if ( (systime(/sec) - last_status_update0)/60. gt 10. ) then begin
+		if ( (systime(/sec) - last_status_update0)/60. gt 20. ) then begin
 
 			;\\ Make a png of the current phasemap
 			self -> get_phasemap, base, grad, lambda
 			phmap = float(base) * (lambda/630.0) * grad
 			write_png, 'c:\users\sdi3000\status_phasemap.png', phmap
 
+			;\\ Get some log file paths
+			time = convert_js(dt_tm_tojs(systime(/ut)))
+			log_path = self.logging.log_directory + '\' + ymd2string( time.year, time.month, time.day, separator='_')
+			console_log = log_path + '\console_log.txt'
+			instr_log = log_path + '\instrumentspecific_log.txt'
+			spectrum_log = log_path + '\spectrum_log.txt'
+
+
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
 			printf, hnd, 'put c:/users/sdi3000/status_phasemap.png /status/' + self.header.site_code + '/phasemap.png'
 			printf, hnd, 'put ' + self.runtime.schedule + ' /status/' + self.header.site_code + '/schedule.txt'
+			printf, hnd, 'put ' + console_log + ' /status/' + self.header.site_code + '/console_log.txt'
+			printf, hnd, 'put ' + instr_log + ' /status/' + self.header.site_code + '/instrumentspecific_log.txt'
+			printf, hnd, 'put ' + spectrum_log + ' /status/' + self.header.site_code + '/spectrum_log.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
