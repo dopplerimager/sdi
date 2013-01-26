@@ -2201,16 +2201,27 @@ pro XDIConsole::status_update
 	if self.logging.ftp_snapshot ne '' then begin
 
 		;\\ Send status update
-		if ( (systime(/sec) - last_status_update0)/60. gt 10. ) then begin
+		if ( (systime(/sec) - last_status_update0)/60. gt 20. ) then begin
 
 			;\\ Make a png of the current phasemap
 			self -> get_phasemap, base, grad, lambda
 			phmap = float(base) * (lambda/630.0) * grad
 			write_png, 'c:\users\sdi3000\status_phasemap.png', phmap
 
+			;\\ Get some log file paths
+			time = convert_js(dt_tm_tojs(systime(/ut)))
+			log_path = self.logging.log_directory + '\' + ymd2string( time.year, time.month, time.day, separator='_')
+			console_log = log_path + '\console_log.txt'
+			instr_log = log_path + '\instrumentspecific_log.txt'
+			spectrum_log = log_path + '\spectrum_log.txt'
+
+
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
 			printf, hnd, 'put c:/users/sdi3000/status_phasemap.png /status/' + self.header.site_code + '/phasemap.png'
 			printf, hnd, 'put ' + self.runtime.schedule + ' /status/' + self.header.site_code + '/schedule.txt'
+			printf, hnd, 'put ' + console_log + ' /status/' + self.header.site_code + '/console_log.txt'
+			printf, hnd, 'put ' + instr_log + ' /status/' + self.header.site_code + '/instrumentspecific_log.txt'
+			printf, hnd, 'put ' + spectrum_log + ' /status/' + self.header.site_code + '/spectrum_log.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
