@@ -112,7 +112,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		set_bttn1  = widget_button(set_menu,  value = 'Load settings',  uvalue = {tag:'load_settings'})
 		set_bttn1  = widget_button(set_menu,  value = 'Load settings (full restore)',  uvalue = {tag:'load_settings_full'})
 		set_bttn1  = widget_button(set_menu,  value = 'Re-Load current settings',  uvalue = {tag:'reload_settings'})
-		set_bttn2  = widget_button(set_menu,  value = 'Edit settings',  uvalue = {tag:'edit_settings'})
+		set_bttn2  = widget_button(set_menu,  value = 'Show current settings',  uvalue = {tag:'show_current_settings'})
 		set_bttn1  = widget_button(set_menu,  value = 'Write settings',  uvalue = {tag:'write_settings'})
 		set_bttn3  = widget_button(set_menu,  value = 'Edit Port Mapping',  uvalue = {tag:'edit_ports'})
 		set_bttn4  = widget_button(set_menu,  value = 'Close Mirror Port',  uvalue = {tag:'close_mport'})
@@ -1400,23 +1400,24 @@ pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
 end
 
 ;\D\<Return a string version of a struc for the settings file.>
-function XDIConsole::write_settings_struc, name, struc, indent
+function XDIConsole::write_settings_struc, name, struc, indent, show_all=show_all
 	str = ''
 	names = tag_names(struc)
 	edits = where(names eq 'EDITABLE', edits_yn)
 	for i = 0, n_tags(struc) - 1 do begin
 		if edits_yn eq 1 then match = where(strupcase(struc.editable) eq names[i], can_edit) $
 			else can_edit = 1
-		if can_edit eq 1 then str += self->write_settings_field(name + '.' + names[i], $
-																struc.(i), indent) + string([13B,10B])
+		if (can_edit eq 1) or keyword_set(show_all) then $
+			str += self->write_settings_field(name + '.' + names[i], $
+				   struc.(i), indent, show_all=show_all) + string([13B,10B])
 	endfor
 	return, str
 end
 
 ;\D\<Return a string version of a field for the settings file.>
-function XDIConsole::write_settings_field, name, field, indent
+function XDIConsole::write_settings_field, name, field, indent, show_all=show_all
 	if size(field, /type) eq 8 then begin
-		return, self->write_settings_struc(name, field, indent)
+		return, self->write_settings_struc(name, field, indent, show_all=show_all)
 	endif else begin
 		is_string = 0
 		case size(field, /type) of
@@ -1425,9 +1426,14 @@ function XDIConsole::write_settings_field, name, field, indent
 			3: fmt = '(i0)'
 			4: fmt = '(f0)'
 			7: is_string = 1
+			else: return, indent + 'data.' + name + ' = ' + size(field, /tname)
 		endcase
-		if is_string eq 0 then return, indent + 'data.' + name + ' = ' + string(field, f=fmt) $
-			else return, indent + 'data.' + name + " = '" + field + "'"
+		if is_string eq 0 then field_string = string(field, f=fmt) else field_string = field
+		if n_elements(field_string) gt 0 then begin
+			pre_spaces = strjoin(replicate(' ', strlen(indent + 'data.' + name) + 4), '', /single)
+			out_string = '[' + strjoin(field_string, ',' + string([13B,10B]) + pre_spaces, /single) + ']'
+		endif
+		return, indent + 'data.' + name + " = '" + out_string
 	endelse
 end
 
@@ -1437,8 +1443,31 @@ pro XDIConsole::save_current_settings, filename=filename, $ ;\A\<Settings filena
 									   pfilename=pfilename  ;\A\<Persistent-data filename to save to>
 
 	self->write_settings, filename=filename, pfilename=pfilename
-
 end
+
+;\D\<Show the current settings>
+pro XDIConsole::show_current_settings, event
+
+	tab = string(9B)
+	newline = string([13B,10B])
+	text = ''
+	text += newline + '>> ETALON' + newline
+	text += self->write_settings_struc('etalon', self.etalon, '', /show_all)
+	text += newline + '>> CAMERA' + newline
+	text += self->write_settings_struc('camera', self.camera, '', /show_all)
+	text += newline + '>> HEADER' + newline
+	text += self->write_settings_struc('header', self.header, '', /show_all)
+	text += newline + '>> LOGGING' + newline
+	text += self->write_settings_struc('logging', self.logging, '', /show_all)
+	text += newline + '>> MISC' + newline
+	text += self->write_settings_struc('misc', self.misc, '', /show_all)
+
+	base = widget_base(group_leader = self.misc.console_id, col = 1)
+	text = widget_text(base, value = text, font = 'Courier*15', $
+					   ys = 50, xs = 100., /scroll)
+	widget_control, /realize, base
+end
+
 
 
 ;\D\<Called by widgets when they want to log events. These get logged to a log file,>
