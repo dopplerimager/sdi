@@ -101,7 +101,7 @@ pro data_transfer, data_dir = data_dir, $
 		free_lun, log_handle
 
 
-		;\\ Create the ftp script, slipt into batches of two files per session (timeout problems)
+		;\\ Create the ftp script, split into batches of two files per session (timeout problems)
 		openw, ftp_handle, ftp_script, /get_lun
 		printf, ftp_handle, 'cd instrument_incomming'
 		printf, ftp_handle, 'lcd ' + data_dir

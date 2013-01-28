@@ -32,8 +32,8 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
     if not keyword_set(mode) then mode = 'manual'
 
     if not keyword_set(settings) then begin
-    	res = dialog_message('Settings file required.')
-    	return, 0
+    	print, 'No settings file specified, using default settings!'
+    	settings = '__no_settings_file_provided__'
     endif
 
 	if not keyword_set(start_line) then begin
@@ -1224,6 +1224,11 @@ pro XDIConsole::image_capture, event  ;\A\<Widget event>
 
 end
 
+;\D\<Reload the current settings file.>
+pro XDIConsole::reload_settings, event				;\A\<Widget event>
+	self->load_settings, filename = self.runtime.settings
+end
+
 ;\D\<Load all settings (same as on startup)>
 pro XDIConsole::load_settings_full, event				;\A\<Widget event>
 	self->load_settings, event, /first_call
@@ -1247,7 +1252,8 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 		filename = dialog_pickfile(path = self.misc.default_settings_path)
 	endif
 
-	call_procedure, (strsplit(file_basename(filename), '.', /extract))[0], temp
+	if filename ne '__no_settings_file_provided__' then $
+		call_procedure, (strsplit(file_basename(filename), '.', /extract))[0], temp
 
 	self.etalon 	= temp.etalon
 	self.camera 	= temp.camera
@@ -1337,16 +1343,12 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 		widget_control, set_value = 'MotorPos: ' + string(self.misc.motor_cur_pos,f='(i0)'), motor_guage_id
 end
 
-;\D\<Reload the current settings file.>
-pro XDIConsole::reload_settings, event				;\A\<Widget event>
-	self->load_settings
-end
-
-
 ;\D\<Write settings to a file.>
 pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
 								filename=filename, $
 								pfilename=pfilename
+
+	if self.runtime.settings eq '__no_settings_file_provided__' then return
 
 	fname = self.runtime.settings
 	info = routine_info(fname, /source)
