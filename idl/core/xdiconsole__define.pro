@@ -8,6 +8,9 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
                            settings=settings, $       ;\A\<The console settings file (required)>
                            start_line=start_line      ;\A\<Optional start line in the schedule file>
 
+	;\\ Keep a list of things to log, once the log is set up
+	log_queue = ['']
+
 	;\\ Fill out the default values here
 	xdisettings_template, etalon=def_etalon, $
 						  camera=def_camera, $
@@ -32,7 +35,7 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
     if not keyword_set(mode) then mode = 'manual'
 
     if not keyword_set(settings) then begin
-    	print, 'No settings file specified, using default settings!'
+    	log_queue = [log_queue, 'No settings file specified, using default settings!']
     	settings = '__no_settings_file_provided__'
     endif
 
@@ -155,12 +158,16 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 
 		endif
 
-
 	;\\ Create the timer widget
 		self.misc.timer_id  = widget_base(self.misc.console_id, map = 0, uval = 'Timer')
 
 	;\\ Realize the console
 		widget_control, self.misc.console_id, /realize
+
+		;\\ Output any accumulated log messages
+		for i = 1, n_elements(log_queue) - 1 do begin
+			self->log, log_queue[i], 'Console', /display
+		endfor
 
 	;\\ Create an instance of the manager class
 		self.manager = obj_new('XDIWidgetReg', id = self.misc.console_id, ref = self)
@@ -188,18 +195,15 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 			endif
 		endelse
 
-
 	;\\ Modify the title to indicate a manual or auto session
 		title = 'SDI CONSOLE - ' + self.header.instrument_name + ' - Mode: ' + self.runtime.mode
 		widget_control, self.misc.console_id, base_set_title = title
-
 
 	;\\ Load the console specific settings file (each plugin has one, usually describing widget geometry)
 		if file_test(self.misc.default_settings_path + 'console.sdi') then begin
 			restore, self.misc.default_settings_path + 'console.sdi', /relaxed
 			widget_control, xo = geometry.xoffset, yo = geometry.yoffset, self.misc.console_id
 		endif
-
 
 	;\\ Compile the instrument specific file
 		resolve_routine, self.header.instrument_name + '_initialise', /compile_full_file
@@ -225,7 +229,6 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		self -> update_camera, commands, results
 
 		res = call_external(self.misc.dll_name, 'uStartAcquisition')
-
 
 	;\\ Ensure the timer tick interval is greater than zero
 		if self.misc.timer_tick_interval eq 0.0 then self.misc.timer_tick_interval = 0.0
@@ -1428,12 +1431,14 @@ function XDIConsole::write_settings_field, name, field, indent, show_all=show_al
 			7: is_string = 1
 			else: return, indent + 'data.' + name + ' = ' + size(field, /tname)
 		endcase
-		if is_string eq 0 then field_string = string(field, f=fmt) else field_string = field
-		if n_elements(field_string) gt 0 then begin
+		if is_string eq 0 then field_string = string(field, f=fmt) else field_string = "'" + field + "'"
+		if n_elements(field_string) gt 1 then begin
 			pre_spaces = strjoin(replicate(' ', strlen(indent + 'data.' + name) + 4), '', /single)
 			out_string = '[' + strjoin(field_string, ',' + string([13B,10B]) + pre_spaces, /single) + ']'
-		endif
-		return, indent + 'data.' + name + " = '" + out_string
+		endif else begin
+			out_string = field_string
+		endelse
+		return, indent + 'data.' + name + " = " + out_string
 	endelse
 end
 
