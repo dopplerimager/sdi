@@ -23,6 +23,10 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 	self.logging = def_logging
 	self.misc = def_misc
 
+	;\\ Manual mode by default
+	if not keyword_set(mode) then mode = 'manual'
+
+	;\\ Make sure we have  schedule file if starting up in auto mode
 	if keyword_set(mode) then begin
 		if mode eq 'auto' and not keyword_set(schedule) then begin
 			res = dialog_message('No schedule file for auto mode - switching to manual mode.')
@@ -32,8 +36,9 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 
 	if not keyword_set(schedule) then schedule = ''
 
-    if not keyword_set(mode) then mode = 'manual'
-
+	;\\ If no settings file was provided, the default settings will be used.
+	;\\ Warn about this, and set the settings field in self.runtime to something
+	;\\ that allows to check whether a settings file was provided.
     if not keyword_set(settings) then begin
     	log_queue = [log_queue, 'No settings file specified, using default settings!']
     	settings = '__no_settings_file_provided__'
@@ -2845,9 +2850,7 @@ pro XDIConsole__define
 	        plugin_name_list:strarr(nmods), $
 	          current_status:'', $
 	   last_schedule_command:'', $
-	                editable:0}
-
-			;\\ shutter_state 0 = closed, 1 = open
+	                editable:['']}
 
 	void = {XDIConsole, etalon:etalon, $
 					    camera:camera, $
