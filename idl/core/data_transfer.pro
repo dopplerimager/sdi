@@ -2,7 +2,8 @@
 pro data_transfer, data_dir = data_dir, $
 				   sent_dir = sent_dir, $
 				   ftp_command = ftp_command, $
-				   site = site
+				   site = site, $
+				   dry_run = dry_run
 
 
 	if not keyword_set(data_dir) then begin
@@ -63,7 +64,7 @@ pro data_transfer, data_dir = data_dir, $
 			match = where(files_processed eq filename, nmatching)
 			if nmatching eq 1 then begin
 				printf, log_handle, 'Moving processed file ' + filename + ' to ' + sent_dir
-				file_move, files[i], sent_dir + '\' + file_basename(files[i])
+				if not keyword_set(dry_run) then file_move, files[i], sent_dir + '\' + file_basename(files[i])
 			endif else begin
 				remaining = [remaining, files[i]]
 			endelse
@@ -101,16 +102,19 @@ pro data_transfer, data_dir = data_dir, $
 		free_lun, log_handle
 
 
-		;\\ Create the ftp script, slipt into batches of two files per session (timeout problems)
+		;\\ Create the ftp script, split into batches of two files per session (timeout problems)
 		openw, ftp_handle, ftp_script, /get_lun
 		printf, ftp_handle, 'cd instrument_incomming'
 		printf, ftp_handle, 'lcd ' + data_dir
+		if keyword_set(dry_run) then print, 'cd instrument_incomming'
+		if keyword_set(dry_run) then print, 'lcd ' + data_dir
 
 		file_count = 0
 		for i = 0, nfiles - 1 do begin
 
 			filename = file_basename(files[i])
 			printf, ftp_handle, 'put ' + filename
+			if keyword_set(dry_run) then print, 'put ' + filename
 			file_count ++
 
 			if (i eq nfiles - 1 or file_count eq 2) then begin
@@ -118,19 +122,30 @@ pro data_transfer, data_dir = data_dir, $
 				file_count = 0
 
 				;\\ The last file to transfer is the list of incomming files + checksums
-				if (i eq nfiles - 1) then printf, ftp_handle, 'put ' + file_basename(incomming)
+				if (i eq nfiles - 1) then begin
+					printf, ftp_handle, 'put ' + file_basename(incomming)
+					if keyword_set(dry_run) then print, 'put ' + file_basename(incomming)
+				endif
 
 				printf, ftp_handle, 'quit'
+				if keyword_set(dry_run) then print, 'quit'
 				close, ftp_handle
 				free_lun, ftp_handle
 
 				;\\ Run the ftp command
-				spawn, ftp_command + ' -b ' + ftp_script + ' > ftplog.txt', result
+
+				if keyword_set(dry_run) then begin
+					print, 'spawn, ' + ftp_command + ' -b ' + ftp_script + ' > ftplog.txt, result'
+				endif else begin
+					spawn, ftp_command + ' -b ' + ftp_script + ' > ftplog.txt', result
+				endelse
 
 				if (i lt nfiles - 1) then begin
 					openw, ftp_handle, ftp_script, /get_lun
 					printf, ftp_handle, 'cd instrument_incomming'
 					printf, ftp_handle, 'lcd ' + data_dir
+					if keyword_set(dry_run) then print, 'cd instrument_incomming'
+					if keyword_set(dry_run) then print, 'lcd ' + data_dir
 				endif
 			endif
 
@@ -139,6 +154,8 @@ pro data_transfer, data_dir = data_dir, $
 	;\\ Delete the _processed file
 		file_delete, processed_fname, /allow_nonexistent
 
-
+	if keyword_set(dry_run) then begin
+		res = dialog_message('Data transfer dry run finished')
+	endif
 
 end
