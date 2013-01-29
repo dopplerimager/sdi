@@ -1348,8 +1348,8 @@ end
 
 ;\D\<Write settings to a file.>
 pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
-								filename=filename, $
-								pfilename=pfilename
+								filename=filename, $ ;\A\<Write the settings file to this filename>
+								pfilename=pfilename  ;\A\<Write the persistent file to this filename>
 
 	if self.runtime.settings eq '__no_settings_file_provided__' then return
 
@@ -1402,8 +1402,11 @@ pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
 
 end
 
-;\D\<Return a string version of a struc for the settings file.>
-function XDIConsole::write_settings_struc, name, struc, indent, show_all=show_all
+;\D\<Return a string version of a struc for the settings file (internal use).>
+function XDIConsole::write_settings_struc, name, $ ;\A\<Name of the structure>
+										   struc, $ ;\A\<The actual structure>
+										   indent, $ ;\A\<Indentation level>
+										   show_all=show_all ;\A\<Show non-editable fields too>
 	str = ''
 	names = tag_names(struc)
 	edits = where(names eq 'EDITABLE', edits_yn)
@@ -1417,8 +1420,11 @@ function XDIConsole::write_settings_struc, name, struc, indent, show_all=show_al
 	return, str
 end
 
-;\D\<Return a string version of a field for the settings file.>
-function XDIConsole::write_settings_field, name, field, indent, show_all=show_all
+;\D\<Return a string version of a field for the settings file (internal use).>
+function XDIConsole::write_settings_field, name, $ ;\A\<Name of the field>
+										   field, $ ;\A\<The actual field>
+										   indent, $ ;\A\<Indentation level>
+										   show_all=show_all ;\A\<Show non-editable fields too>
 	if size(field, /type) eq 8 then begin
 		return, self->write_settings_struc(name, field, indent, show_all=show_all)
 	endif else begin
@@ -1443,15 +1449,14 @@ function XDIConsole::write_settings_field, name, field, indent, show_all=show_al
 end
 
 
-;\D\<Save current settings file, new implementation.>
+;\D\<Save current settings file, forwards to write_settings.>
 pro XDIConsole::save_current_settings, filename=filename, $ ;\A\<Settings filename to save to>
 									   pfilename=pfilename  ;\A\<Persistent-data filename to save to>
-
 	self->write_settings, filename=filename, pfilename=pfilename
 end
 
-;\D\<Show the current settings>
-pro XDIConsole::show_current_settings, event
+;\D\<Show the current settings file (shows all fields).>
+pro XDIConsole::show_current_settings, event ;\A\<Widget event>
 
 	tab = string(9B)
 	newline = string([13B,10B])
@@ -1472,7 +1477,6 @@ pro XDIConsole::show_current_settings, event
 					   ys = 50, xs = 100., /scroll)
 	widget_control, /realize, base
 end
-
 
 
 ;\D\<Called by widgets when they want to log events. These get logged to a log file,>
@@ -1624,47 +1628,44 @@ pro XDIConsole::cam_cooler, event  ;\A\<Widget event>
 
 	if res eq 'Yes' or self.runtime.mode eq 'manual' then begin
 
-			set_temp = self.camera.cooler_temp
-			cam_temp = self.camera.cam_temp
-			cool = self.camera.cooler_on
-			minim = self.camera.cam_min_temp
-			maxim = self.camera.cam_max_temp
+		set_temp = self.camera.cooler_temp
+		cam_temp = self.camera.cam_temp
+		cool = self.camera.cooler_on
+		minim = self.camera.cam_min_temp
+		maxim = self.camera.cam_max_temp
 
-			if cool eq 1 then state_val = 'Turn Cooler OFF' else state_val = 'Turn Cooler ON'
-			if cool eq 1 then cool_val = 'ON' else cool_val = 'OFF'
+		if cool eq 1 then state_val = 'Turn Cooler OFF' else state_val = 'Turn Cooler ON'
+		if cool eq 1 then cool_val = 'ON' else cool_val = 'OFF'
 
-			geom = widget_info(self.misc.console_id, /geometry)
-			xoff = geom.xoffset + 20
-			yoff = geom.yoffset + 20
+		geom = widget_info(self.misc.console_id, /geometry)
+		xoff = geom.xoffset + 20
+		yoff = geom.yoffset + 20
 
-			font = 'Ariel*15*Bold'
+		font = 'Ariel*15*Bold'
 
-			base = widget_base(group_leader = self.misc.console_id, xs = 300, ys = 250, xoff=xoff, yoff=yoff, title='Cooling')
+		base = widget_base(group_leader = self.misc.console_id, xs = 300, ys = 250, xoff=xoff, yoff=yoff, title='Cooling')
 
-			warning1 = widget_label(base, xoff=10, yoff=10, value = 'IF SET POINT IS CHANGED WHEN COOLER IS', font=font)
-			warning2 = widget_label(base, xoff=10, yoff=30, value = 'ON, COOLER WILL BE RESTARTED', font=font)
+		warning1 = widget_label(base, xoff=10, yoff=10, value = 'IF SET POINT IS CHANGED WHEN COOLER IS', font=font)
+		warning2 = widget_label(base, xoff=10, yoff=30, value = 'ON, COOLER WILL BE RESTARTED', font=font)
 
-			on_off_but = widget_button(base, xoff = 10, yoff = 190, value = state_val, uname='Console_'+self.obj_num+'coolerbut', $
-									   uvalue = {tag:'cam_cooler_event', event:'toggle'}, font=font)
-			update_but = widget_button(base, xoff = 140, yoff = 190, value = 'Update Set Point', uname='Console_'+self.obj_num+'setbut', $
-									   uvalue = {tag:'cam_cooler_event', event:'set'}, font=font)
-			curr_cool = widget_label(base, xoff=10, yoff=70, value = 'Cooler is currently ' + cool_val, $
-									uname='Console_'+self.obj_num+'coolerval', font=font)
+		on_off_but = widget_button(base, xoff = 10, yoff = 190, value = state_val, uname='Console_'+self.obj_num+'coolerbut', $
+								   uvalue = {tag:'cam_cooler_event', event:'toggle'}, font=font)
+		update_but = widget_button(base, xoff = 140, yoff = 190, value = 'Update Set Point', uname='Console_'+self.obj_num+'setbut', $
+								   uvalue = {tag:'cam_cooler_event', event:'set'}, font=font)
+		curr_cool = widget_label(base, xoff=10, yoff=70, value = 'Cooler is currently ' + cool_val, $
+								uname='Console_'+self.obj_num+'coolerval', font=font)
 
-			current    = widget_label(base, xoff = 10, yoff = 100, value = 'Current Temperature: ' + string(cam_temp,f='(f0.2)'), $
-						 			  uname='Console_'+self.obj_num+'camtemp', font=font)
-			set_label  = widget_label(base, xoff = 10, yoff = 130, value = 'Set Temperature:', font=font)
-			set_box	   = widget_slider(base, xoff = 100, yoff = 130, value = set_temp, minim=minim, maxim=maxim, $
-								     uname='Console_'+self.obj_num+'settemp', uval = {tag:'cam_cooler_event', event:'slider'}, font=font)
+		current = widget_label(base, xoff = 10, yoff = 100, value = 'Current Temperature: ' + string(cam_temp,f='(f0.2)'), $
+							  uname='Console_'+self.obj_num+'camtemp', font=font)
+		set_label = widget_label(base, xoff = 10, yoff = 130, value = 'Set Temperature:', font=font)
+		set_box	= widget_slider(base, xoff = 100, yoff = 130, value = set_temp, minim=minim, maxim=maxim, $
+						     uname='Console_'+self.obj_num+'settemp', uval = {tag:'cam_cooler_event', event:'slider'}, font=font)
 
-			self.manager -> register, base, self, 'Console internal', 0, 0, 0
-
-			widget_control, base, /realize
-
-			xmanager, 'base', base, event_handler = 'Handle_Event', cleanup = 'Kill_Entry', /no_block
+		self.manager -> register, base, self, 'Console internal', 0, 0, 0
+		widget_control, base, /realize
+		xmanager, 'base', base, event_handler = 'Handle_Event', cleanup = 'Kill_Entry', /no_block
 
 	endif
-
 end
 
 ;\D\<Event handler for the camera cooler widget.>
