@@ -10,7 +10,7 @@ pro Handle_Event, event  ;\A\<Widget event structure>
 
 end
 
-;\D\<Handle widget destroy events. These are rerouted to the consoles kill handler.>
+;\D\<Handle widget destroy events. These are rerouted to the console's kill handler.>
 pro Kill_Entry, id  ;\A\<Widget id>
 
 	COMMON Console_Share, info
@@ -31,11 +31,12 @@ end
 pro Handle_Error, error  ;\A\<Error recieved>
 
 	COMMON Console_Share, info
-stop
+
 	print, 'THERE WAS AN ERROR! ID: ', error
 	print, 'TIME: ' + systime()
 	print,  'MESSAGE: ', !ERROR_STATE.MSG
 	obj_destroy, info.console
+	stop
 
 end
 
