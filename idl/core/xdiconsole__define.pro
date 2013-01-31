@@ -2266,10 +2266,9 @@ pro XDIConsole::status_update
 		last_status_update0 = systime(/sec)
 		last_status_update1 = systime(/sec)
 	endelse
-
 end
 
-;\D\<Get the free space (in Mb by default, use keyword for Gb) in the given path>
+;\D\<Get the free space (in Mb by default, use keyword for Gb) in the given path.>
 function XDIConsole::FreeDiskSpace, path, gb=gb
   spawn, 'dir ' + path + ' | find "free"', res, err, /hide
   out = strsplit(res, ' ', /extract)
