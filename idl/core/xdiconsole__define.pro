@@ -722,7 +722,7 @@ pro XDIConsole::execute_schedule
 			self->log, 'Phasemap lag is: ' + string(phase_lag_hours,f='(f0.1)') + ', refreshing...', 'Console', /display
 			schedule_reader, schedule_file, 0, command, args, lat, lon, self, /refresh_phasemap
 			if command eq 'eof' then begin
-				print, 'No Phasemapper command found in schedule file for refresh'
+				self->log, 'No Phasemapper command found in schedule file for refresh', 'Console', /display
 				self.etalon.phasemap_time = now_time
 			endif else begin
 				self -> start_plugin, command, args=args, new_obj=new_obj
@@ -743,13 +743,11 @@ pro XDIConsole::execute_schedule
 
 	if command ne 'control' and command ne 'eof' then begin
 
+		self->log, 'Executing schedule line ' + string(schedule_line, f='(i0)') + ': ' + command, 'Console', /display
+
 		;\\ Steps/Order and Phasemapper plugins are started and destroyed as needed
 			if command eq 'stepsperorder' or command eq 'phasemapper' then begin
-
-				self->log, 'Executing schedule line ' + string(schedule_line, f='(i0)') + ': ' + command, 'Console', /display
-
 				self -> cam_shutteropen, 0
-
 				self -> start_plugin, command, args=args, new_obj=new_obj
 				if obj_valid(new_obj) then begin
 					self.misc.active_object = new_obj
@@ -902,7 +900,7 @@ end
 ;\D\<When a user clicks on a plugin in the menu or a schedule command requires a plugin to be>
 ;\D\<created this method is called. It is responsible for creating the plugin/object, registering>
 ;\D\<it with the widget manager>
-pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
+pro XDIConsole::start_plugin, event, $             ;\A\<Widget event (manual) or string (auto start)>
                               args=args, $         ;\A\<No Doc>
                               new_obj=new_obj      ;\A\<No Doc>
 
@@ -918,15 +916,14 @@ pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
 			w = float(args(0))
 		endelse
 
+		self->log, 'Creating plugin: ' + val, 'Console', /display
+
 		xbin = self.camera.xbin
 		ybin = self.camera.ybin
 
 		if auto_start eq 0 and strlowcase(val) eq 'spectrum' then begin
 			while w eq 0.0 do begin
-				if w eq 0.0 then begin
-					;xvaredit, w, name = 'Enter a wavelength in nanometres:', group=self.misc.console_id
-					w = inputBox(w, title = "Set Wavelength in Nanometres", group = self.misc.console_id)
-				endif
+				w = inputBox(w, title = "Set Wavelength in Nanometres", group = self.misc.console_id)
 			endwhile
 		endif
 
@@ -981,7 +978,7 @@ pro XDIConsole::start_plugin, event, $             ;\A\<No Doc>
 			resx = call_external(self.misc.dll_name, 'uStartAcquisition')
 			template_image = *self.buffer.image
 			*self.buffer.image = template_image - template_image
-			print, 'Cleared stored images...'
+			self->log, 'Cleared stored images...', 'Console', /display
 end
 
 ;\D\<Update the camera with the current set of values stored in the \verb"camera" structure of>
