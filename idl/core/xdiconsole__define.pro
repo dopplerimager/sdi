@@ -706,7 +706,7 @@ pro XDIConsole::execute_schedule
 			self->log, 'NM/Step lag is: ' + string(nm_step_lag_hours,f='(f0.1)') + ', refreshing...', 'Console', /display
 			schedule_reader, schedule_file, 0, command, args, lat, lon, self, /refresh_nm_per_step
 			if command eq 'eof' then begin
-				print, 'No Stepsperorder command found in schedule file for refresh'
+				self->log, 'No Stepsperorder command found in schedule file for refresh', 'Console', /display
 				self.etalon.nm_per_step_time = now_time
 			endif else begin
 				self -> start_plugin, command, args=args, new_obj=new_obj
@@ -719,7 +719,7 @@ pro XDIConsole::execute_schedule
 		endif
 
 		if phase_lag_hours gt self.etalon.phasemap_refresh_hours then begin
-			self->log, 'Phasemap lag is: ' + string(nm_step_lag_hours,f='(f0.1)') + ', refreshing...', 'Console', /display
+			self->log, 'Phasemap lag is: ' + string(phase_lag_hours,f='(f0.1)') + ', refreshing...', 'Console', /display
 			schedule_reader, schedule_file, 0, command, args, lat, lon, self, /refresh_phasemap
 			if command eq 'eof' then begin
 				print, 'No Phasemapper command found in schedule file for refresh'
