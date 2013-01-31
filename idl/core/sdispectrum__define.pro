@@ -15,7 +15,6 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 		self.palette	= data.palette
 		self.obj_num 	= string(data.count, format = '(i0)')
 
-
 	;\\ Do if no zone map settings
 		if not keyword_Set(zone_settings) then begin
 			zone_settings = 'default_zones.txt'
@@ -40,6 +39,10 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 		if strmid(zone_settings, strlen(zone_settings)-4, 4) ne '.txt' then zone_settings = zone_settings + '.txt'
 		if keyword_set(file_name_format) then self.file_name_format = file_name_format
 		self.zone_settings = self.console -> get_zone_set_path() + zone_settings
+
+		self.console -> log, 'Spectrum INIT:', 'Spectrum'
+		self.console -> log, '  Lambda = ' + string(data.wavelength, f='(f0.1'), 'Spectrum'
+		self.console -> log, '  Zonemap = ' + zone_settings, 'Spectrum'
 
 		self.border = 20
 
@@ -109,7 +112,6 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 
 		if self.file_name_format eq '' then begin
 			file_name_format = ''
-			;xvaredit, file_name_format, name = 'Enter a filename/format string:', group=self.id
 			file_name_format = inputbox(file_name_format, title = "Set Filename/Format String", group = self.id)
 		endif
 
@@ -125,12 +127,12 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 		spec_save_info.zone_sectors = *self.secs
 
 		if file_test(self.spec_path + filename) eq 1 then begin
-			self.console -> log, 'REopening ' + self.spec_path + filename, 'Spectrum'
+			self.console -> log, 'Found existing data file, re-opening ' + self.spec_path + filename, 'Spectrum'
 			Write_Spectra_NetCDF, 0, *self.spectra, 0, 0, 0, 0, fname=self.spec_path + filename, return_id=return_id, $
 					  header=header, data=spec_save_info, /reopen
 			self.file_id = return_id
 		endif else begin
-			self.console -> log, 'Opening ' + self.spec_path + filename, 'Spectrum'
+			self.console -> log, 'No data file exists, creating ' + self.spec_path + filename, 'Spectrum'
 			Write_Spectra_NetCDF, 0, *self.spectra, 0, 0, 0, 0, /create, fname=self.spec_path + filename, return_id=return_id, $
 					  header=header, data=spec_save_info
 			self.file_id = return_id
@@ -160,7 +162,7 @@ pro SDISpectrum::start_scan, event  ;\A\<Widget event>
 
 			if status eq 'Scanner started' then begin
 				self.scanning = 1
-				self.console -> log, 'Started acquiring spectra', 'Spectrum'
+				self.console -> log, 'Started acquiring spectra (manual mode)', 'Spectrum'
 			endif
 
 	endif
@@ -182,10 +184,10 @@ function SDISpectrum::auto_start, args  ;\A\<String array of arguments from the 
 
 		if status eq 'Scanner started' then begin
 			self.scanning = 1
-			self.console -> log, 'Started acquiring spectra', 'Spectrum'
+			self.console -> log, 'Started acquiring spectra (auto mode)', 'Spectrum'
 		endif else begin
 			;\\ Update the log
-				self.console -> log, 'Scanner could not be started - auto-mode', 'Spectrum'
+				self.console -> log, 'Scanner could not be started (auto mode)', 'Spectrum'
 				return, 'Error: failed to start scanner'
 		endelse
 
@@ -252,7 +254,6 @@ pro SDISpectrum::initializer
 		*self.zonemap = zonemap
 		self.nzones = max(zonemap) + 1
 
-
 		self.console -> log, 'Zone settings:', 'Spectrum'
 		self.console -> log, 'Rads - ' + string(rads, f='("[",'+string(n_elements(rads),f='(i0)')+'(f0.2," "),"]")'), 'Spectrum'
 		self.console -> log, 'Secs - ' + string(secs, f='("[",'+string(n_elements(secs),f='(i0)')+'(i0,  " "),"]")'), 'Spectrum'
@@ -305,13 +306,6 @@ pro SDISpectrum::initializer
 
 	;\\ Set up the spectra array
 		*self.spectra = ulonarr(self.nzones, self.nchann)
-
-;-------Discard any images accumulated in the camera while we set all this up:
-;		resx = call_external(self.dll, 'uAbortAcquisition')
-;		resx = call_external(self.dll, 'uFreeInternalMemory')
-;		self.console -> zero_image
-;		resx = call_external(self.dll, 'uStartAcquisition')
-
 end
 
 ;\D\<Frame event where the spectral information from the latest camera image is extracted. The primary>
@@ -633,7 +627,7 @@ pro SDISpectrum::set_phasemap, failed  ;\A\<OUT: flag to indicate failure, not c
 
 	failed = 0
 
-	self.console -> log, 'Setting/Refreshing Phasemap and Zones...', 'Spectrum'
+	self.console -> log, 'Setting phasemap', 'Spectrum'
 
 	*self.phasemap = intarr(self.xdim, self.ydim)
 
