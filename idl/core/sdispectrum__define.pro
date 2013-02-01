@@ -41,7 +41,7 @@ function SDISpectrum::init, restore_struc=restore_struc, $         ;\A\<Restored
 		self.zone_settings = self.console -> get_zone_set_path() + zone_settings
 
 		self.console -> log, 'Spectrum INIT:', 'Spectrum'
-		self.console -> log, '  Lambda = ' + string(data.wavelength, f='(f0.1'), 'Spectrum'
+		self.console -> log, '  Lambda = ' + string(data.wavelength, f='(f0.1)'), 'Spectrum'
 		self.console -> log, '  Zonemap = ' + zone_settings, 'Spectrum'
 
 		self.border = 20
