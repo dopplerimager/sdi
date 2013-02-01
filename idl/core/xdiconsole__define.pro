@@ -2232,6 +2232,7 @@ pro XDIConsole::status_update
 		if ( (systime(/sec) - last_status_update1)/60. gt 2. ) then begin
 
 			openw, hnd, 'c:\users\sdi3000\status_info.txt', /get
+			printf, hnd, 'SiteCode=' + self.header.site_code
 			printf, hnd, 'SystemUT=' + systime(/ut)
 			printf, hnd, 'SunElevationDeg=' + string(get_sun_elevation(self.header.latitude, self.header.longitude), f='(f0.2)')
 			printf, hnd, 'FreeDiskSpaceCGb=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
