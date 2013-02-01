@@ -1394,10 +1394,15 @@ pro XDIConsole::log, entry, $                         ;\A\<String containing the
 ;				    	    editable:[0,1,2,3,4,5]}
 
 	;\\ Set up an error handler. Failing to log should not cause a crash.
+	error_retries = 0 ;\\ try 3 times to log, else give up
 	catch, error
 	if error ne 0 then begin
-		catch, /cancel
-		return
+		if error_retries ge 3 then begin
+			catch, /cancel
+			return
+		endif else begin
+			error_retries++
+		endelse
 	endif
 
 	if self.logging.enable_logging ne 0 and size(sender, /type) ne 0 then begin
