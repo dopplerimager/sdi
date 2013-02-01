@@ -1393,6 +1393,13 @@ pro XDIConsole::log, entry, $                         ;\A\<String containing the
 ;				         log_entries:0, $
 ;				    	    editable:[0,1,2,3,4,5]}
 
+	;\\ Set up an error handler. Failing to log should not cause a crash.
+	catch, error
+	if error ne 0 then begin
+		catch, /cancel
+		return
+	endif
+
 	if self.logging.enable_logging ne 0 and size(sender, /type) ne 0 then begin
 
 		time = convert_js(dt_tm_tojs(systime(/ut)))
