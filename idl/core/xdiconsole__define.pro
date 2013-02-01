@@ -767,10 +767,9 @@ pro XDIConsole::execute_schedule
 
 	if command ne 'control' and command ne 'eof' then begin
 
-		self->log, 'Executing schedule line ' + string(schedule_line, f='(i0)') + ': ' + command, 'Console', /display
-
 		;\\ Steps/Order and Phasemapper plugins are started and destroyed as needed
 			if command eq 'stepsperorder' or command eq 'phasemapper' then begin
+				self->log, 'Schedule -> ' + command, 'Console', /display
 				self -> cam_shutteropen, 0
 				self -> start_plugin, command, args=args, new_obj=new_obj
 				if obj_valid(new_obj) then begin
@@ -783,6 +782,7 @@ pro XDIConsole::execute_schedule
 		;\\ Spectrum plugins are started at initialization, and switched to as needed
 			if command eq 'spectrum' then begin
 
+				self->log, 'Schedule -> Spectrum', 'Console', /display
 				self -> cam_shutteropen, 0
 
 				struc = self.manager -> generate_list()
@@ -1496,6 +1496,18 @@ pro XDIConsole::log, entry, $                         ;\A\<String containing the
 ;				        		 log:strarr(100), $
 ;				         log_entries:0, $
 ;				    	    editable:[0,1,2,3,4,5]}
+
+	;\\ Set up an error handler. Failing to log should not cause a crash.
+	error_retries = 0 ;\\ try 3 times to log, else give up
+	catch, error
+	if error ne 0 then begin
+		if error_retries ge 3 then begin
+			catch, /cancel
+			return
+		endif else begin
+			error_retries++
+		endelse
+	endif
 
 	if self.logging.enable_logging ne 0 and size(sender, /type) ne 0 then begin
 
@@ -2317,9 +2329,9 @@ pro XDIConsole::status_update
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
 			printf, hnd, 'put c:/users/sdi3000/status_phasemap.png /status/' + self.header.site_code + '/phasemap.png'
 			printf, hnd, 'put ' + self.runtime.schedule + ' /status/' + self.header.site_code + '/schedule.txt'
-			printf, hnd, 'put ' + console_log + ' /status/' + self.header.site_code + '/console_log.txt'
-			printf, hnd, 'put ' + instr_log + ' /status/' + self.header.site_code + '/instrumentspecific_log.txt'
-			printf, hnd, 'put ' + spectrum_log + ' /status/' + self.header.site_code + '/spectrum_log.txt'
+			if file_test(console_log) then printf, hnd, 'put ' + console_log + ' /status/' + self.header.site_code + '/console_log.txt'
+			if file_test(instr_log) then printf, hnd, 'put ' + instr_log + ' /status/' + self.header.site_code + '/instrumentspecific_log.txt'
+			if file_test(spectrum_log) then printf, hnd, 'put ' + spectrum_log + ' /status/' + self.header.site_code + '/spectrum_log.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
@@ -2333,6 +2345,7 @@ pro XDIConsole::status_update
 		if ( (systime(/sec) - last_status_update1)/60. gt 2. ) then begin
 
 			openw, hnd, 'c:\users\sdi3000\status_info.txt', /get
+			printf, hnd, 'SiteCode=' + self.header.site_code
 			printf, hnd, 'SystemUT=' + systime(/ut)
 			printf, hnd, 'SunElevationDeg=' + string(get_sun_elevation(self.header.latitude, self.header.longitude), f='(f0.2)')
 			printf, hnd, 'FreeDiskSpaceCGb=' + string(self->FreeDiskSpace('c:\', /gb), f='(f0.2)')
