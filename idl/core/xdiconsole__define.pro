@@ -2216,9 +2216,9 @@ pro XDIConsole::status_update
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update.bat', /get
 			printf, hnd, 'put c:/users/sdi3000/status_phasemap.png /status/' + self.header.site_code + '/phasemap.png'
 			printf, hnd, 'put ' + self.runtime.schedule + ' /status/' + self.header.site_code + '/schedule.txt'
-			printf, hnd, 'put ' + console_log + ' /status/' + self.header.site_code + '/console_log.txt'
-			printf, hnd, 'put ' + instr_log + ' /status/' + self.header.site_code + '/instrumentspecific_log.txt'
-			printf, hnd, 'put ' + spectrum_log + ' /status/' + self.header.site_code + '/spectrum_log.txt'
+			if file_test(console_log) then printf, hnd, 'put ' + console_log + ' /status/' + self.header.site_code + '/console_log.txt'
+			if file_test(instr_log) then printf, hnd, 'put ' + instr_log + ' /status/' + self.header.site_code + '/instrumentspecific_log.txt'
+			if file_test(spectrum_log) then printf, hnd, 'put ' + spectrum_log + ' /status/' + self.header.site_code + '/spectrum_log.txt'
 			printf, hnd, 'exit'
 			free_lun, hnd
 			spawn, 'c:\users\sdi3000\sdi\bin\psftp.exe ' + self.logging.ftp_snapshot + ' -b ' + $
