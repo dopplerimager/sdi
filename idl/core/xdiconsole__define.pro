@@ -743,10 +743,9 @@ pro XDIConsole::execute_schedule
 
 	if command ne 'control' and command ne 'eof' then begin
 
-		self->log, 'Executing schedule line ' + string(schedule_line, f='(i0)') + ': ' + command, 'Console', /display
-
 		;\\ Steps/Order and Phasemapper plugins are started and destroyed as needed
 			if command eq 'stepsperorder' or command eq 'phasemapper' then begin
+				self->log, 'Schedule -> ' + command, 'Console', /display
 				self -> cam_shutteropen, 0
 				self -> start_plugin, command, args=args, new_obj=new_obj
 				if obj_valid(new_obj) then begin
@@ -759,6 +758,7 @@ pro XDIConsole::execute_schedule
 		;\\ Spectrum plugins are started at initialization, and switched to as needed
 			if command eq 'spectrum' then begin
 
+				self->log, 'Schedule -> Spectrum', 'Console', /display
 				self -> cam_shutteropen, 0
 
 				struc = self.manager -> generate_list()
