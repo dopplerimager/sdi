@@ -93,6 +93,8 @@ end
 ;\D\<Phasemap and binary data are split off into a separate save file.>
 pro sdi_settings_converter, infile
 
+	if not arg_present(infile) then infile = dialog_pickfile()
+
 	restore, infile
 
 	self = {etalon:etalon, $

@@ -122,7 +122,6 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		set_bttn1  = widget_button(set_menu,  value = 'Re-Load current settings',  uvalue = {tag:'reload_settings'})
 		set_bttn2  = widget_button(set_menu,  value = 'Show current settings',  uvalue = {tag:'show_current_settings'})
 		set_bttn1  = widget_button(set_menu,  value = 'Write settings',  uvalue = {tag:'write_settings'})
-		set_bttn3  = widget_button(set_menu,  value = 'Edit Port Mapping',  uvalue = {tag:'edit_ports'})
 		set_bttn4  = widget_button(set_menu,  value = 'Close Mirror Port',  uvalue = {tag:'close_mport'})
 		set_bttn4  = widget_button(set_menu,  value = 'Open Mirror Port',  uvalue = {tag:'open_mport'})
 
@@ -1257,8 +1256,11 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 		filename = dialog_pickfile(path = self.misc.default_settings_path)
 	endif
 
-	if filename ne '__no_settings_file_provided__' then $
-		call_procedure, (strsplit(file_basename(filename), '.', /extract))[0], temp
+	if filename ne '__no_settings_file_provided__' then begin
+		name = (strsplit(file_basename(filename), '.', /extract))[0]
+		resolve_routine, name
+		call_procedure, name, temp
+	endif
 
 	self.etalon 	= temp.etalon
 	self.camera 	= temp.camera
@@ -1463,6 +1465,7 @@ pro XDIConsole::show_current_settings, event ;\A\<Widget event>
 	tab = string(9B)
 	newline = string([13B,10B])
 	text = ''
+	text += newline + strupcase(self.runtime.settings) + newline
 	text += newline + '>> ETALON' + newline
 	text += self->write_settings_struc('etalon', self.etalon, '', /show_all)
 	text += newline + '>> CAMERA' + newline
@@ -2765,36 +2768,6 @@ pro XDIConsole::mot_sel_cal, event, $                   ;\A\<Widget event>
 
 end
 
-;\D\<Edit the structure that defines what the com ports for each device are.>
-pro XDIConsole::edit_ports, event  ;\A\<Widget event>
-
-	;\\ Get current port map, and XVAREDIT it
-		struc = self.misc.port_map
-		xvaredit, struc, name = 'Port Mappings', group=self.misc.console_id
-		self.misc.port_map = struc
-
-        cal_pos = {cal_pos_str, source_0: 0L, source_1: 0L,source_2: 0L,source_3: 0L}
-        cal_pos.source_0 = self.misc.source_map.s0
-        cal_pos.source_1 = self.misc.source_map.s1
-        cal_pos.source_2 = self.misc.source_map.s2
-        cal_pos.source_3 = self.misc.source_map.s3
-		xvaredit, cal_pos, name = 'Cal Positions', group=self.misc.console_id
-        self.misc.source_map.s0 = cal_pos.source_0
-        self.misc.source_map.s1 = cal_pos.source_1
-        self.misc.source_map.s2 = cal_pos.source_2
-        self.misc.source_map.s3 = cal_pos.source_3
-
-	;\\ Update the log - output new port mappings
-		self->log, 'Port Mappings Set:', 'Console', /display
-		tags = tag_names(self.misc.port_map)
-		for n = 0, n_elements(tags) - 1 do begin
-			self->log, tags(n) + ': ' + string(self.misc.port_map.(n),f='(i0)'), 'Console', /display
-		endfor
-
-	;\\ Save the current port map
-		self -> save_current_settings
-
-end
 
 ;\D\<Close the mirror port.>
 pro XDIConsole::close_mport, event  ;\A\<Widget event>
