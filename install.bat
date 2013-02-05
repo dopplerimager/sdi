@@ -38,6 +38,7 @@ ECHO.
 :SkipArg3
 
 MKDIR data
+MKDIR data\sent
 MKDIR log
 MKDIR settings
 MKDIR screencapture
