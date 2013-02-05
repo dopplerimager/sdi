@@ -1,4 +1,5 @@
 
+;\D\<This routine creates the actual output - a text settings file and a binary save file.>
 pro converter_write_settings, self, $
 							  filename, $
 							  pfilename
@@ -88,6 +89,8 @@ function converter_write_settings_field, name, field, indent
 	endelse
 end
 
+;\D\<Convert the old style idl save file settings to the new text-based one.>
+;\D\<Phasemap and binary data are split off into a separate save file.>
 pro sdi_settings_converter, infile
 
 	restore, infile
@@ -106,5 +109,4 @@ pro sdi_settings_converter, infile
 	converter_write_settings, self, $
 							  fname, $
 							  pfname
-
 end
