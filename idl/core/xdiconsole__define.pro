@@ -1506,6 +1506,7 @@ pro XDIConsole::log, entry, $                         ;\A\<String containing the
 			return
 		endif else begin
 			error_retries++
+			wait, 5
 		endelse
 	endif
 
