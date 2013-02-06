@@ -152,14 +152,11 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 
 	;\\ Include the list of SDI modules in the menu
 		if nmods gt 0 then begin
-
 			module_menu = widget_button(menu, value = 'Modules', /menu)
 			module_menu_list = lonarr(nmods)
-
 			for n = 0, (nmods - 1) do begin
 				module_menu_list(n) = widget_button(module_menu, value = self.runtime.plugin_name_list(n), uvalue = {tag:'start_plugin', name:self.runtime.plugin_path_list(n)})
 			endfor
-
 		endif
 
 	;\\ Create the timer widget
@@ -307,21 +304,15 @@ pro XDIConsole::Event_Handler, event  ;\A\<Widget event>
 	endelse
 
 	if size(uval_struc, /type) eq 8 then begin
-
 		uval = uval_struc.tag
 		id = event.top
-
 		if uval eq 'image_capture' or uval eq 'editor_closed' then begin
 			obj = self
 		endif else begin
 			obj = self.manager -> match_register_ref(id)
 		endelse
-
-		str = 'obj -> ' + uval + ', event'
-		res = execute(str)
-
+		call_method, uval, obj, event
 	endif
-
 
 EVENT_SKIP:
 end
@@ -1304,7 +1295,7 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 				self.etalon.leg1_voltage = persistent.etalon.leg1_voltage
 				self.etalon.leg2_voltage = persistent.etalon.leg2_voltage
 				self.etalon.leg3_voltage = persistent.etalon.leg3_voltage
-				self.misc.motor_cur_pos = persistent.misc.motor_cur_pos
+				self.misc.motor_cur_pos  = persistent.misc.motor_cur_pos
 				self.misc.current_filter = persistent.misc.current_filter
 				self.misc.current_source = persistent.misc.current_source
 			endif
@@ -2232,7 +2223,6 @@ pro XDIConsole::cam_exptime, event, $               ;\A\<Widget event>
 
 		if not keyword_set(new_time) then begin
 			exp_time = self.camera.exposure_time
-			;xvaredit, exp_time, name='Enter an exposure time in seconds', group=self.misc.console_id
 			exp_time = inputbox(exp_time, title = "Set Exposure Time (Seconds)", group = self.misc.console_id)
 			self.camera.exposure_time = exp_time
 		endif else begin
