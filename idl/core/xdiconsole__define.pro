@@ -1245,6 +1245,7 @@ pro XDIConsole::load_settings, event, $				;\A\<Widget event>
 
 	if not keyword_set(filename) then begin
 		filename = dialog_pickfile(path = self.misc.default_settings_path)
+		self.runtime.settings = filename
 	endif
 
 	if filename ne '__no_settings_file_provided__' then begin
@@ -2422,7 +2423,8 @@ end
 ;\D\<Return a copy of the the \verb"self" data structure.>
 function XDIConsole::get_console_data
 
-	return, {etalon:self.etalon, $
+	return, {console_id:self, $
+			 etalon:self.etalon, $
 		     camera:self.camera, $
 		     header:self.header, $
 		     logging:self.logging, $
