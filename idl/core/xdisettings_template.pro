@@ -23,7 +23,7 @@ pro xdisettings_template, etalon=etalon, $
 					   leg3_base_voltage:0, $
 					         nm_per_step:0.07, $
 					    nm_per_step_time:0D, $
-			   nm_per_step_refresh_hours:0.0, $
+			   nm_per_step_refresh_hours:24.0, $
 					gap_refractive_index:0.0, $
 								scanning:0, $		;\\ 2 = scan paused
 					   start_volt_offset:0, $
@@ -33,7 +33,7 @@ pro xdisettings_template, etalon=etalon, $
 					       phasemap_grad:ptr_new(/alloc), $
 					     phasemap_lambda:0.0, $
 					       phasemap_time:0D, $
-				  phasemap_refresh_hours:0.0, $
+				  phasemap_refresh_hours:24.0, $
 				  					 gap:20.0, $
 				  		     max_voltage:4095, $
 								editable:['number_of_channels', $
@@ -58,7 +58,7 @@ pro xdisettings_template, etalon=etalon, $
 				shutter_closing_time:0, $
 				shutter_opening_time:10, $
 				    vert_shift_speed:1, $
-				    	   cooler_on:0, $
+				    	   cooler_on:1, $
 				    	 cooler_temp:-80, $
 				    	    fan_mode:0, $
 				    	    cam_temp:0.0, $
