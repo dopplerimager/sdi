@@ -26,6 +26,7 @@ pro data_transfer, data_dir = data_dir, $
 		return
 	endif
 
+
 	openw, log_handle, 'c:\users\sdi3000\log\data_transfer_log.txt', /get
 
 	;\\ Get the list of files awaiting transfer or move
@@ -37,13 +38,18 @@ pro data_transfer, data_dir = data_dir, $
 	;\\ Get the processed list from the server and read in file names
 		ftp_script = 'c:\SDI_ftp_script.ftp'
 		openw, spunt, ftp_script, /get_lun
+		printf, spunt, 'option echo on'
+		printf, spunt, 'option batch abort'
+		printf, spunt, 'option confirm off'
+		printf, spunt, 'open ' + ftp_command
 		printf, spunt, 'cd instrument_incomming'
 		printf, spunt, 'lcd ' + data_dir
 		printf, spunt, 'get _processed.txt'
-		printf, spunt, 'quit'
+		printf, spunt, 'close'
+		printf, spunt, 'exit'
 		close, spunt
 		free_lun, spunt
-		spawn, ftp_command + ' -b ' + ftp_script, result
+		spawn, 'winscp, /script=' + ftp_script
 
 		processed_fname = data_dir + '\_processed.txt'
 		nlines = file_lines(processed_fname)
@@ -102,53 +108,26 @@ pro data_transfer, data_dir = data_dir, $
 		free_lun, log_handle
 
 
-		;\\ Create the ftp script, split into batches of two files per session (timeout problems)
-		openw, ftp_handle, ftp_script, /get_lun
-		printf, ftp_handle, 'cd instrument_incomming'
-		printf, ftp_handle, 'lcd ' + data_dir
-		if keyword_set(dry_run) then print, 'cd instrument_incomming'
-		if keyword_set(dry_run) then print, 'lcd ' + data_dir
+		;\\ Create the ftp script, split into batches of one file per session (timeout problems)
+		files = [files, incomming]
+		for i = 0, n_elements(files) - 1 do begin
+			openw, ftp_handle, ftp_script, /get_lun
+			printf, ftp_handle, 'option echo on'
+			printf, ftp_handle, 'option batch abort'
+			printf, ftp_handle, 'option confirm off'
+			printf, ftp_handle, 'open ' + ftp_command
+			printf, ftp_handle, 'lcd c:\users\sdi3000\data\'
+			printf, ftp_handle, 'put ' + file_basename(files[i]) + ' instrument_incomming/' + file_basename(files[i])
+			printf, ftp_handle, 'close'
+			printf, ftp_handle, 'exit'
+			close, ftp_handle
+			free_lun, ftp_handle
 
-		file_count = 0
-		for i = 0, nfiles - 1 do begin
-
-			filename = file_basename(files[i])
-			printf, ftp_handle, 'put ' + filename
-			if keyword_set(dry_run) then print, 'put ' + filename
-			file_count ++
-
-			if (i eq nfiles - 1 or file_count eq 2) then begin
-
-				file_count = 0
-
-				;\\ The last file to transfer is the list of incomming files + checksums
-				if (i eq nfiles - 1) then begin
-					printf, ftp_handle, 'put ' + file_basename(incomming)
-					if keyword_set(dry_run) then print, 'put ' + file_basename(incomming)
-				endif
-
-				printf, ftp_handle, 'quit'
-				if keyword_set(dry_run) then print, 'quit'
-				close, ftp_handle
-				free_lun, ftp_handle
-
-				;\\ Run the ftp command
-
-				if keyword_set(dry_run) then begin
-					print, 'spawn, ' + ftp_command + ' -b ' + ftp_script + ' > ftplog.txt, result'
-				endif else begin
-					spawn, ftp_command + ' -b ' + ftp_script + ' > ftplog.txt', result
-				endelse
-
-				if (i lt nfiles - 1) then begin
-					openw, ftp_handle, ftp_script, /get_lun
-					printf, ftp_handle, 'cd instrument_incomming'
-					printf, ftp_handle, 'lcd ' + data_dir
-					if keyword_set(dry_run) then print, 'cd instrument_incomming'
-					if keyword_set(dry_run) then print, 'lcd ' + data_dir
-				endif
-			endif
-
+			if keyword_set(dry_run) then begin
+				print, 'spawn, winscp /script=' + ftp_script
+			endif else begin
+				spawn, 'winscp /script=' + ftp_script
+			endelse
 		endfor
 
 	;\\ Delete the _processed file
