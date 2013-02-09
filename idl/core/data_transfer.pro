@@ -116,7 +116,7 @@ pro data_transfer, data_dir = data_dir, $
 			printf, ftp_handle, 'option batch abort'
 			printf, ftp_handle, 'option confirm off'
 			printf, ftp_handle, 'open ' + ftp_command
-			printf, ftp_handle, 'lcd c:\users\sdi3000\data\'
+			printf, ftp_handle, 'lcd ' + data_dir
 			printf, ftp_handle, 'put ' + file_basename(files[i]) + ' instrument_incomming/' + file_basename(files[i])
 			printf, ftp_handle, 'close'
 			printf, ftp_handle, 'exit'
