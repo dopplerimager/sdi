@@ -142,7 +142,11 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		filter_pos_guage  = widget_label(gauge_base, value = 'Filter Num: ', font=font, uname = 'console_filter_guage', xs = xs)
 		frame_rate_guage  = widget_label(gauge_base, value = 'Frame Rate: ', font=font, uname = 'console_frame_guage', xs = xs)
 
-		leg_base = widget_base(self.misc.console_id, col = 1, /align_center)
+		lower_base = widget_base(self.misc.console_id, col=2)
+
+		reload_button = widget_button(lower_base, font=font, value='Reload', ys=50, uvalue = {tag:'reload_settings'})
+
+		leg_base = widget_base(lower_base, col = 1, /align_center)
 
 		xs = 600
 		leg1bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg1_bar')
