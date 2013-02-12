@@ -144,14 +144,15 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 
 		lower_base = widget_base(self.misc.console_id, col=2)
 
-		reload_button = widget_button(lower_base, font=font, value='Reload', ys=50, uvalue = {tag:'reload_settings'})
+		reload_button = widget_button(lower_base, font=font, value='Reload Settings', ys=50, $
+									   uvalue = {tag:'reload_settings'}, /align_center)
 
 		leg_base = widget_base(lower_base, col = 1, /align_center)
 
 		xs = 600
-		leg1bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg1_bar')
-		leg2bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg2_bar')
-		leg3bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg3_bar')
+		leg1bar  = Widget_Draw(leg_base, xsize= 0.7*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg1_bar')
+		leg2bar  = Widget_Draw(leg_base, xsize= 0.7*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg2_bar')
+		leg3bar  = Widget_Draw(leg_base, xsize= 0.7*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg3_bar')
 		leglab   = widget_label(leg_base, frame=0, value = "Leg Voltages: ", font=font)
 
 	;\\ Include the list of SDI modules in the menu
