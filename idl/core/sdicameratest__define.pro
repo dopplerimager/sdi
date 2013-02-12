@@ -37,11 +37,15 @@ function SDICameraTest::init, restore_struc=restore_struc, $   ;\A\<Restored set
 	vss = 'VS Speeds: ' + strjoin(string(indgen(n_elements(caps.VSSpeeds)), f='(i0)') + ': ' + $
 									string(caps.VSSpeeds, f='(f0.2)') + ' usecs', ', ', /single)
 
-	hss = 'HS Speeds: ' + strjoin(string(indgen(n_elements(caps.HSSpeeds)), f='(i0)') + ': ' + $
-									string(caps.HSSpeeds, f='(f0.2)') + ' MHz', ', ', /single)
+	hss = ['HS Speeds:']
+	for i = 0, n_elements(caps.HSSpeeds) - 1 do begin
+		hss = [hss, '   AD Channel: ' + string(caps.HSSpeeds[i].adchannel, f='(i0)') + ', ' + $
+					'Output Amp: ' + string(caps.HSSpeeds[i].outputamp, f='(i0)') + ', ' + $
+					'Speeds: ' + strjoin( string(caps.HSSpeeds[i].speeds[0:caps.HSSpeeds[i].numhsspeeds-1], f='(i0)') + ' Mhz', ', ')]
+	endfor
 
 	info = [adc, amps, vsamps, vss, hss]
-	list = widget_list(base, value=info, ys=n_elements(info) , font='Ariel*18*Bold')
+	list = widget_list(base, value=info, ys=n_elements(info) , font='Ariel*18*Bold', uval={tag:'list_event'})
 
 	self.id = base
 
@@ -51,9 +55,14 @@ function SDICameraTest::init, restore_struc=restore_struc, $   ;\A\<Restored set
 
 end
 
+pro SDICameraTest::list_event, event
+
+end
+
 function SDICameraTest::query_camera
 
 	dll = (get_console_data()).misc.dll_name
+	result = get_error(call_external(dll, 'uAbortAcquisition'))
 
 	no_camera = 0
 	numADChannels = -1
@@ -206,6 +215,8 @@ function SDICameraTest::query_camera
 		   pixels:pixels, $
 		   buffer_size:buffsize, $
 		   softwareVersion:softwareVersion }
+
+	result = get_error(call_external(dll, 'uStartAcquisition'))
 
 	return, out
 end
