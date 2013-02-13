@@ -1,6 +1,5 @@
 ;\\ Code formatted by DocGen
 
-
 ;\D\<Initialize the CameraTest plugin.>
 function SDICameraTest::init, restore_struc=restore_struc, $   ;\A\<Restored settings>
                            data=data                        ;\A\<Misc data from the console>
@@ -24,27 +23,8 @@ function SDICameraTest::init, restore_struc=restore_struc, $   ;\A\<Restored set
 
 	base = widget_base(xoffset = xoffset, yoffset = yoffset, mbar = menu, $
 					   title = 'CameraTest', group_leader = leader, col=1)
+	info = self->format_caps(self->query_camera())
 
-	caps = self->query_camera()
-
-	adc = 'AD Channels: ' + strjoin(string(indgen(caps.numADChannels), f='(i0)') + ': ' + $
-									string(caps.bitDepths, f='(i0)') + ' bits', ', ')
-
-	amps = 'PreAmp Gains: ' + strjoin(string(caps.preAmpGains, f='(i0)'), ', ')
-
-	vsamps = 'VS Amplitudes: ' + strjoin(string(indgen(caps.numVSAmplitudes), f='(i0)'), ', ')
-
-	vss = 'VS Speeds: ' + strjoin(string(indgen(n_elements(caps.VSSpeeds)), f='(i0)') + ': ' + $
-									string(caps.VSSpeeds, f='(f0.2)') + ' usecs', ', ', /single)
-
-	hss = ['HS Speeds:']
-	for i = 0, n_elements(caps.HSSpeeds) - 1 do begin
-		hss = [hss, '   AD Channel: ' + string(caps.HSSpeeds[i].adchannel, f='(i0)') + ', ' + $
-					'Output Amp: ' + string(caps.HSSpeeds[i].outputamp, f='(i0)') + ', ' + $
-					'Speeds: ' + strjoin( string(caps.HSSpeeds[i].speeds[0:caps.HSSpeeds[i].numhsspeeds-1], f='(i0)') + ' Mhz', ', ')]
-	endfor
-
-	info = [adc, amps, vsamps, vss, hss]
 	list = widget_list(base, value=info, ys=n_elements(info) , font='Ariel*18*Bold', uval={tag:'list_event'})
 
 	self.id = base
@@ -55,10 +35,13 @@ function SDICameraTest::init, restore_struc=restore_struc, $   ;\A\<Restored set
 
 end
 
-pro SDICameraTest::list_event, event
 
+;\D\<A dummy for gui list events.>
+pro SDICameraTest::list_event, event
 end
 
+
+;\D\<Query the camera, return a capabilities structure.>
 function SDICameraTest::query_camera
 
 	dll = (get_console_data()).misc.dll_name
@@ -221,6 +204,50 @@ function SDICameraTest::query_camera
 	return, out
 end
 
+
+;\D\<Produce an array of strings to show the camera capabilities.>
+function SDICameraTest::format_caps, caps
+
+	out = ['Software Version: ' + strjoin(string(caps.softwareVersion, f='(i0)'), '.')]
+
+	out = [out, 'Max Exposure Time: ' + string(caps.maxExposureTime, f='(f0.2)')]
+
+	out = [out, 'Temp. Range: ' + strjoin(string(caps.temprange, f='(f0.2)'), '-')]
+
+	out = [out, 'Output Amps: ']
+	for i = 0, n_elements(caps.amps) - 1 do begin
+		out = [out, '  ' + caps.amps[i].description + ', Max HS Speed: ' + string(caps.amps[i].maxhsspeed, f='(f0.2)')]
+	endfor
+
+	out = [out, 'AD Channels: ' + strjoin(string(indgen(caps.numADChannels), f='(i0)') + ': ' + $
+									string(caps.bitDepths, f='(i0)') + ' bits', ', ')]
+
+	out = [out, 'PreAmp Gains: ' + strjoin(string(caps.preAmpGains, f='(i0)'), ', ')]
+
+	out = [out, 'VS Amplitudes: ' + strjoin(string(indgen(caps.numVSAmplitudes), f='(i0)'), ', ')]
+
+	out = [out, 'VS Speeds: ']
+	if total(caps.VSSpeeds ne 0) then begin
+		out = [out, string(indgen(n_elements(caps.VSSpeeds)), f='(i0)') + ': ' + $
+					string(caps.VSSpeeds, f='(f0.2)') + ' usecs']
+	endif
+
+	out = [out, 'Recommended VS Speed: Index=' + string(caps.VSRecommended.index, f='(i0)') + ', ' + $
+				'Speed=' + string(caps.VSRecommended.speed, f='(f0.2)') + ' usecs']
+
+	out = [out, 'HS Speeds:']
+	for i = 0, n_elements(caps.HSSpeeds) - 1 do begin
+		if (caps.HSSpeeds[i].numhsspeeds gt 0) then begin
+			out = [out, '   AD Channel: ' + string(caps.HSSpeeds[i].adchannel, f='(i0)') + ', ' + $
+						'Output Amp: ' + string(caps.HSSpeeds[i].outputamp, f='(i0)') + ', ' + $
+						'Speeds: ' + strjoin( string(caps.HSSpeeds[i].speeds[0:caps.HSSpeeds[i].numhsspeeds-1], f='(i0)') + ' Mhz', ', ')]
+		endif
+	endfor
+
+	return, out
+end
+
+
 ;\D\<Get settings to save.>
 function SDICameraTest::get_settings
 
@@ -235,11 +262,9 @@ end
 
 ;\D\<Cleanup - nothing to do.>
 pro SDICameraTest::cleanup, log  ;\A\<No Doc>
-
-
 end
 
-;\D\<The CameraTest plugin displays the latest camera images as they are recorded.>
+;\D\<The CameraTest plugin queries the camera's capabilities and displays them.>
 pro SDICameraTest__define
 
 	void = {SDICameraTest, id: 0L, inherits XDIBase}
