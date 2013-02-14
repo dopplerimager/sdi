@@ -216,19 +216,23 @@ function SDICameraTest::format_caps, caps
 
 	out = [out, 'Output Amps: ']
 	for i = 0, n_elements(caps.amps) - 1 do begin
-		out = [out, '  ' + caps.amps[i].description + ', Max HS Speed: ' + string(caps.amps[i].maxhsspeed, f='(f0.2)')]
+		out = [out, '   ' + string(i, f='(i0)') + ': ' + strcompress(caps.amps[i].description) + ', Max HS Speed: ' + string(caps.amps[i].maxhsspeed, f='(f0.2)')]
 	endfor
 
 	out = [out, 'AD Channels: ' + strjoin(string(indgen(caps.numADChannels), f='(i0)') + ': ' + $
-									string(caps.bitDepths, f='(i0)') + ' bits', ', ')]
+								string(caps.bitDepths, f='(i0)') + ' bits', ', ')]
 
-	out = [out, 'PreAmp Gains: ' + strjoin(string(caps.preAmpGains, f='(i0)'), ', ')]
+	out = [out, 'PreAmp Gains:']
+	for i = 0, n_elements(caps.preAmpGains) - 1 do begin
+		out = [out, '   ' + string(i, f='(i0)') + ': ' + string(caps.preAmpGains[i], f='(i0)')]
+
+	endfor
 
 	out = [out, 'VS Amplitudes: ' + strjoin(string(indgen(caps.numVSAmplitudes), f='(i0)'), ', ')]
 
 	out = [out, 'VS Speeds: ']
 	if total(caps.VSSpeeds ne 0) then begin
-		out = [out, string(indgen(n_elements(caps.VSSpeeds)), f='(i0)') + ': ' + $
+		out = [out, '   ' + string(indgen(n_elements(caps.VSSpeeds)), f='(i0)') + ': ' + $
 					string(caps.VSSpeeds, f='(f0.2)') + ' usecs']
 	endif
 
