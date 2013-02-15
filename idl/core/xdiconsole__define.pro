@@ -8,6 +8,25 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
                            settings=settings, $       ;\A\<The console settings file (required)>
                            start_line=start_line      ;\A\<Optional start line in the schedule file>
 
+	;\\ Keep a list of things to log, once the log is set up
+	log_queue = ['']
+
+	;\\ Fill out the default values here
+	xdisettings_template, etalon=def_etalon, $
+						  camera=def_camera, $
+						  header=def_header, $
+						  logging=def_logging, $
+						  misc=def_misc
+	self.etalon = def_etalon
+	self.camera = def_camera
+	self.header = def_header
+	self.logging = def_logging
+	self.misc = def_misc
+
+	;\\ Manual mode by default
+	if not keyword_set(mode) then mode = 'manual'
+
+	;\\ Make sure we have  schedule file if starting up in auto mode
 	if keyword_set(mode) then begin
 		if mode eq 'auto' and not keyword_set(schedule) then begin
 			res = dialog_message('No schedule file for auto mode - switching to manual mode.')
@@ -17,11 +36,12 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 
 	if not keyword_set(schedule) then schedule = ''
 
-    if not keyword_set(mode) then mode = 'manual'
-
+	;\\ If no settings file was provided, the default settings will be used.
+	;\\ Warn about this, and set the settings field in self.runtime to something
+	;\\ that allows to check whether a settings file was provided.
     if not keyword_set(settings) then begin
-    	res = dialog_message('Settings file required.')
-    	return, 0
+    	log_queue = [log_queue, 'No settings file specified, using default settings!']
+    	settings = '__no_settings_file_provided__'
     endif
 
 	if not keyword_set(start_line) then begin
@@ -98,8 +118,10 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		mot_bttn6  = widget_button(mot_menu,  value = 'Home Cal Source',   uvalue = {tag:'mot_sel_cal', type:'home'})
 
 		set_bttn1  = widget_button(set_menu,  value = 'Load settings',  uvalue = {tag:'load_settings'})
-		set_bttn2  = widget_button(set_menu,  value = 'Edit settings',  uvalue = {tag:'edit_settings'})
-		set_bttn3  = widget_button(set_menu,  value = 'Edit Port Mapping',  uvalue = {tag:'edit_ports'})
+		set_bttn1  = widget_button(set_menu,  value = 'Load settings (full restore)',  uvalue = {tag:'load_settings_full'})
+		set_bttn1  = widget_button(set_menu,  value = 'Re-Load current settings',  uvalue = {tag:'reload_settings'})
+		set_bttn2  = widget_button(set_menu,  value = 'Show current settings',  uvalue = {tag:'show_current_settings'})
+		set_bttn1  = widget_button(set_menu,  value = 'Write settings',  uvalue = {tag:'write_settings'})
 		set_bttn4  = widget_button(set_menu,  value = 'Close Mirror Port',  uvalue = {tag:'close_mport'})
 		set_bttn4  = widget_button(set_menu,  value = 'Open Mirror Port',  uvalue = {tag:'open_mport'})
 
@@ -120,32 +142,38 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		filter_pos_guage  = widget_label(gauge_base, value = 'Filter Num: ', font=font, uname = 'console_filter_guage', xs = xs)
 		frame_rate_guage  = widget_label(gauge_base, value = 'Frame Rate: ', font=font, uname = 'console_frame_guage', xs = xs)
 
-		leg_base = widget_base(self.misc.console_id, col = 1, /align_center)
+		lower_base = widget_base(self.misc.console_id, col=2)
+
+		reload_button = widget_button(lower_base, font=font, value='Reload Settings', ys=50, $
+									   uvalue = {tag:'reload_settings'}, /align_center)
+
+		leg_base = widget_base(lower_base, col = 1, /align_center)
 
 		xs = 600
-		leg1bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg1_bar')
-		leg2bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg2_bar')
-		leg3bar  = Widget_Draw(leg_base, xsize= 0.78*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg3_bar')
+		leg1bar  = Widget_Draw(leg_base, xsize= 0.7*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg1_bar')
+		leg2bar  = Widget_Draw(leg_base, xsize= 0.7*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg2_bar')
+		leg3bar  = Widget_Draw(leg_base, xsize= 0.7*xs, ysize = 0.03*ys, frame=1, uname = 'console_leg3_bar')
 		leglab   = widget_label(leg_base, frame=0, value = "Leg Voltages: ", font=font)
 
 	;\\ Include the list of SDI modules in the menu
 		if nmods gt 0 then begin
-
 			module_menu = widget_button(menu, value = 'Modules', /menu)
 			module_menu_list = lonarr(nmods)
-
 			for n = 0, (nmods - 1) do begin
 				module_menu_list(n) = widget_button(module_menu, value = self.runtime.plugin_name_list(n), uvalue = {tag:'start_plugin', name:self.runtime.plugin_path_list(n)})
 			endfor
-
 		endif
-
 
 	;\\ Create the timer widget
 		self.misc.timer_id  = widget_base(self.misc.console_id, map = 0, uval = 'Timer')
 
 	;\\ Realize the console
 		widget_control, self.misc.console_id, /realize
+
+		;\\ Output any accumulated log messages
+		for i = 1, n_elements(log_queue) - 1 do begin
+			self->log, log_queue[i], 'Console', /display
+		endfor
 
 	;\\ Create an instance of the manager class
 		self.manager = obj_new('XDIWidgetReg', id = self.misc.console_id, ref = self)
@@ -173,18 +201,15 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 			endif
 		endelse
 
-
 	;\\ Modify the title to indicate a manual or auto session
 		title = 'SDI CONSOLE - ' + self.header.instrument_name + ' - Mode: ' + self.runtime.mode
 		widget_control, self.misc.console_id, base_set_title = title
-
 
 	;\\ Load the console specific settings file (each plugin has one, usually describing widget geometry)
 		if file_test(self.misc.default_settings_path + 'console.sdi') then begin
 			restore, self.misc.default_settings_path + 'console.sdi', /relaxed
 			widget_control, xo = geometry.xoffset, yo = geometry.yoffset, self.misc.console_id
 		endif
-
 
 	;\\ Compile the instrument specific file
 		resolve_routine, self.header.instrument_name + '_initialise', /compile_full_file
@@ -210,7 +235,6 @@ function XDIConsole::init, schedule=schedule, $       ;\A\<The schedule file nam
 		self -> update_camera, commands, results
 
 		res = call_external(self.misc.dll_name, 'uStartAcquisition')
-
 
 	;\\ Ensure the timer tick interval is greater than zero
 		if self.misc.timer_tick_interval eq 0.0 then self.misc.timer_tick_interval = 0.0
@@ -285,21 +309,15 @@ pro XDIConsole::Event_Handler, event  ;\A\<Widget event>
 	endelse
 
 	if size(uval_struc, /type) eq 8 then begin
-
 		uval = uval_struc.tag
 		id = event.top
-
 		if uval eq 'image_capture' or uval eq 'editor_closed' then begin
 			obj = self
 		endif else begin
 			obj = self.manager -> match_register_ref(id)
 		endelse
-
-		str = 'obj -> ' + uval + ', event'
-		res = execute(str)
-
+		call_method, uval, obj, event
 	endif
-
 
 EVENT_SKIP:
 end
@@ -413,8 +431,9 @@ pro XDIConsole::timer_event
 			file_mkdir, backup_dir
 			self.runtime.current_daynumber = current_daynumber
 			fname_backup = backup_dir + file_basename(self.runtime.settings) + '_BACKUP_' + dt_tm_mk(systime(/jul), f='Y$_0n$_0d$')
-			self->save_current_settings, filename=fname_backup
-			print, 'Saved Backup Settings File: ' + fname_backup
+			pfname_backup = backup_dir + 'persistent_BACKUP_' + dt_tm_mk(systime(/jul), f='Y$_0n$_0d$')
+			self->save_current_settings, filename=fname_backup, pfilename=pfname_backup
+			print, 'Saved Backup Files: ' + fname_backup + ', ' + pfname_backup
 		endif
 
 
@@ -1205,104 +1224,109 @@ pro XDIConsole::image_capture, event  ;\A\<Widget event>
 
 end
 
-;\D\<Load console settings from a settings file.>
-pro XDIConsole::load_settings, event, $                   ;\A\<Widget event>
-                               filename=filename, $       ;\A\<Filename to load from>
-                               error=error, $             ;\A\<OUT: error code>
-                               first_call=first_call      ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
+;\D\<Reload the current settings file.>
+pro XDIConsole::reload_settings, event				;\A\<Widget event>
+	self->load_settings, filename = self.runtime.settings
+end
+
+;\D\<Load all settings (same as on startup)>
+pro XDIConsole::load_settings_full, event				;\A\<Widget event>
+	self->load_settings, event, /first_call
+end
+
+;\D\<A new implementation of the settings file loader, testing.>
+pro XDIConsole::load_settings, event, $				;\A\<Widget event>
+							   filename=filename, $    ;\A\<Filename to load from>
+							   error=error, $          ;\A\<OUT: error code>
+                               first_call=first_call   ;\A\<Set if this is the first time settings are being loaded (i.e. in init)>
 
 	error = 0
 
-	var_holder = {etalon:self.etalon, camera:self.camera, header:self.header, logging:self.logging, misc:self.misc}
+	temp = {etalon:self.etalon, $
+			camera:self.camera, $
+			header:self.header, $
+			logging:self.logging, $
+			misc:self.misc}
 
 	if not keyword_set(filename) then begin
 		filename = dialog_pickfile(path = self.misc.default_settings_path)
+		self.runtime.settings = filename
 	endif
 
-	restore, filename, /relaxed
-
-	var_names = tag_names(var_holder)
-
-	if n_elements(var_names) ne n_elements(save_names) then begin
-		mess = ['File not compatible with current settings information, cannot load.', $
-				'Error - Wrong number of settings categories:', $
-				'Load file has ' + string(n_elements(save_names), f='(i0)')+', expecting ' + string(n_elements(var_names),f='(i0)')]
-		res = dialog_message(mess)
-		error = 1
-		goto, END_LOAD
+	if filename ne '__no_settings_file_provided__' then begin
+		name = (strsplit(file_basename(filename), '.', /extract))[0]
+		resolve_routine, name
+		call_procedure, name, temp
 	endif
 
-	for n = 0, n_elements(save_names) - 1 do begin
+	self.etalon 	= temp.etalon
+	self.camera 	= temp.camera
+	self.header 	= temp.header
+	self.logging 	= temp.logging
+	self.misc 		= temp.misc
 
-		match = where(save_names(n) eq var_names, matchyn)
-		if matchyn eq 0 then begin
-			mess = ['File not compatible with current settings information, cannot load.', $
-			  		'Error - No matching category for save file variable ' + save_names(n)]
-			res = dialog_message(mess)
-			error = 2
-			goto, END_LOAD
+	xpix = self.camera.xpix
+	ypix = self.camera.ypix
+
+	x_dimension = ceil(xpix/float(self.camera.xbin))
+	y_dimension = ceil(ypix/float(self.camera.ybin))
+
+	ptr_free, self.buffer.image, $
+			  self.buffer.raw_image, $
+			  self.etalon.phasemap_base, $
+			  self.etalon.phasemap_grad
+
+	self.etalon.phasemap_base = ptr_new(intarr(x_dimension, y_dimension))
+	self.etalon.phasemap_grad = ptr_new(intarr(x_dimension, y_dimension))
+	self.buffer.image = ptr_new(ulonarr(x_dimension, y_dimension))
+	self.buffer.raw_image = ptr_new(ulonarr(x_dimension, y_dimension))
+
+	if file_test(self.misc.default_settings_path + 'persistent.idlsave') then begin
+
+		;\\ In case loading the persistent file fails (corrupted), just skip it
+		catch, error_status
+		if error_status ne 0 then begin
+			catch, /cancel
+			goto, SKIP_PERSISTENT_LOAD
 		endif
 
-		tag = match(0)
+		restore, self.misc.default_settings_path + 'persistent.idlsave', /relaxed
 
-		res = execute('new_tags = n_tags(' + save_names(n) + ')')
+		if size(persistent, /type) eq 8 then begin
 
-		if new_tags ne n_tags(var_holder.(tag)) then begin
-			mess = ['File not compatible with current settings information, cannot load.', $
-			  		'Error - Tags in category: ' + save_names(n) + ' dont match those expected']
-			res = dialog_message(mess)
-			error = 3
-			goto, END_LOAD
-		endif else begin
-			res = execute('tags_to_load = ' + save_names(n) + '.editable')
-			for t = 0, n_elements(tags_to_load) - 1 do begin
-				res = execute('self.(tag).(tags_to_load(t)) = ' + save_names(n) + '.(tags_to_load(t))')
-			endfor
-			res = execute('self.(tag).editable = ' + save_names(n) + '.editable')
-		endelse
+			help, persistent, /str
 
-	endfor
-
-	;\\ Initialize the image and phasemap arrays
-		xpix = self.camera.xpix
-		ypix = self.camera.ypix
-
-		x_dimension = ceil(xpix/float(self.camera.xbin))
-		y_dimension = ceil(ypix/float(self.camera.ybin))
-		self.buffer.image = ptr_new(/alloc)
-		self.buffer.raw_image = ptr_new(/alloc)
-		self.etalon.phasemap_base = ptr_new(/alloc)
-		self.etalon.phasemap_grad = ptr_new(/alloc)
-		*self.buffer.image = ulonarr(x_dimension, y_dimension)
-		*self.buffer.raw_image = ulonarr(x_dimension, y_dimension)
-		*self.etalon.phasemap_base = intarr(x_dimension, y_dimension)
-		*self.etalon.phasemap_grad = intarr(x_dimension, y_dimension)
-		self.etalon.phasemap_lambda = etalon.phasemap_lambda
-
-		if size(*etalon.phasemap_base, /type) ne 0 then begin
-			phase_tmp = *etalon.phasemap_base
-			if n_elements(phase_tmp(*,0)) eq x_dimension and n_elements(phase_tmp(0,*)) eq y_dimension then begin
-				*self.etalon.phasemap_base = phase_tmp
+			;\\ Only load these on init (or when 'Load Settings (full restore)' is selected)
+			if keyword_set(first_call) then begin
+				self.etalon.leg1_voltage = persistent.etalon.leg1_voltage
+				self.etalon.leg2_voltage = persistent.etalon.leg2_voltage
+				self.etalon.leg3_voltage = persistent.etalon.leg3_voltage
+				self.misc.motor_cur_pos  = persistent.misc.motor_cur_pos
+				self.misc.current_filter = persistent.misc.current_filter
+				self.misc.current_source = persistent.misc.current_source
 			endif
-			phase_tmp = *etalon.phasemap_grad
-			if n_elements(phase_tmp(*,0)) eq x_dimension and n_elements(phase_tmp(0,*)) eq y_dimension then begin
-				*self.etalon.phasemap_grad = phase_tmp
-			endif
-		endif
 
-	;\\ Add in the phasemap and nm/step times
-		self.etalon.phasemap_time = etalon.phasemap_time
-		self.etalon.nm_per_step_time = etalon.nm_per_step_time
+			;\\ Always load the phasemap and nm/step times
+			self.etalon.phasemap_lambda = persistent.etalon.phasemap_lambda
+			self.etalon.phasemap_time = persistent.etalon.phasemap_time
+			self.etalon.nm_per_step_time = persistent.etalon.nm_per_step_time
 
-	;\\ Add in the saved port mappings, current filter number, mirror pos, source map, source pos
-		self.misc.port_map = misc.port_map
-		self.misc.current_filter = misc.current_filter
-		self.misc.motor_cur_pos = misc.motor_cur_pos
-		self.misc.source_map = misc.source_map
-		self.misc.current_source = misc.current_source
+			;\\ Make sure dimensions match
+			dims = size(persistent.etalon.phasemap_base, /dimensions)
+			if dims[0] eq x_dimension and $
+			   dims[1] eq y_dimension then *self.etalon.phasemap_base = persistent.etalon.phasemap_base
+
+			dims = size(persistent.etalon.phasemap_grad, /dimensions)
+			if dims[0] eq x_dimension and $
+			   dims[1] eq y_dimension then *self.etalon.phasemap_grad = persistent.etalon.phasemap_grad
+
+		endif ;\\ if persistent valid
+
+	endif ;\\ if persistent exists
+	SKIP_PERSISTENT_LOAD:
+
 
 	;\\ Update the camera
-
 		commands = ['uSetShutter', 'uSetReadMode', 'uSetImage', 'uSetAcquisitionMode', $
 					'uSetFrameTransferMode', 'uSetPreAmpGain', 'uSetEMGainMode', 'uSetVSAmplitude', $
 					'uSetBaselineClamp', 'uSetADChannel', 'uSetOutputAmplifier', 'uSetTriggerMode', 'uSetHSSpeed', $
@@ -1321,61 +1345,141 @@ pro XDIConsole::load_settings, event, $                   ;\A\<Widget event>
 		widget_control, set_value = 'Gain: ' + string(self.camera.gain, f='(i0)'), gain_guage_id
 		widget_control, set_value = 'Shutter: ' + shutter_string, shutter_guage_id
 		widget_control, set_value = 'MotorPos: ' + string(self.misc.motor_cur_pos,f='(i0)'), motor_guage_id
-
-END_LOAD:
 end
 
-;\D\<Launch the console settings editor \verb"edit_console_settings".>
-pro XDIConsole::edit_settings, event  ;\A\<Widget event>
+;\D\<Write settings to a file.>
+pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
+								filename=filename, $ ;\A\<Write the settings file to this filename>
+								pfilename=pfilename  ;\A\<Write the persistent file to this filename>
 
-	edit_console_settings, filename = self.runtime.settings, $
-						   leader = self.misc.console_id, $
-						   console = self
+	if self.runtime.settings eq '__no_settings_file_provided__' then return
+
+	fname = self.runtime.settings
+	info = routine_info(fname, /source)
+
+	tab = string(9B)
+	newline = string([13B,10B])
+
+	outname = info.path
+	if keyword_set(filename) then outname = filename
+
+	openw, hnd, outname, /get
+	printf, hnd, 'pro ' + info.name + ', data'
+	printf, hnd, newline + tab + ';\\ ETALON'
+	printf, hnd, self->write_settings_struc('etalon', self.etalon, tab)
+	printf, hnd, newline + tab + ';\\ CAMERA'
+	printf, hnd, self->write_settings_struc('camera', self.camera, tab)
+	printf, hnd, newline + tab + ';\\ HEADER'
+	printf, hnd, self->write_settings_struc('header', self.header, tab)
+	printf, hnd, newline + tab + ';\\ LOGGING'
+	printf, hnd, self->write_settings_struc('logging', self.logging, tab)
+	printf, hnd, newline + tab + ';\\ MISC'
+	printf, hnd, self->write_settings_struc('misc', self.misc, tab)
+	printf, hnd, 'end'
+	close, hnd
+	free_lun, hnd
+
+	outname = self.misc.default_settings_path + 'persistent.idlsave'
+	if keyword_set(pfilename) then outname = pfilename
+
+	persistent =  {$
+
+				   etalon:{phasemap_base:*self.etalon.phasemap_base, $
+				   		   phasemap_grad:*self.etalon.phasemap_grad, $
+				   		   phasemap_time:self.etalon.phasemap_time, $
+				   		   nm_per_step_time:self.etalon.nm_per_step_time, $
+				   		   phasemap_lambda:self.etalon.phasemap_lambda, $
+				   		   leg1_voltage:self.etalon.leg1_voltage, $
+				   		   leg2_voltage:self.etalon.leg2_voltage, $
+				   		   leg3_voltage:self.etalon.leg3_voltage }, $
+
+				   misc:{motor_cur_pos:self.misc.motor_cur_pos, $
+				   		 current_filter:self.misc.current_filter, $
+				   		 current_source:self.misc.current_source} $
+
+				   }
+
+	save, filename = outname, persistent
 
 end
 
-;\D\<Called when the editor, launched from the console, is closed. This applies the new settings.>
-pro XDIConsole::editor_closed, event  ;\A\<Widget event>
-
-	res = dialog_message('Reload current settings file?', /question)
-
-	if res eq 'Yes' then begin
-		if self.runtime.mode eq 'auto' then begin
-			mess = ['Warning: Console is running automatically! Implementing new settings',$
-				   'could have adverse effects. Do you want to continue?']
-			res = dialog_message(mess, /question)
-		endif else begin
-			res = 'Yes'
-		endelse
-		if res eq 'Yes' then self -> load_settings, 0, filename = self.runtime.settings
-	endif
-
-end
-
-;\D\<Save current settings file.>
-pro XDIConsole::save_current_settings, filename=filename  ;\A\<Filename to save to>
-
-	var_holder = {etalon:self.etalon, camera:self.camera, header:self.header, logging:self.logging, misc:self.misc}
-
-	if not keyword_set(filename) then begin
-		fname = self.runtime.settings
-	endif else begin
-		fname = filename
-	endelse
-	save_names = tag_names(var_holder)
-
-	var_holder.misc.active_object = obj_new()
-
+;\D\<Return a string version of a struc for the settings file (internal use).>
+function XDIConsole::write_settings_struc, name, $ ;\A\<Name of the structure>
+										   struc, $ ;\A\<The actual structure>
+										   indent, $ ;\A\<Indentation level>
+										   show_all=show_all ;\A\<Show non-editable fields too>
 	str = ''
-	for n = 0, n_elements(save_names) - 1 do begin
-		res = execute(save_names(n) + ' = ' + 'var_holder.(n)')
-		str = str + save_names(n)
-		if n ne n_elements(save_names) - 1 then str = str + ', '
+	names = tag_names(struc)
+	edits = where(names eq 'EDITABLE', edits_yn)
+	for i = 0, n_tags(struc) - 1 do begin
+		if edits_yn eq 1 then match = where(strupcase(struc.editable) eq names[i], can_edit) $
+			else can_edit = 1
+		if (can_edit eq 1) or keyword_set(show_all) then $
+			str += self->write_settings_field(name + '.' + names[i], $
+				   struc.(i), indent, show_all=show_all) + string([13B,10B])
 	endfor
-
-	res = execute('save, filename = fname, save_names, ' + str)
-
+	return, str
 end
+
+;\D\<Return a string version of a field for the settings file (internal use).>
+function XDIConsole::write_settings_field, name, $ ;\A\<Name of the field>
+										   field, $ ;\A\<The actual field>
+										   indent, $ ;\A\<Indentation level>
+										   show_all=show_all ;\A\<Show non-editable fields too>
+	if size(field, /type) eq 8 then begin
+		return, self->write_settings_struc(name, field, indent, show_all=show_all)
+	endif else begin
+		is_string = 0
+		case size(field, /type) of
+			1: fmt = '(i0)'
+			2: fmt = '(i0)'
+			3: fmt = '(i0)'
+			4: fmt = '(f0)'
+			7: is_string = 1
+			else: return, indent + 'data.' + name + ' = ' + size(field, /tname)
+		endcase
+		if is_string eq 0 then field_string = string(field, f=fmt) else field_string = "'" + field + "'"
+		if n_elements(field_string) gt 1 then begin
+			pre_spaces = strjoin(replicate(' ', strlen(indent + 'data.' + name) + 4), '', /single)
+			out_string = '[' + strjoin(field_string, ',' + string([13B,10B]) + pre_spaces, /single) + ']'
+		endif else begin
+			out_string = field_string
+		endelse
+		return, indent + 'data.' + name + " = " + out_string
+	endelse
+end
+
+
+;\D\<Save current settings file, forwards to write_settings.>
+pro XDIConsole::save_current_settings, filename=filename, $ ;\A\<Settings filename to save to>
+									   pfilename=pfilename  ;\A\<Persistent-data filename to save to>
+	self->write_settings, filename=filename, pfilename=pfilename
+end
+
+;\D\<Show the current settings file (shows all fields).>
+pro XDIConsole::show_current_settings, event ;\A\<Widget event>
+
+	tab = string(9B)
+	newline = string([13B,10B])
+	text = ''
+	text += newline + strupcase(self.runtime.settings) + newline
+	text += newline + '>> ETALON' + newline
+	text += self->write_settings_struc('etalon', self.etalon, '', /show_all)
+	text += newline + '>> CAMERA' + newline
+	text += self->write_settings_struc('camera', self.camera, '', /show_all)
+	text += newline + '>> HEADER' + newline
+	text += self->write_settings_struc('header', self.header, '', /show_all)
+	text += newline + '>> LOGGING' + newline
+	text += self->write_settings_struc('logging', self.logging, '', /show_all)
+	text += newline + '>> MISC' + newline
+	text += self->write_settings_struc('misc', self.misc, '', /show_all)
+
+	base = widget_base(group_leader = self.misc.console_id, col = 1)
+	text = widget_text(base, value = text, font = 'Courier*15', $
+					   ys = 50, xs = 100., /scroll)
+	widget_control, /realize, base
+end
+
 
 ;\D\<Called by widgets when they want to log events. These get logged to a log file,>
 ;\D\<and optionally output to the display.>
@@ -1539,47 +1643,44 @@ pro XDIConsole::cam_cooler, event  ;\A\<Widget event>
 
 	if res eq 'Yes' or self.runtime.mode eq 'manual' then begin
 
-			set_temp = self.camera.cooler_temp
-			cam_temp = self.camera.cam_temp
-			cool = self.camera.cooler_on
-			minim = self.camera.cam_min_temp
-			maxim = self.camera.cam_max_temp
+		set_temp = self.camera.cooler_temp
+		cam_temp = self.camera.cam_temp
+		cool = self.camera.cooler_on
+		minim = self.camera.cam_min_temp
+		maxim = self.camera.cam_max_temp
 
-			if cool eq 1 then state_val = 'Turn Cooler OFF' else state_val = 'Turn Cooler ON'
-			if cool eq 1 then cool_val = 'ON' else cool_val = 'OFF'
+		if cool eq 1 then state_val = 'Turn Cooler OFF' else state_val = 'Turn Cooler ON'
+		if cool eq 1 then cool_val = 'ON' else cool_val = 'OFF'
 
-			geom = widget_info(self.misc.console_id, /geometry)
-			xoff = geom.xoffset + 20
-			yoff = geom.yoffset + 20
+		geom = widget_info(self.misc.console_id, /geometry)
+		xoff = geom.xoffset + 20
+		yoff = geom.yoffset + 20
 
-			font = 'Ariel*15*Bold'
+		font = 'Ariel*15*Bold'
 
-			base = widget_base(group_leader = self.misc.console_id, xs = 300, ys = 250, xoff=xoff, yoff=yoff, title='Cooling')
+		base = widget_base(group_leader = self.misc.console_id, xs = 300, ys = 250, xoff=xoff, yoff=yoff, title='Cooling')
 
-			warning1 = widget_label(base, xoff=10, yoff=10, value = 'IF SET POINT IS CHANGED WHEN COOLER IS', font=font)
-			warning2 = widget_label(base, xoff=10, yoff=30, value = 'ON, COOLER WILL BE RESTARTED', font=font)
+		warning1 = widget_label(base, xoff=10, yoff=10, value = 'IF SET POINT IS CHANGED WHEN COOLER IS', font=font)
+		warning2 = widget_label(base, xoff=10, yoff=30, value = 'ON, COOLER WILL BE RESTARTED', font=font)
 
-			on_off_but = widget_button(base, xoff = 10, yoff = 190, value = state_val, uname='Console_'+self.obj_num+'coolerbut', $
-									   uvalue = {tag:'cam_cooler_event', event:'toggle'}, font=font)
-			update_but = widget_button(base, xoff = 140, yoff = 190, value = 'Update Set Point', uname='Console_'+self.obj_num+'setbut', $
-									   uvalue = {tag:'cam_cooler_event', event:'set'}, font=font)
-			curr_cool = widget_label(base, xoff=10, yoff=70, value = 'Cooler is currently ' + cool_val, $
-									uname='Console_'+self.obj_num+'coolerval', font=font)
+		on_off_but = widget_button(base, xoff = 10, yoff = 190, value = state_val, uname='Console_'+self.obj_num+'coolerbut', $
+								   uvalue = {tag:'cam_cooler_event', event:'toggle'}, font=font)
+		update_but = widget_button(base, xoff = 140, yoff = 190, value = 'Update Set Point', uname='Console_'+self.obj_num+'setbut', $
+								   uvalue = {tag:'cam_cooler_event', event:'set'}, font=font)
+		curr_cool = widget_label(base, xoff=10, yoff=70, value = 'Cooler is currently ' + cool_val, $
+								uname='Console_'+self.obj_num+'coolerval', font=font)
 
-			current    = widget_label(base, xoff = 10, yoff = 100, value = 'Current Temperature: ' + string(cam_temp,f='(f0.2)'), $
-						 			  uname='Console_'+self.obj_num+'camtemp', font=font)
-			set_label  = widget_label(base, xoff = 10, yoff = 130, value = 'Set Temperature:', font=font)
-			set_box	   = widget_slider(base, xoff = 100, yoff = 130, value = set_temp, minim=minim, maxim=maxim, $
-								     uname='Console_'+self.obj_num+'settemp', uval = {tag:'cam_cooler_event', event:'slider'}, font=font)
+		current = widget_label(base, xoff = 10, yoff = 100, value = 'Current Temperature: ' + string(cam_temp,f='(f0.2)'), $
+							  uname='Console_'+self.obj_num+'camtemp', font=font)
+		set_label = widget_label(base, xoff = 10, yoff = 130, value = 'Set Temperature:', font=font)
+		set_box	= widget_slider(base, xoff = 100, yoff = 130, value = set_temp, minim=minim, maxim=maxim, $
+						     uname='Console_'+self.obj_num+'settemp', uval = {tag:'cam_cooler_event', event:'slider'}, font=font)
 
-			self.manager -> register, base, self, 'Console internal', 0, 0, 0
-
-			widget_control, base, /realize
-
-			xmanager, 'base', base, event_handler = 'Handle_Event', cleanup = 'Kill_Entry', /no_block
+		self.manager -> register, base, self, 'Console internal', 0, 0, 0
+		widget_control, base, /realize
+		xmanager, 'base', base, event_handler = 'Handle_Event', cleanup = 'Kill_Entry', /no_block
 
 	endif
-
 end
 
 ;\D\<Event handler for the camera cooler widget.>
@@ -2128,7 +2229,6 @@ pro XDIConsole::cam_exptime, event, $               ;\A\<Widget event>
 
 		if not keyword_set(new_time) then begin
 			exp_time = self.camera.exposure_time
-			;xvaredit, exp_time, name='Enter an exposure time in seconds', group=self.misc.console_id
 			exp_time = inputbox(exp_time, title = "Set Exposure Time (Seconds)", group = self.misc.console_id)
 			self.camera.exposure_time = exp_time
 		endif else begin
@@ -2328,7 +2428,8 @@ end
 ;\D\<Return a copy of the the \verb"self" data structure.>
 function XDIConsole::get_console_data
 
-	return, {etalon:self.etalon, $
+	return, {console_id:self, $
+			 etalon:self.etalon, $
 		     camera:self.camera, $
 		     header:self.header, $
 		     logging:self.logging, $
@@ -2603,7 +2704,6 @@ pro XDIConsole::mot_sel_filter, event  ;\A\<Widget event>
 
 	;\\ This allows the user to manually select the current filter
 		filter = self.misc.current_filter
-		;xvaredit, filter, name = 'Select Filter Number', group = self.misc.console_id
 		filter = inputbox(filter, title = "Select Filter", group = self.misc.console_id)
 
 		if (filter eq self.misc.current_filter) then return
@@ -2635,7 +2735,6 @@ pro XDIConsole::mot_sel_cal, event, $                   ;\A\<Widget event>
 			if uval.type eq 'drive' then begin
 				;\\ This allows the user to manually select the current source
 					source = self.misc.current_source
-					;xvaredit, source, name = 'Select Source Number', group = self.misc.console_id
 					source = inputbox(source, title = "Select Cal Source", group = self.misc.console_id)
 			endif
 			if uval.type eq 'home' then begin
@@ -2666,36 +2765,6 @@ pro XDIConsole::mot_sel_cal, event, $                   ;\A\<Widget event>
 
 end
 
-;\D\<Edit the structure that defines what the com ports for each device are.>
-pro XDIConsole::edit_ports, event  ;\A\<Widget event>
-
-	;\\ Get current port map, and XVAREDIT it
-		struc = self.misc.port_map
-		xvaredit, struc, name = 'Port Mappings', group=self.misc.console_id
-		self.misc.port_map = struc
-
-        cal_pos = {cal_pos_str, source_0: 0L, source_1: 0L,source_2: 0L,source_3: 0L}
-        cal_pos.source_0 = self.misc.source_map.s0
-        cal_pos.source_1 = self.misc.source_map.s1
-        cal_pos.source_2 = self.misc.source_map.s2
-        cal_pos.source_3 = self.misc.source_map.s3
-		xvaredit, cal_pos, name = 'Cal Positions', group=self.misc.console_id
-        self.misc.source_map.s0 = cal_pos.source_0
-        self.misc.source_map.s1 = cal_pos.source_1
-        self.misc.source_map.s2 = cal_pos.source_2
-        self.misc.source_map.s3 = cal_pos.source_3
-
-	;\\ Update the log - output new port mappings
-		self->log, 'Port Mappings Set:', 'Console', /display
-		tags = tag_names(self.misc.port_map)
-		for n = 0, n_elements(tags) - 1 do begin
-			self->log, tags(n) + ': ' + string(self.misc.port_map.(n),f='(i0)'), 'Console', /display
-		endfor
-
-	;\\ Save the current port map
-		self -> save_current_settings
-
-end
 
 ;\D\<Close the mirror port.>
 pro XDIConsole::close_mport, event  ;\A\<Widget event>
@@ -2732,139 +2801,16 @@ end
 ;\D\<XDIConsole is the main routine for SDI control. See the software manual for details.>
 pro XDIConsole__define
 
-
-;################################################################
-
-	;\\ Load a palette prototype
-	load_pal, culz, idl=[3,1]
-
 	;\\ Count the plugins
 	paths = Get_Paths()
 	path_list = file_search(paths + '\SDI*__define.pro', count = nmods)
 
-	;\\ Console settings
-	etalon = {eta,	  number_of_channels:0, $
-						 current_channel:0, $
-							 leg1_offset:0.0, $
-					         leg2_offset:0.0, $
-					         leg3_offset:0.0, $
-							leg1_voltage:0, $
-						    leg2_voltage:0, $
-					        leg3_voltage:0, $
-					   leg1_base_voltage:0, $
-					   leg2_base_voltage:0, $
-					   leg3_base_voltage:0, $
-					         nm_per_step:0.0, $
-					    nm_per_step_time:0D, $
-			   nm_per_step_refresh_hours:0.0, $
-					gap_refractive_index:0.0, $
-								scanning:0, $		;\\ 2 = scan paused
-					   start_volt_offset:0, $
-						stop_volt_offset:0, $
-					      volt_step_size:0.0, $
-					       phasemap_base:ptr_new(/alloc), $
-					       phasemap_grad:ptr_new(/alloc), $
-					     phasemap_lambda:0.0, $
-					       phasemap_time:0D, $
-				  phasemap_refresh_hours:0.0, $
-				  					 gap:0.0, $
-				  		     max_voltage: 4095, $
-				    		    editable:[0,2,3,4,8,9,10,11,13,14,23,24,25]}
-
-	camera = {cam, 	 exposure_time:0.0, $
-					       read_mode:0, $
-					acquisition_mode:0, $
-					    trigger_mode:0, $
-					    shutter_mode:0, $
-				shutter_closing_time:0, $
-				shutter_opening_time:0, $
-				    vert_shift_speed:0, $
-				    	   cooler_on:0, $
-				    	 cooler_temp:0, $
-				    	    fan_mode:0, $
-				    	    cam_temp:0.0, $
-				    	  temp_state:'', $
-				    	        xbin:0, $
-				    	        ybin:0, $
-				   wait_for_min_temp:0, $
-				   wait_for_shutdown:0, $
-				        cam_min_temp:0.0, $
-				        cam_max_temp:0.0, $
-				       cam_safe_temp:0.0, $
-				       			gain:0, $
-				       			xcen:0, $
-				       			ycen:0, $
-	 	       			 preamp_gain:0, $
-	 	       		  baseline_clamp:0, $
-	 	       		    em_gain_mode:0, $
-	 	       		    vs_amplitude:0, $
-	 	       		      ad_channel:0, $
-	 	       		output_amplifier:0, $
-	 	       				hs_speed:0, $
-	 	       					xpix:0, $
-	 	       					ypix:0, $
-			 			    editable:[0,1,2,3,4,5,6,7,8,9,10,11,13,14,20,21,22,23,24,25,26,27,28,29,30,31]}
-
-	header = {hea,        records:0, $
-				   file_specifier:'', $
-				             site:'', $
-				        site_code:'', $
-				  instrument_name:'', $
-				        longitude:0.0, $
-				         latitude:0.0, $
-				             year:'', $
-				              doy:'', $
-				         operator:'', $
-				          comment:'', $
-				         software:'', $
-				            notes:replicate(string(' ', format = '(a80)'), 32), $
-				   	     editable:[2,3,4,5,6,7,8,9,10,11]}
-
-	logging = {log,    log_directory:'', $
-				    time_name_format:'', $
-				      enable_logging:0, $
-				       log_overwrite:0, $
-				          log_append:0, $
-				        ftp_snapshot:'', $
-				        		 log:strarr(100), $
-				         log_entries:0, $
-				    	    editable:[0,1,2,3,4,5]}
-
-;---MC mod to store more information about the type of hardware interfaces in use:
-;	port_map_struc = {pms, mirror:0L, cal_source:0L, etalon:0L}
-    interface_info = {ifs, number: 0L, type: 'unknown', settings: 'none'}
-	port_map_struc = {pms, mirror: interface_info, cal_source: interface_info, etalon: interface_info, filter: interface_info}
-	port_map_struc.etalon.type = 'Access I/O USB to Parallel'
-	source_map_struc = {sms, s0:0, s1:0, s2:0, s3:0}
-
-    whoami, me_dir, me_file
-    misc = {mis, default_settings_path:me_dir + '..\setup\', $
-				   screen_capture_path:me_dir + '..\screen_captures\', $
-				        phase_map_path:me_dir + '..\phase_maps\', $
-				         zone_set_path:me_dir + '..\zone_set\', $
-				          spectra_path:me_dir + '..\spectra\', $
-				              dll_name:me_dir + '..\scanning_doppler_imager.dll', $
-				   timer_tick_interval:0.0, $
-				               palette:culz, $
-				      shutdown_on_exit:0, $
-				          object_count:0, $
-				              timer_id:0L, $
-				             timer2_id:0L, $
-							console_id:0L, $
-						 		log_id:0L, $
-						 active_object:obj_new(), $
-						 schedule_line:0L, $
-						 motor_sky_pos:0L, $
-						 motor_cal_pos:0L, $
-						 motor_cur_pos:0L, $
-						current_filter:0,  $
-						current_source:0,  $
-						 	  port_map:port_map_struc, $
-						 	source_map:source_map_struc, $
-						 snapshot_time:0D, $
-				snapshot_refresh_hours:0.0, $
-						      editable:[0,1,2,3,4,5,6,8,16,17,24]}
-;################################################################
+	;\\ This just gets the proto-types - it is called again in INIT to set values
+	xdisettings_template, etalon=etalon, $
+						  camera=camera, $
+						  header=header, $
+						  logging=logging, $
+						  misc=misc
 
 	buffer = {ima, image:ptr_new(/alloc), $
 				   raw_image:ptr_new(/alloc)}
@@ -2884,9 +2830,7 @@ pro XDIConsole__define
 	        plugin_name_list:strarr(nmods), $
 	          current_status:'', $
 	   last_schedule_command:'', $
-	                editable:0}
-
-			;\\ shutter_state 0 = closed, 1 = open
+	                editable:['']}
 
 	void = {XDIConsole, etalon:etalon, $
 					    camera:camera, $
