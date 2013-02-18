@@ -2346,7 +2346,7 @@ pro XDIConsole::status_update
 		if ( (systime(/sec) - last_status_update1)/60. gt 2. ) then begin
 
 			;\\ Get the current software version from git (most recent git commit on master branch)
-			spawn, 'cd c:/users/sdi3000/sdi & git log --oneline -1', result
+			spawn, 'cd c:\users\sdi3000\sdi & git log --oneline -1', result
 			software_version = strtrim(result)
 
 			openw, hnd, 'c:\users\sdi3000\status_info.txt', /get
