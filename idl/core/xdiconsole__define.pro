@@ -2345,6 +2345,10 @@ pro XDIConsole::status_update
 		;\\ Send more regular stuff
 		if ( (systime(/sec) - last_status_update1)/60. gt 2. ) then begin
 
+			;\\ Get the current software version from git (most recent git commit on master branch)
+			spawn, 'cd c:/users/sdi3000/sdi & git log --oneline -1', result
+			software_version = strtrim(result)
+
 			openw, hnd, 'c:\users\sdi3000\status_info.txt', /get
 			printf, hnd, 'SiteCode=' + self.header.site_code
 			printf, hnd, 'SystemUT=' + systime(/ut)
@@ -2362,6 +2366,7 @@ pro XDIConsole::status_update
 			printf, hnd, 'CameraGain=' + string(self.camera.gain, f='(i0)')
 			printf, hnd, 'CurrentStatus=' + self.runtime.current_status
 			printf, hnd, 'OperatingMode=' + self.runtime.mode
+			printf, hnd, 'SoftwareVersion=' + software_version
 			free_lun, hnd
 
 			openw, hnd, 'c:\users\sdi3000\ftp_status_update_regular.bat', /get
