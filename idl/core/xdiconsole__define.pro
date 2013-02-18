@@ -1355,7 +1355,8 @@ pro XDIConsole::write_settings, event, $ ;\A\<Widget event>
 	if self.runtime.settings eq '__no_settings_file_provided__' then return
 
 	fname = self.runtime.settings
-	info = routine_info(fname, /source)
+	proname = (strsplit(file_basename(fname), '.', /extract))[0]
+	info = routine_info(proname, /source)
 
 	tab = string(9B)
 	newline = string([13B,10B])
